@@ -19,7 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DddEfteling\DddEfteling.csproj" />
+    <ProjectReference Include="..\DddEfteling.Visitors\DddEfteling.Visitors.csproj" />
+    <ProjectReference Include="..\DddEfteling\DddEfteling.Park.csproj" />
   </ItemGroup>
 
   <ItemGroup>

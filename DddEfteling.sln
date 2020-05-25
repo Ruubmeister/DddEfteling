@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DddEfteling", "DddEfteling\DddEfteling.csproj", "{F9E26329-EDE9-45F7-BB79-F4B1FA57190B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DddEfteling.Park", "DddEfteling\DddEfteling.Park.csproj", "{F9E26329-EDE9-45F7-BB79-F4B1FA57190B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DddEfteling.Tests", "DddEfteling.Tests\DddEfteling.Tests.csproj", "{6208A815-E99D-48C6-AB17-9A02E5A55567}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DddEfteling.Tests", "DddEfteling.Tests\DddEfteling.Tests.csproj", "{6208A815-E99D-48C6-AB17-9A02E5A55567}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DddEfteling.Visitors", "DddEfteling.Visitors\DddEfteling.Visitors.csproj", "{B4505BB4-D05C-405E-9927-B99042E8DE6B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{6208A815-E99D-48C6-AB17-9A02E5A55567}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6208A815-E99D-48C6-AB17-9A02E5A55567}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6208A815-E99D-48C6-AB17-9A02E5A55567}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4505BB4-D05C-405E-9927-B99042E8DE6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4505BB4-D05C-405E-9927-B99042E8DE6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4505BB4-D05C-405E-9927-B99042E8DE6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4505BB4-D05C-405E-9927-B99042E8DE6B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
