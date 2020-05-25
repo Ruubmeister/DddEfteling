@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace DddEfteling.Park.Employees.Controls
 {
-    public class EmployeeControl
+    public class EmployeeControl: IEmployeeControl
     {
 
         private HashSet<Employee> Employees { get; }
@@ -37,5 +37,9 @@ namespace DddEfteling.Park.Employees.Controls
         {
             return Employees.FirstOrDefault(employee => employee.FirstName == firstName && employee.LastName == lastName);
         }
+    }
+
+    public interface IEmployeeControl
+    {
     }
 }

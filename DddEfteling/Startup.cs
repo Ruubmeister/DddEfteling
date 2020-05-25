@@ -1,3 +1,7 @@
+using DddEfteling.Park.Employees.Controls;
+using DddEfteling.Park.Entrances.Controls;
+using DddEfteling.Park.Realms.Controls;
+using DddEfteling.Park.Rides.Controls;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -8,12 +12,16 @@ namespace DddEfteling
 {
     public class Startup
     {
+
         /* This method gets called by the runtime. Use this method to add services to the container.
          For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         */
         public void ConfigureServices(IServiceCollection services)
         {
-            // No reason yet, maybe in the future, but this comment fixes sonarqube
+            services.AddSingleton<IRealmControl, RealmControl>();
+            services.AddSingleton<IEntranceControl, EntranceControl>();
+            services.AddSingleton<IRideControl, RideControl>();
+            services.AddSingleton<IEmployeeControl, EmployeeControl>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

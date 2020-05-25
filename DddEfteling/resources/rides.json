@@ -1,0 +1,206 @@
+[
+  {
+    "status": "Closed",
+    "name": "Baron 1898",
+    "minimumAge": "0",
+    "minimumLength": 1.32,
+    "duration": {
+      "minutes": 2,
+      "seconds": 10
+    },
+    "maxPersons": 54,
+    "realm": "Ruigrijk"
+  },
+  {
+    "status": "Closed",
+    "name": "Carnaval Festival",
+    "minimumAge": "0",
+    "minimumLength": "0",
+    "duration": {
+      "minutes": 8,
+      "seconds": 0
+    },
+    "maxPersons": 200,
+    "realm": "Reizenrijk"
+  },
+  {
+    "status": "Closed",
+    "name": "Droomvlucht",
+    "minimumAge": "0",
+    "minimumLength": "0",
+    "duration": {
+      "minutes": 6,
+      "seconds": "0"
+    },
+    "maxPersons": 150,
+    "realm": "Marerijk"
+  },
+  {
+    "status": "Closed",
+    "name": "Fabula",
+    "minimumAge": "0",
+    "minimumLength": "0",
+    "duration": {
+      "minutes": 8,
+      "seconds": "0"
+    },
+    "maxPersons": 70,
+    "realm": "Anderrijk"
+  },
+  {
+    "status": "Closed",
+    "name": "Fata Morgana",
+    "minimumAge": "0",
+    "minimumLength": "0",
+    "duration": {
+      "minutes": 8,
+      "seconds": 0
+    },
+    "maxPersons": 210,
+    "realm": "Anderrijk"
+  },
+  {
+    "status": "Closed",
+    "name": "Gondoletta",
+    "minimumAge": "0",
+    "minimumLength": "0",
+    "duration": {
+      "minutes": 20,
+      "seconds": 0
+    },
+    "maxPersons": 200,
+    "realm": "Reizenrijk"
+  },
+  {
+    "status": "Closed",
+    "name": "Halve Maen",
+    "minimumAge": 8,
+    "minimumLength": 1.20,
+    "duration": {
+      "minutes": 3,
+      "seconds": 0
+    },
+    "maxPersons": 50,
+    "realm": "Ruigrijk"
+  },
+  {
+    "status": "Closed",
+    "name": "Joris en de Draak",
+    "minimumAge": "0",
+    "minimumLength": 1.10,
+    "duration": {
+      "minutes": 2,
+      "seconds": 0
+    },
+    "maxPersons": 52,
+    "realm": "Ruigrijk"
+  },
+  {
+    "status": "Closed",
+    "name": "Monsieur Cannibale",
+    "minimumAge": "0",
+    "minimumLength": "0",
+    "duration": {
+      "minutes": 6,
+      "seconds": 0
+    },
+    "maxPersons": 40,
+    "realm": "Reizenrijk"
+  },
+  {
+    "status": "Closed",
+    "name": "Pagode",
+    "minimumAge": "0",
+    "minimumLength": "0",
+    "duration": {
+      "minutes": 5,
+      "seconds": 10
+    },
+    "maxPersons": 60,
+    "realm": "Reizenrijk"
+  },
+  {
+    "status": "Closed",
+    "name": "Piraña",
+    "minimumAge": 6,
+    "minimumLength": "0",
+    "duration": {
+      "minutes": 5,
+      "seconds": 0
+    },
+    "maxPersons": 250,
+    "realm": "Ruigrijk"
+  },
+  {
+    "status": "Closed",
+    "name": "Spookslot",
+    "minimumAge": "0",
+    "minimumLength": "0",
+    "duration": {
+      "minutes": 15,
+      "seconds": 0
+    },
+    "maxPersons": 80,
+    "realm": "Anderrijk"
+  },
+  {
+    "status": "Closed",
+    "name": "Python",
+    "minimumAge": "0",
+    "minimumLength": 1.20,
+    "duration": {
+      "minutes": 2,
+      "seconds": 8
+    },
+    "maxPersons": 30,
+    "realm": "Ruigrijk"
+  },
+  {
+    "status": "Closed",
+    "name": "Symbolica",
+    "minimumAge": "0",
+    "minimumLength": "0",
+    "duration": {
+      "minutes": 7,
+      "seconds": 0
+    },
+    "maxPersons": 200,
+    "realm": "Fantasierijk"
+  },
+  {
+    "status": "Closed",
+    "name": "Villa Volta",
+    "minimumAge": "0",
+    "minimumLength": 1.0,
+    "duration": {
+      "minutes": 10,
+      "seconds": 0
+    },
+    "maxPersons": 80,
+    "realm": "Marerijk"
+  },
+  {
+    "status": "Closed",
+    "name": "De Vliegende Hollander",
+    "minimumAge": "0",
+    "minimumLength": 1.20,
+    "duration": {
+      "minutes": 3,
+      "seconds": 43
+    },
+    "maxPersons": 50,
+    "realm": "Ruigrijk"
+  },
+  {
+    "status": "Closed",
+    "name": "Vogel Rok",
+    "minimumAge": "0",
+    "minimumLength": 1.20,
+    "duration": {
+      "minutes": 1,
+      "seconds": 31
+    },
+    "maxPersons": 40,
+    "realm": "Ruigrijk"
+  }
+]

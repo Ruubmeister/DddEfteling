@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace DddEfteling.Park.Entrances.Controls
 {
-    public class EntranceControl
+    public class EntranceControl: IEntranceControl
     {
         private EntranceStatus status;
 
@@ -30,7 +30,10 @@ namespace DddEfteling.Park.Entrances.Controls
 
         public List<Ticket> SellTickets(List<TicketType> type)
         {
-            return type.Select(type => new Ticket(type)).ToList();
+            return type.Select(localType => new Ticket(localType)).ToList();
         }
+    }
+
+    interface IEntranceControl { 
     }
 }

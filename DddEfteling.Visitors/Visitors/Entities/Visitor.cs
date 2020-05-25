@@ -4,7 +4,6 @@ namespace DddEfteling.Visitors.Visitors.Entities
 {
     public class Visitor
     {
-
         public Visitor(DateTime dateOfBirth, double length)
         {
             Guid = Guid.NewGuid();

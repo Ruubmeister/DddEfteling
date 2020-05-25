@@ -6,7 +6,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Park\Realms\Controls\" />
+    <Compile Remove="Park\Common\Controls\**" />
+    <Compile Remove="Park\Park\**" />
+    <Content Remove="Park\Common\Controls\**" />
+    <Content Remove="Park\Park\**" />
+    <EmbeddedResource Remove="Park\Common\Controls\**" />
+    <EmbeddedResource Remove="Park\Park\**" />
+    <None Remove="Park\Common\Controls\**" />
+    <None Remove="Park\Park\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DddEfteling.Visitors\DddEfteling.Visitors.csproj" />
   </ItemGroup>
 
 </Project>
