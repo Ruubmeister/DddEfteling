@@ -1,23 +1,24 @@
-﻿using DddEfteling.Park.Realms.Controls;
-using DddEfteling.Park.Rides.Entities;
+﻿using DddEfteling.Park.Common.Entities;
+using DddEfteling.Park.FairyTales.Entities;
+using DddEfteling.Park.Realms.Controls;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 
-namespace DddEfteling.Park.Rides.Controls
+namespace DddEfteling.Park.FairyTales.Controls
 {
-    public class RideConverter : JsonConverter
+    public class FairyTaleConverter : JsonConverter
     {
         private readonly IRealmControl realmControl;
 
-        public RideConverter(IRealmControl realmControl)
+        public FairyTaleConverter(IRealmControl realmControl)
         {
             this.realmControl = realmControl;
         }
 
         public override bool CanConvert(Type objectType)
         {
-            return (objectType == typeof(Ride));
+            return (objectType == typeof(FairyTale));
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -29,17 +30,12 @@ namespace DddEfteling.Park.Rides.Controls
         {
             JObject obj = JObject.Load(reader);
 
-            TimeSpan duration = new TimeSpan(0, int.Parse(obj["duration"]["minutes"].ToString()), 
-                int.Parse(obj["duration"]["seconds"].ToString()));
-
-            return new Ride(
-                RideStatus.Closed,
+            return new FairyTale(obj["name"].ToString(),
                 realmControl.FindRealmByName(obj["realm"].ToString()),
-                obj["name"].ToString(),
-                int.Parse(obj["minimumAge"].ToString()),
-                double.Parse(obj["minimumLength"].ToString()),
-                duration,
-                int.Parse(obj["maxPersons"].ToString())
+                new Coordinates(
+                    obj["coordinates"]["lat"].ToObject<double>(),
+                    obj["coordinates"]["long"].ToObject<double>()
+                    )
                 );
         }
 

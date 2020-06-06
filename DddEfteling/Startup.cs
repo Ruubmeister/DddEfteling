@@ -1,5 +1,6 @@
 using DddEfteling.Park.Employees.Controls;
 using DddEfteling.Park.Entrances.Controls;
+using DddEfteling.Park.FairyTales.Controls;
 using DddEfteling.Park.Realms.Controls;
 using DddEfteling.Park.Rides.Controls;
 using Microsoft.AspNetCore.Builder;
@@ -21,6 +22,7 @@ namespace DddEfteling
             services.AddSingleton<IRealmControl, RealmControl>();
             services.AddSingleton<IEntranceControl, EntranceControl>();
             services.AddSingleton<IRideControl, RideControl>();
+            services.AddSingleton<IFairyTaleControl, FairyTaleControl>();
             services.AddSingleton<IEmployeeControl, EmployeeControl>();
         }
 

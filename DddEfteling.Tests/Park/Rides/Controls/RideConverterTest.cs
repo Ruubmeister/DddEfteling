@@ -1,5 +1,6 @@
 ﻿using DddEfteling.Park.Realms.Controls;
 using DddEfteling.Park.Realms.Entities;
+using DddEfteling.Park.Rides.Controls;
 using DddEfteling.Park.Rides.Entities;
 using Moq;
 using Newtonsoft.Json;
