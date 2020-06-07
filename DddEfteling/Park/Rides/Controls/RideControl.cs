@@ -26,13 +26,11 @@ namespace DddEfteling.Park.Rides.Controls
 
         private List<Ride> LoadRides()
         {
-            using (StreamReader r = new StreamReader("resources/rides.json"))
-            {
-                string json = r.ReadToEnd();
-                JsonSerializerSettings settings = new JsonSerializerSettings();
-                settings.Converters.Add(new RideConverter(realmControl));
-                return JsonConvert.DeserializeObject<List<Ride>>(json, settings);
-            }
+            using StreamReader r = new StreamReader("resources/rides.json");
+            string json = r.ReadToEnd();
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.Converters.Add(new RideConverter(realmControl));
+            return JsonConvert.DeserializeObject<List<Ride>>(json, settings);
         }
 
         public bool AddVisitorToRide(Visitor visitor, Ride ride)

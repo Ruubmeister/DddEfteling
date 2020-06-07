@@ -14,10 +14,10 @@ namespace DddEfteling.Tests.Park.Entrances.Controls
         public void changeParkStatus_openAndClosePark_expectsStatusToBeChanged()
         {
             EntranceControl entranceControl = new EntranceControl();
-            entranceControl.openPark();
+            entranceControl.OpenPark();
             Assert.True(entranceControl.IsOpen());
 
-            entranceControl.closePark();
+            entranceControl.ClosePark();
             Assert.False(entranceControl.IsOpen());
         }
 

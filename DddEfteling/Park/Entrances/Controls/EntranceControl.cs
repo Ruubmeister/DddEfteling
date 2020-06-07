@@ -8,12 +8,12 @@ namespace DddEfteling.Park.Entrances.Controls
     {
         private EntranceStatus status;
 
-        public void openPark()
+        public void OpenPark()
         {
             this.status = EntranceStatus.Open;
         }
 
-        public void closePark()
+        public void ClosePark()
         {
             this.status = EntranceStatus.Closed;
         }
