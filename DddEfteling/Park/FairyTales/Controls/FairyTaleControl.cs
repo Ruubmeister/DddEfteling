@@ -28,13 +28,11 @@ namespace DddEfteling.Park.FairyTales.Controls
 
         private List<FairyTale> LoadFairyTales()
         {
-            using (StreamReader r = new StreamReader("resources/fairy-tales.json"))
-            {
-                string json = r.ReadToEnd();
-                JsonSerializerSettings settings = new JsonSerializerSettings();
-                settings.Converters.Add(new FairyTaleConverter(realmControl));
-                return JsonConvert.DeserializeObject<List<FairyTale>>(json, settings);
-            }
+            using StreamReader r = new StreamReader("resources/fairy-tales.json");
+            string json = r.ReadToEnd();
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.Converters.Add(new FairyTaleConverter(realmControl));
+            return JsonConvert.DeserializeObject<List<FairyTale>>(json, settings);
         }
 
         public FairyTale FindFairyTaleByName(string name)

@@ -23,11 +23,9 @@ namespace DddEfteling.Park.Realms.Controls
 
         private List<Realm> LoadRealms()
         {
-            using (StreamReader r = new StreamReader("resources/realms.json"))
-            {
-                string json = r.ReadToEnd();
-                return JsonConvert.DeserializeObject<List<Realm>>(json);
-            }
+            using StreamReader r = new StreamReader("resources/realms.json");
+            string json = r.ReadToEnd();
+            return JsonConvert.DeserializeObject<List<Realm>>(json);
         }
     }
 

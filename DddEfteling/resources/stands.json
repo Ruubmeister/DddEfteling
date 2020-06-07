@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Polles pannenkoeken",
+    "realm": "Fantasierijk",
+    "coordinates": {
+      "lat": 1.0,
+      "long": 1.2
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  }
+]
