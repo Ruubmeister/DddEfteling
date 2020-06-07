@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using DddEfteling.Park.Rides.Controls;
 using DddEfteling.Park.Entrances.Controls;
 using DddEfteling.Park.Employees.Controls;
+using DddEfteling.Park.FairyTales.Controls;
 
 namespace DddEfteling
 {
@@ -29,6 +30,7 @@ namespace DddEfteling
                 services.GetRequiredService<IRealmControl>();
                 services.GetRequiredService<IEntranceControl>();
                 services.GetRequiredService<IRideControl>();
+                services.GetRequiredService<IFairyTaleControl>();
                 services.GetRequiredService<IEmployeeControl>();
             }
 

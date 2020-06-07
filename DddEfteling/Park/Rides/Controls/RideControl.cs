@@ -63,5 +63,6 @@ namespace DddEfteling.Park.Rides.Controls
 
     interface IRideControl
     {
+        Ride FindRideByName(string name);
     }
 }
