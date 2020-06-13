@@ -1,4 +1,5 @@
-﻿using DddEfteling.Park.Realms.Controls;
+﻿using DddEfteling.Park.Common.Entities;
+using DddEfteling.Park.Realms.Controls;
 using DddEfteling.Park.Rides.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -32,9 +33,13 @@ namespace DddEfteling.Park.Rides.Controls
             TimeSpan duration = new TimeSpan(0, int.Parse(obj["duration"]["minutes"].ToString()), 
                 int.Parse(obj["duration"]["seconds"].ToString()));
 
+            Coordinates coordinates = new Coordinates(obj["coordinates"]["lat"].ToObject<double>(),
+                obj["coordinates"]["long"].ToObject<double>());
+
             return new Ride(
                 RideStatus.Closed,
                 realmControl.FindRealmByName(obj["realm"].ToString()),
+                coordinates,
                 obj["name"].ToString(),
                 int.Parse(obj["minimumAge"].ToString()),
                 double.Parse(obj["minimumLength"].ToString()),

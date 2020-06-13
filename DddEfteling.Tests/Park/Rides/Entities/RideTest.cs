@@ -1,4 +1,5 @@
-﻿using DddEfteling.Park.Realms.Entities;
+﻿using DddEfteling.Park.Common.Entities;
+using DddEfteling.Park.Realms.Entities;
 using DddEfteling.Park.Rides.Entities;
 using System;
 using Xunit;
@@ -11,7 +12,8 @@ namespace DddEfteling.Tests.Park.Rides.Entities
         public void Construct_CreateRide_ExpectRide()
         {
             Realm realm = new Realm("Test");
-            Ride ride = new Ride(RideStatus.Open, realm, "Rider", 8, 1.33, TimeSpan.FromSeconds(31), 22);
+            Coordinates coordinates = new Coordinates(1.22D, 45.44D);
+            Ride ride = new Ride(RideStatus.Open, realm, coordinates, "Rider", 8, 1.33, TimeSpan.FromSeconds(31), 22);
 
             Assert.Equal(RideStatus.Open, ride.Status);
             Assert.Equal(realm, ride.Realm);
@@ -19,6 +21,8 @@ namespace DddEfteling.Tests.Park.Rides.Entities
             Assert.Equal(8, ride.MinimumAge);
             Assert.Equal(1.33, ride.MinimumLength);
             Assert.Equal(31, ride.Duration.TotalSeconds);
+            Assert.Equal(1.22, ride.Coordinates.Latitude);
+            Assert.Equal(45.44, ride.Coordinates.Longitude);
             Assert.Equal(22, ride.MaxPersons);
         }
 
@@ -26,7 +30,8 @@ namespace DddEfteling.Tests.Park.Rides.Entities
         public void ToMaintenance_RideIsSetToMaintenanceStatus_ExpectMaintenanceStatus()
         {
             Realm realm = new Realm("Test");
-            Ride ride = new Ride(RideStatus.Open, realm, "Rider", 8, 1.33, TimeSpan.FromSeconds(31), 22);
+            Coordinates coordinates = new Coordinates(1.22D, 45.44D);
+            Ride ride = new Ride(RideStatus.Open, realm, coordinates, "Rider", 8, 1.33, TimeSpan.FromSeconds(31), 22);
 
             Assert.Equal(RideStatus.Open, ride.Status);
             ride.ToMaintenance();

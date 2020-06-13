@@ -1,11 +1,12 @@
+using DddEfteling.Park.Common.Control;
 using DddEfteling.Park.Employees.Controls;
 using DddEfteling.Park.Entrances.Controls;
 using DddEfteling.Park.FairyTales.Controls;
 using DddEfteling.Park.Realms.Controls;
 using DddEfteling.Park.Rides.Controls;
+using DddEfteling.Park.Stands.Controls;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -20,10 +21,13 @@ namespace DddEfteling
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IRealmControl, RealmControl>();
+            services.AddSingleton<INameService, NameService>();
             services.AddSingleton<IEntranceControl, EntranceControl>();
             services.AddSingleton<IRideControl, RideControl>();
             services.AddSingleton<IFairyTaleControl, FairyTaleControl>();
+            services.AddSingleton<IStandControl, StandControl>();
             services.AddSingleton<IEmployeeControl, EmployeeControl>();
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -33,15 +37,21 @@ namespace DddEfteling
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapRazorPages();
+                endpoints.MapControllers();
             });
         }
     }

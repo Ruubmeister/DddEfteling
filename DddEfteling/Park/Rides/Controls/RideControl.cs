@@ -1,6 +1,6 @@
 ﻿using DddEfteling.Park.Realms.Controls;
 using DddEfteling.Park.Rides.Entities;
-using DddEfteling.Visitors.Visitors.Entities;
+using DddEfteling.Visitors.Entities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -55,12 +55,19 @@ namespace DddEfteling.Park.Rides.Controls
             return rides.FirstOrDefault(ride => ride.Name.Equals(name));
         }
 
+        public List<Ride> All()
+        {
+            return rides;
+        }
+
         // Visitor in Ride plaatsen
         // Attractie starten, na voltooien visitors eruit halen en als klaar melden
     }
 
-    interface IRideControl
+    public interface IRideControl
     {
-        Ride FindRideByName(string name);
+        public Ride FindRideByName(string name);
+
+        public List<Ride> All();
     }
 }

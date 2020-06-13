@@ -1,4 +1,5 @@
-﻿using DddEfteling.Park.Stands.Entities;
+﻿using DddEfteling.Common.Controls;
+using DddEfteling.Park.Stands.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -19,7 +20,7 @@ namespace DddEfteling.Park.Stands.Controls
             return new Product(
                 obj["name"].ToString(),
                 float.Parse(obj["price"].ToString()),
-                (ProductType) Enum.Parse(typeof(ProductType), obj["type"].ToString())
+                (ProductType) Enum.Parse(typeof(ProductType), StringExtensions.FirstCharToUpper(obj["type"].ToString()))
                 );
         }
 
