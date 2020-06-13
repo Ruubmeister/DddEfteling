@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace DddEfteling.Park.Common.Entities
+﻿namespace DddEfteling.Park.Common.Entities
 {
     public struct Coordinates
     {
@@ -21,7 +16,7 @@ namespace DddEfteling.Park.Common.Entities
 
         public override string ToString()
         {
-            return string.Format("{0},{1}", Latitude, Longitude);
+            return string.Format("{0};{1}", Latitude, Longitude);
         }
     }
 }

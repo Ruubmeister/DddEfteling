@@ -1,4 +1,5 @@
-﻿using DddEfteling.Park.Realms.Controls;
+﻿using DddEfteling.Park.Common.Entities;
+using DddEfteling.Park.Realms.Controls;
 using DddEfteling.Park.Realms.Entities;
 using DddEfteling.Park.Rides.Controls;
 using DddEfteling.Park.Rides.Entities;
@@ -18,9 +19,10 @@ namespace DddEfteling.Tests.Park.Rides.Controls
         {
             string json = "[{\"status\": \"Closed\",\"name\": \"Carnaval Festival\",\"minimumAge\": \"0\"," +
                 "\"minimumLength\": \"0\",\"duration\": {\"minutes\": 8,\"seconds\": 0},\"maxPersons\": 200," +
-                "\"realm\": \"Reizenrijk\"},{\"status\": \"Closed\",\"name\": \"Python\",\"minimumAge\": \"0\"," +
+                "\"realm\": \"Reizenrijk\",\"coordinates\":{\"lat\":53.44,\"long\":5.443}}," +
+                "{\"status\": \"Closed\",\"name\": \"Python\",\"minimumAge\": \"0\"," +
                 "\"minimumLength\": \"0\",\"duration\": {\"minutes\": 8,\"seconds\": 0},\"maxPersons\": 200," +
-                "\"realm\": \"Reizenrijk\"}]";
+                "\"realm\": \"Reizenrijk\",\"coordinates\":{\"lat\":53.44,\"long\":5.443}}]";
 
             var mock = new Mock<IRealmControl>();
             Realm realm = new Realm("Reizenrijk");
@@ -38,7 +40,7 @@ namespace DddEfteling.Tests.Park.Rides.Controls
         {
             string json = "[{\"status\": \"Closed\",\"nam\": \"Carnaval Festival\",\"minimumAge\": \"0\"," +
                 "\"minimumLength\": \"0\",\"duration\": {\"minutes\": 8,\"seconds\": 0},\"maxPersons\": 200," +
-                "\"realm\": \"Reizenrijk\"}]";
+                "\"realm\": \"Reizenrijk\",\"coordinates\":{\"lat\":53.44,\"long\":5.443}}]";
             var mock = new Mock<IRealmControl>();
             Realm realm = new Realm("Reizenrijk");
             mock.Setup(r => r.FindRealmByName("Reizenrijk")).Returns(realm);
@@ -62,8 +64,9 @@ namespace DddEfteling.Tests.Park.Rides.Controls
         {
             var mock = new Mock<IRealmControl>();
             Realm realm = new Realm("Test realm");
+            Coordinates coordinates = new Coordinates(1.22D, 45.44D);
             RideConverter rideConverter = new RideConverter(mock.Object);
-            Ride ride = new Ride(RideStatus.Open, realm, "Rider", 8, 1.33, TimeSpan.FromSeconds(31), 22);
+            Ride ride = new Ride(RideStatus.Open, realm, coordinates, "Rider", 8, 1.33, TimeSpan.FromSeconds(31), 22);
             Assert.True(rideConverter.CanConvert(ride.GetType()));
         }
     }

@@ -31,10 +31,16 @@ namespace DddEfteling.Park.Stands.Controls
         {
             return this.stands.FirstOrDefault(stand => stand.Name.Equals(name));
         }
+
+        public List<Stand> All()
+        {
+            return stands;
+        }
     }
 
     public interface IStandControl
     {
-        Stand FindStandByName(string name);
+        public Stand FindStandByName(string name);
+        public List<Stand> All();
     }
 }

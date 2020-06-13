@@ -1,6 +1,6 @@
 ﻿using DddEfteling.Park.Common.Entities;
 using DddEfteling.Park.Realms.Entities;
-using DddEfteling.Visitors.Visitors.Entities;
+using DddEfteling.Visitors.Entities;
 using System;
 using System.Collections.Generic;
 
@@ -8,7 +8,7 @@ namespace DddEfteling.Park.Rides.Entities
 {
     public class Ride: Workspace
     {
-        public Ride(RideStatus status, Realm realm, String name, int minimumAge, double minimumLength, TimeSpan duration,
+        public Ride(RideStatus status, Realm realm, Coordinates coordinates, String name, int minimumAge, double minimumLength, TimeSpan duration,
             int maxPersons)
         {
             Status = status;
@@ -18,6 +18,7 @@ namespace DddEfteling.Park.Rides.Entities
             Duration = duration;
             MaxPersons = maxPersons;
             Realm = realm;
+            Coordinates = coordinates;
 
             VisitorsInLine = new HashSet<Visitor>();
             VisitorsInRide = new HashSet<Visitor>();
@@ -45,5 +46,7 @@ namespace DddEfteling.Park.Rides.Entities
         private HashSet<Visitor> VisitorsInLine { get; set; }
 
         private HashSet<Visitor> VisitorsInRide { get; set; }
+
+        public Coordinates Coordinates { get; }
     }
 }

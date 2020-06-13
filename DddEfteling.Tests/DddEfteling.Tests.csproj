@@ -26,7 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DddEfteling.Visitors\DddEfteling.Visitors.csproj" />
     <ProjectReference Include="..\DddEfteling\DddEfteling.Park.csproj" />
   </ItemGroup>
 

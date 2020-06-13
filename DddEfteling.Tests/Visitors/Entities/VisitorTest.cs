@@ -1,4 +1,4 @@
-﻿using DddEfteling.Visitors.Visitors.Entities;
+﻿using DddEfteling.Visitors.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -1,12 +1,13 @@
+using DddEfteling.Park.Employees.Controls;
+using DddEfteling.Park.Entrances.Controls;
+using DddEfteling.Park.FairyTales.Controls;
 using DddEfteling.Park.Realms.Controls;
+using DddEfteling.Park.Rides.Controls;
+using DddEfteling.Park.Stands.Controls;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using DddEfteling.Park.Rides.Controls;
-using DddEfteling.Park.Entrances.Controls;
-using DddEfteling.Park.Employees.Controls;
-using DddEfteling.Park.FairyTales.Controls;
 
 namespace DddEfteling
 {
@@ -31,7 +32,9 @@ namespace DddEfteling
                 services.GetRequiredService<IEntranceControl>();
                 services.GetRequiredService<IRideControl>();
                 services.GetRequiredService<IFairyTaleControl>();
+                services.GetRequiredService<IStandControl>();
                 services.GetRequiredService<IEmployeeControl>();
+
             }
 
             await host.RunAsync();

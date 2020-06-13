@@ -1,13 +1,10 @@
-﻿using DddEfteling.Park.FairyTales.Controls;
-using DddEfteling.Park.FairyTales.Entities;
+﻿using DddEfteling.Park.FairyTales.Entities;
 using DddEfteling.Park.Realms.Controls;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace DddEfteling.Park.FairyTales.Controls
 {
@@ -39,10 +36,17 @@ namespace DddEfteling.Park.FairyTales.Controls
         {
             return fairyTales.FirstOrDefault(tale => tale.Name.Equals(name));
         }
+
+        public List<FairyTale> All()
+        {
+            return fairyTales;
+        }
     }
 
-    interface IFairyTaleControl
+    public interface IFairyTaleControl
     {
-        FairyTale FindFairyTaleByName(string name);
+        public FairyTale FindFairyTaleByName(string name);
+
+        public List<FairyTale> All();
     }
 }
