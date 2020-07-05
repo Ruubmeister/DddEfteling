@@ -1,8 +1,8 @@
-﻿using DddEfteling.Park.Common.Entities;
-using DddEfteling.Park.Realms.Controls;
+﻿using DddEfteling.Park.Realms.Controls;
 using DddEfteling.Park.Realms.Entities;
 using DddEfteling.Park.Stands.Controls;
 using DddEfteling.Park.Stands.Entities;
+using Geolocation;
 using Moq;
 using Newtonsoft.Json;
 using System;
@@ -67,7 +67,7 @@ namespace DddEfteling.Tests.Park.Stands.Controls
             var mock = new Mock<IRealmControl>();
             Realm realm = new Realm("Test realm");
             StandConverter standConverter = new StandConverter(mock.Object);
-            Stand stand = new Stand("Name", realm, new Coordinates(), new List<Product>());
+            Stand stand = new Stand("Name", realm, new Coordinate(), new List<Product>());
             Assert.True(standConverter.CanConvert(stand.GetType()));
         }
     }

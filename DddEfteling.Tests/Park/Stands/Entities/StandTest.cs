@@ -1,8 +1,6 @@
-﻿using DddEfteling.Park.Common.Entities;
-using DddEfteling.Park.Realms.Entities;
-using DddEfteling.Park.Rides.Entities;
+﻿using DddEfteling.Park.Realms.Entities;
 using DddEfteling.Park.Stands.Entities;
-using System;
+using Geolocation;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -15,7 +13,7 @@ namespace DddEfteling.Tests.Park.Stands.Entities
         public void Construct_CreateStandWithoutProducts_ExpectStand()
         {
             Realm realm = new Realm("Test");
-            Coordinates coordinates = new Coordinates(1.2, 2.2);
+            Coordinate coordinates = new Coordinate(1.2, 2.2);
             Stand stand = new Stand("Stand 1", realm, coordinates, new List<Product>());
 
             Assert.Equal(realm, stand.Realm);
@@ -29,7 +27,7 @@ namespace DddEfteling.Tests.Park.Stands.Entities
         public void Construct_CreateStandWithProducts_ExpectStand()
         {
             Realm realm = new Realm("Test");
-            Coordinates coordinates = new Coordinates(1.2, 2.2);
+            Coordinate coordinates = new Coordinate(1.2, 2.2);
 
             List<Product> products = new List<Product>();
             products.Add(new Product("meal 1", 1.1F, ProductType.Meal));

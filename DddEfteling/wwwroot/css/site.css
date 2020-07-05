@@ -66,3 +66,11 @@ body {
   white-space: nowrap;
   line-height: 30px; /* Vertically center the text there */
 }
+
+.visible{
+    display:normal;
+}
+
+.invisible{
+    display:none;
+}

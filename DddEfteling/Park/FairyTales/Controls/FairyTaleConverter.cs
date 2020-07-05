@@ -1,6 +1,6 @@
-﻿using DddEfteling.Park.Common.Entities;
-using DddEfteling.Park.FairyTales.Entities;
+﻿using DddEfteling.Park.FairyTales.Entities;
 using DddEfteling.Park.Realms.Controls;
+using Geolocation;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -32,7 +32,7 @@ namespace DddEfteling.Park.FairyTales.Controls
 
             return new FairyTale(obj["name"].ToString(),
                 realmControl.FindRealmByName(obj["realm"].ToString()),
-                new Coordinates(
+                new Coordinate(
                     obj["coordinates"]["lat"].ToObject<double>(),
                     obj["coordinates"]["long"].ToObject<double>()
                     )

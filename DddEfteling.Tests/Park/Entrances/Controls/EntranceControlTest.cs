@@ -1,5 +1,7 @@
 ﻿using DddEfteling.Park.Entrances.Controls;
 using DddEfteling.Park.Entrances.Entities;
+using MediatR;
+using Moq;
 using NuGet.Frameworks;
 using System;
 using System.Collections.Generic;
@@ -10,10 +12,19 @@ namespace DddEfteling.Tests.Park.Entrances.Controls
 {
     public class EntranceControlTest
     {
+
+        IMediator mediator;
+
+        public EntranceControlTest()
+        {
+            Mock<IMediator> mediator = new Mock<IMediator>();
+            this.mediator = mediator.Object;
+        }
+
         [Fact]
         public void changeParkStatus_openAndClosePark_expectsStatusToBeChanged()
         {
-            EntranceControl entranceControl = new EntranceControl();
+            EntranceControl entranceControl = new EntranceControl(mediator);
             entranceControl.OpenPark();
             Assert.True(entranceControl.IsOpen());
 
@@ -24,7 +35,7 @@ namespace DddEfteling.Tests.Park.Entrances.Controls
         [Fact]
         public void sellTicket_ticketForFamily_expectsTicket()
         {
-            EntranceControl entranceControl = new EntranceControl();
+            EntranceControl entranceControl = new EntranceControl(mediator);
 
             Ticket ticket = entranceControl.SellTicket(TicketType.Family);
             Assert.NotNull(ticket);
@@ -35,7 +46,7 @@ namespace DddEfteling.Tests.Park.Entrances.Controls
         [Fact]
         public void sellTickets_differentTicketTypes_expectsTickets()
         {
-            EntranceControl entranceControl = new EntranceControl();
+            EntranceControl entranceControl = new EntranceControl(mediator);
 
             List<TicketType> ticketTypes = new List<TicketType>();
             ticketTypes.Add(TicketType.Adult);

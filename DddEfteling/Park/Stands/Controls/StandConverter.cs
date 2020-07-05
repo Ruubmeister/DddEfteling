@@ -1,6 +1,6 @@
-﻿using DddEfteling.Park.Common.Entities;
-using DddEfteling.Park.Realms.Controls;
+﻿using DddEfteling.Park.Realms.Controls;
 using DddEfteling.Park.Stands.Entities;
+using Geolocation;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -31,7 +31,7 @@ namespace DddEfteling.Park.Stands.Controls
             return new Stand(
                 obj["name"].ToString(),
                 realmControl.FindRealmByName(obj["realm"].ToString()),
-                new Coordinates(double.Parse(obj["coordinates"]["lat"].ToString()), double.Parse(obj["coordinates"]["long"].ToString())),
+                new Coordinate(double.Parse(obj["coordinates"]["lat"].ToString()), double.Parse(obj["coordinates"]["long"].ToString())),
                 products
                 );
         }

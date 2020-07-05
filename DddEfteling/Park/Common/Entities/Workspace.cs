@@ -18,16 +18,21 @@ namespace DddEfteling.Park.Common.Entities
 
         public Realm Realm { get; set; }
 
-        private readonly Dictionary<Skill, int> skillRequiredEmployeeMap = new Dictionary<Skill, int>();
+        protected readonly Dictionary<Skill, int> skillRequiredEmployeeMap = new Dictionary<Skill, int>();
 
         public void setEmployeeSkillRequirement(Skill skill, int requirement)
         {
-            this.skillRequiredEmployeeMap.Add(skill, requirement);
+            this.skillRequiredEmployeeMap[skill] = requirement;
         }
 
-        private Boolean isSkillUnderstaffed(List<Employee> rideEmployees, Skill skill)
+        public Boolean IsSkillUnderstaffed(List<Employee> rideEmployees, Skill skill)
         {
             return rideEmployees.Count(employee => employee.ActiveSkill.Equals(skill)) < skillRequiredEmployeeMap.GetValueOrDefault(skill);
+        }
+
+        public int requiredEmployeesForSkill(List<Employee> rideEmployees, Skill skill)
+        {
+            return skillRequiredEmployeeMap.GetValueOrDefault(skill) - rideEmployees.Count(employee => employee.ActiveSkill.Equals(skill));
         }
     }
 }

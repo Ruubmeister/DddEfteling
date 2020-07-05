@@ -3,6 +3,7 @@ using DddEfteling.Park.Realms.Controls;
 using DddEfteling.Park.Realms.Entities;
 using DddEfteling.Park.Rides.Controls;
 using DddEfteling.Park.Rides.Entities;
+using Geolocation;
 using Moq;
 using Newtonsoft.Json;
 using System;
@@ -64,7 +65,7 @@ namespace DddEfteling.Tests.Park.Rides.Controls
         {
             var mock = new Mock<IRealmControl>();
             Realm realm = new Realm("Test realm");
-            Coordinates coordinates = new Coordinates(1.22D, 45.44D);
+            Coordinate coordinates = new Coordinate(1.22D, 45.44D);
             RideConverter rideConverter = new RideConverter(mock.Object);
             Ride ride = new Ride(RideStatus.Open, realm, coordinates, "Rider", 8, 1.33, TimeSpan.FromSeconds(31), 22);
             Assert.True(rideConverter.CanConvert(ride.GetType()));

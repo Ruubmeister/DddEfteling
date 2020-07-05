@@ -1,6 +1,6 @@
-﻿using DddEfteling.Park.Common.Entities;
-using DddEfteling.Park.Realms.Entities;
+﻿using DddEfteling.Park.Realms.Entities;
 using DddEfteling.Park.Rides.Entities;
+using Geolocation;
 using System;
 using Xunit;
 
@@ -12,7 +12,7 @@ namespace DddEfteling.Tests.Park.Rides.Entities
         public void Construct_CreateRide_ExpectRide()
         {
             Realm realm = new Realm("Test");
-            Coordinates coordinates = new Coordinates(1.22D, 45.44D);
+            Coordinate coordinates = new Coordinate(1.22D, 45.44D);
             Ride ride = new Ride(RideStatus.Open, realm, coordinates, "Rider", 8, 1.33, TimeSpan.FromSeconds(31), 22);
 
             Assert.Equal(RideStatus.Open, ride.Status);
@@ -30,7 +30,7 @@ namespace DddEfteling.Tests.Park.Rides.Entities
         public void ToMaintenance_RideIsSetToMaintenanceStatus_ExpectMaintenanceStatus()
         {
             Realm realm = new Realm("Test");
-            Coordinates coordinates = new Coordinates(1.22D, 45.44D);
+            Coordinate coordinates = new Coordinate(1.22D, 45.44D);
             Ride ride = new Ride(RideStatus.Open, realm, coordinates, "Rider", 8, 1.33, TimeSpan.FromSeconds(31), 22);
 
             Assert.Equal(RideStatus.Open, ride.Status);

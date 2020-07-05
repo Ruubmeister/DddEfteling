@@ -3,5 +3,66 @@
 @{
     ViewData["Title"] = "Efteling map";
 }
+<div class="container-fluid" style="min-height:100%">
+    <div class="row" style="min-height:100%">
+        <div class="col-sm-9 map-col">
+            <div id="map" class="map"></div>
+        </div>
+        <div class="col-sm-3">
+            <h2>Park</h2>
+            <div class="park-statistics">
+                <h4>Park statistieken</h4>
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Bezoekers</th>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Medewerkers</th>
+                            <td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="ride-statistics invisible">
+                <h4>Attractie statistieken</h4>
+                <table class="table table-striped">
+                    <thead>
+                        <tr class="text-center">
+                            <th colspan="2">Bezoekers</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">In wachtrij</th>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">In attractie</th>
+                            <td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-    <div id="map" class="map"></div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr class="text-center">
+                            <th colspan="2">Medewerkers</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Controllers</th>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Hosts</th>
+                            <td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

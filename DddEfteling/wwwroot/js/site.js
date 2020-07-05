@@ -12,7 +12,16 @@ var map = new ol.Map({
     })
 });
 
+
+visitorVectorLayer = null;
+
+var rideStatsBar = $(".ride-statistics")
+var parkStatsBar = $(".park-statistics")
+
 $(document).ready(function () {
+
+    $(".map-col").height($("body").height() - $("footer").height());
+    map.updateSize();
 
     var rideIconStyle = new ol.style.Style({
         image: new ol.style.Icon({
@@ -54,6 +63,40 @@ $(document).ready(function () {
             "iconStyle": standIconStyle
         }]
 
+    setInterval(function () {
+        $.get("/api/visitors", function (data) {
+            var features = [];
+
+            $.each(data, function (k, visitor) {
+                var iconFeature = new ol.Feature({
+                    geometry: new ol.geom.Point(
+                        ol.proj.fromLonLat([visitor.currentLocation.longitude, visitor.currentLocation.latitude])
+                    ),
+                    name: visitor.Guid
+                });
+
+                features.push(iconFeature);
+            });
+
+            var vectorSource = new ol.source.Vector({
+                features: features
+            });
+            console.log(visitorVectorLayer);
+            if (visitorVectorLayer != null) {
+                map.removeLayer(visitorVectorLayer);
+            }
+
+            visitorVectorLayer = new ol.layer.Vector({
+                source: vectorSource
+            });
+
+            map.addLayer(visitorVectorLayer);
+        });
+    }, 1000);
+            
+    
+   
+
     $.each(iconSources, function (i, iconSource) {
         $.get(iconSource.url, function (data) {
 
@@ -80,6 +123,30 @@ $(document).ready(function () {
             });
 
             map.addLayer(vectorLayer);
+
+            map.on('click', function (evt) {
+                var feature = map.forEachFeatureAtPixel(evt.pixel,
+                    function (feature) {
+                        return feature;
+                    });
+                if (feature) {
+
+                    rideStatsBar.addClass("visible").removeClass("invisible");
+                    parkStatsBar.addClass("invisible").removeClass("visible");
+
+                    var coordinates = feature.getGeometry().getCoordinates();
+                    popup.setPosition(coordinates);
+                    $(element).popover({
+                        placement: 'top',
+                        html: true,
+                        content: feature.get('name')
+                    });
+                    $(element).popover('show');
+                } else {
+                    rideStatsBar.addClass("invisible").removeClass("visible");
+                    parkStatsBar.addClass("visible").removeClass("invisible");
+                }
+            });
         });
     });
 

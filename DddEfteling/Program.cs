@@ -4,9 +4,16 @@ using DddEfteling.Park.FairyTales.Controls;
 using DddEfteling.Park.Realms.Controls;
 using DddEfteling.Park.Rides.Controls;
 using DddEfteling.Park.Stands.Controls;
+using DddEfteling.Park.Visitors.Controls;
+using DddEfteling.Park.Visitors.Entities;
+using Geolocation;
+using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using System;
 using System.Threading.Tasks;
 
 namespace DddEfteling
@@ -29,11 +36,28 @@ namespace DddEfteling
                 var services = serviceScope.ServiceProvider;
 
                 services.GetRequiredService<IRealmControl>();
-                services.GetRequiredService<IEntranceControl>();
+                IEntranceControl entranceControl = services.GetRequiredService<IEntranceControl>();
                 services.GetRequiredService<IRideControl>();
                 services.GetRequiredService<IFairyTaleControl>();
                 services.GetRequiredService<IStandControl>();
                 services.GetRequiredService<IEmployeeControl>();
+                IVisitorControl visitorControl = services.GetRequiredService<IVisitorControl>();
+
+                Task.Run(async () =>
+               {
+                   Random random = new Random();
+                   int maxVisitors = 1000;
+                   int currentVisitors = 0;
+                   while (currentVisitors <= maxVisitors)
+                   {
+                       int newVisitors = random.Next(10, 20);
+
+                       visitorControl.AddVisitors(newVisitors);
+                       currentVisitors += newVisitors;
+                       Task.Delay(1000).Wait();
+                   }
+               });
+                
 
             }
 

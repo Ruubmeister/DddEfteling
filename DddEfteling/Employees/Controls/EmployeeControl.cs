@@ -1,6 +1,7 @@
 ﻿using DddEfteling.Park.Common.Control;
 using DddEfteling.Park.Common.Entities;
 using DddEfteling.Park.Employees.Entities;
+using DddEfteling.Park.Rides.Entities;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -57,6 +58,11 @@ namespace DddEfteling.Park.Employees.Controls
         {
             return Employees.FirstOrDefault(employee => employee.FirstName == firstName && employee.LastName == lastName);
         }
+
+        public List<Employee> GetEmployees(Ride ride)
+        {
+            return Employees.Where(employee => employee.ActiveWorkspace.Equals(ride)).ToList();
+        }
     }
 
     public interface IEmployeeControl
@@ -64,5 +70,7 @@ namespace DddEfteling.Park.Employees.Controls
         public Employee HireEmployee(String firstName, String lastName, Skill skill);
         public void AssignEmployee(Workspace workspace, Skill skill);
         public Employee FindEmployeeByName(String firstName, String lastName);
+
+        public List<Employee> GetEmployees(Ride ride);
     }
 }

@@ -1,8 +1,10 @@
 ﻿using Castle.Core.Logging;
+using DddEfteling.Park.Employees.Controls;
 using DddEfteling.Park.Realms.Controls;
 using DddEfteling.Park.Realms.Entities;
 using DddEfteling.Park.Rides.Controls;
 using DddEfteling.Park.Rides.Entities;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
@@ -21,7 +23,9 @@ namespace DddEfteling.Tests.Park.Rides.Controls
         {
             IRealmControl realmControl = new RealmControl();
             ILogger<RideControl> logger = Mock.Of<ILogger<RideControl>>();
-            this.rideControl = new RideControl(realmControl, logger);
+            IMediator mediator = new Mock<IMediator>().Object;
+            IEmployeeControl employeeControl = new Mock<IEmployeeControl>().Object;
+            this.rideControl = new RideControl(realmControl, logger, employeeControl, mediator);
         }
 
         [Fact]
