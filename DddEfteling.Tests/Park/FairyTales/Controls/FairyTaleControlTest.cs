@@ -39,5 +39,13 @@ namespace DddEfteling.Tests.Park.FairyTales.Controls
             Assert.NotEmpty(fairyTales);
             Assert.Single(fairyTales.Where(fairytale => fairytale.Name.Equals("Sneeuwwitje")));
         }
+
+        [Fact]
+        public void Random_GetRandomTale_ExpectRandomTale()
+        {
+            FairyTale tale = fairyTaleControl.GetRandom();
+            Assert.NotNull(tale);
+            Assert.Contains(tale, fairyTaleControl.All());
+        }
     }
 }
