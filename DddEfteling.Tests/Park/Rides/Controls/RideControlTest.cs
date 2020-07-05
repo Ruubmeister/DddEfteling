@@ -1,5 +1,6 @@
 ﻿using Castle.Core.Logging;
 using DddEfteling.Park.Employees.Controls;
+using DddEfteling.Park.Employees.Entities;
 using DddEfteling.Park.Realms.Controls;
 using DddEfteling.Park.Realms.Entities;
 using DddEfteling.Park.Rides.Controls;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace DddEfteling.Tests.Park.Rides.Controls
@@ -24,8 +26,13 @@ namespace DddEfteling.Tests.Park.Rides.Controls
             IRealmControl realmControl = new RealmControl();
             ILogger<RideControl> logger = Mock.Of<ILogger<RideControl>>();
             IMediator mediator = new Mock<IMediator>().Object;
-            IEmployeeControl employeeControl = new Mock<IEmployeeControl>().Object;
-            this.rideControl = new RideControl(realmControl, logger, employeeControl, mediator);
+            Mock<IEmployeeControl> employeeControl = new Mock<IEmployeeControl>();
+
+            employeeControl.Setup(
+                employeeControl => employeeControl.GetEmployees(It.IsAny<Ride>())
+                ).Returns(new List<Employee>());
+
+            this.rideControl = new RideControl(realmControl, logger, employeeControl.Object, mediator);
         }
 
         [Fact]
@@ -52,6 +59,32 @@ namespace DddEfteling.Tests.Park.Rides.Controls
             List<Ride> rides = rideControl.All();
             Assert.NotEmpty(rides);
             Assert.Single(rides.Where(ride => ride.Name.Equals("Python")));
+        }
+
+        [Fact]
+        public void OpenAndCloseRides_OpenAllRidesAndCloseAllRides_ExpectAllRidesToBeOpen()
+        {
+
+            rideControl.CloseRides();
+            Task.Delay(1000).Wait();
+            Assert.Empty(rideControl.All().Where(ride => ride.Status.Equals(RideStatus.Open)));
+            rideControl.OpenRides();
+            Task.Delay(1000).Wait();
+            List<Ride> rides = rideControl.All().Where(ride => ride.Status.Equals(RideStatus.Closed)).ToList();
+            Assert.Empty((rideControl.All()).Where(ride => ride.Status.Equals(RideStatus.Closed)).ToList());
+            Assert.NotEmpty(rideControl.All().Where(ride => ride.Status.Equals(RideStatus.Open)));
+            rideControl.CloseRides();
+            Task.Delay(1000).Wait();
+            Assert.Empty(rideControl.All().Where(ride => ride.Status.Equals(RideStatus.Open)));
+            Assert.NotEmpty(rideControl.All().Where(ride => ride.Status.Equals(RideStatus.Closed)));
+        }
+
+        [Fact]
+        public void Random_GetRandomRide_ExpectRandomRide()
+        {
+            Ride ride = rideControl.GetRandom();
+            Assert.NotNull(ride);
+            Assert.Contains(ride, rideControl.All());
         }
     }
 }
