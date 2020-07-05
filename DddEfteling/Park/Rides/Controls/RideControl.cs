@@ -113,9 +113,6 @@ namespace DddEfteling.Park.Rides.Controls
         {
             return this.rides.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
         }
-
-        // Visitor in Ride plaatsen
-        // Attractie starten, na voltooien visitors eruit halen en als klaar melden
     }
 
     public interface IRideControl
