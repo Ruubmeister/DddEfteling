@@ -1,4 +1,5 @@
 ﻿using DddEfteling.Park.Entrances.Entities;
+using MediatR;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,15 +8,22 @@ namespace DddEfteling.Park.Entrances.Controls
     public class EntranceControl: IEntranceControl
     {
         private EntranceStatus status;
-
-        public void OpenPark()
+        private IMediator mediator;
+        public EntranceControl(IMediator mediator)
         {
-            this.status = EntranceStatus.Open;
+            this.mediator = mediator;
         }
 
-        public void ClosePark()
+        public async void OpenPark()
+        {
+            this.status = EntranceStatus.Open;
+            await mediator.Publish(new EntranceEvent(Common.Entities.EventType.StatusChanged));
+        }
+
+        public async void ClosePark()
         {
             this.status = EntranceStatus.Closed;
+            await mediator.Publish(new EntranceEvent(Common.Entities.EventType.StatusChanged));
         }
 
         public bool IsOpen()
@@ -34,6 +42,11 @@ namespace DddEfteling.Park.Entrances.Controls
         }
     }
 
-    interface IEntranceControl { 
+    public interface IEntranceControl {
+
+        void OpenPark();
+        void ClosePark();
+
+        bool IsOpen();
     }
 }

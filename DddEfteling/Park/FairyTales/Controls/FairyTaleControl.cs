@@ -2,7 +2,9 @@
 using DddEfteling.Park.Realms.Controls;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 
@@ -17,8 +19,10 @@ namespace DddEfteling.Park.FairyTales.Controls
         public FairyTaleControl(IRealmControl realmControl, ILogger<FairyTaleControl> logger)
         {
             this.realmControl = realmControl;
-            this.fairyTales = LoadFairyTales();
+            fairyTales = LoadFairyTales();
             this.logger = logger;
+
+            calculateFairyTaleDistances();
 
             this.logger.LogInformation($"Loaded fairy tales count: {fairyTales.Count}");
         }
@@ -41,12 +45,32 @@ namespace DddEfteling.Park.FairyTales.Controls
         {
             return fairyTales;
         }
+
+        private void calculateFairyTaleDistances()
+        {
+            foreach (FairyTale tale in fairyTales)
+            {
+                Dictionary<string, double> distanceToTales = new Dictionary<string, double>();
+                foreach (FairyTale toTale in fairyTales)
+                {
+                    distanceToTales[tale.Name] = tale.GetDistanceTo(toTale);
+                }
+                tale.DistanceToOthers = distanceToTales.OrderBy(item => item.Value).ToImmutableSortedDictionary();
+            }
+        }
+        public FairyTale GetRandom()
+        {
+            return this.fairyTales.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
+        }
     }
+
 
     public interface IFairyTaleControl
     {
         public FairyTale FindFairyTaleByName(string name);
 
         public List<FairyTale> All();
+
+        public FairyTale GetRandom();
     }
 }

@@ -1,8 +1,6 @@
-﻿using DddEfteling.Park.Common.Entities;
-using DddEfteling.Park.FairyTales.Entities;
+﻿using DddEfteling.Park.FairyTales.Entities;
 using DddEfteling.Park.Realms.Entities;
-using DddEfteling.Park.Rides.Entities;
-using System;
+using Geolocation;
 using Xunit;
 
 namespace DddEfteling.Tests.Park.FairyTales.Entities
@@ -13,7 +11,7 @@ namespace DddEfteling.Tests.Park.FairyTales.Entities
         public void Construct_CreateFairyTale_ExpectFairyTale()
         {
             Realm realm = new Realm("Test");
-            FairyTale tale = new FairyTale("Sneeuwwitje", realm, new Coordinates(1.88, 2.77));
+            FairyTale tale = new FairyTale("Sneeuwwitje", realm, new Coordinate(1.88, 2.77));
 
             Assert.Equal(realm, tale.Realm);
             Assert.Equal( "Sneeuwwitje", tale.Name);

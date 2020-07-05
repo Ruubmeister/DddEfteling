@@ -1,6 +1,6 @@
-﻿using DddEfteling.Park.Common.Entities;
-using DddEfteling.Park.Realms.Controls;
+﻿using DddEfteling.Park.Realms.Controls;
 using DddEfteling.Park.Rides.Entities;
+using Geolocation;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -33,7 +33,7 @@ namespace DddEfteling.Park.Rides.Controls
             TimeSpan duration = new TimeSpan(0, int.Parse(obj["duration"]["minutes"].ToString()), 
                 int.Parse(obj["duration"]["seconds"].ToString()));
 
-            Coordinates coordinates = new Coordinates(obj["coordinates"]["lat"].ToObject<double>(),
+            Coordinate coordinates = new Coordinate(obj["coordinates"]["lat"].ToObject<double>(),
                 obj["coordinates"]["long"].ToObject<double>());
 
             return new Ride(

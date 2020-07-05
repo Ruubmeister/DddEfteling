@@ -1,9 +1,8 @@
-﻿using DddEfteling.Park.Common.Entities;
-using DddEfteling.Park.FairyTales.Controls;
+﻿using DddEfteling.Park.FairyTales.Controls;
 using DddEfteling.Park.FairyTales.Entities;
 using DddEfteling.Park.Realms.Controls;
 using DddEfteling.Park.Realms.Entities;
-using DddEfteling.Tests.Park.FairyTales.Entities;
+using Geolocation;
 using Moq;
 using Newtonsoft.Json;
 using System;
@@ -60,7 +59,7 @@ namespace DddEfteling.Tests.Park.FairyTales.Controls
             var mock = new Mock<IRealmControl>();
             Realm realm = new Realm("Test realm");
             FairyTaleConverter fairyTaleConverter = new FairyTaleConverter(mock.Object);
-            FairyTale tale = new FairyTale("Sneeuwwitje", realm, new Coordinates(1.2, 2.4));
+            FairyTale tale = new FairyTale("Sneeuwwitje", realm, new Coordinate(1.2, 2.4));
             Assert.True(fairyTaleConverter.CanConvert(tale.GetType()));
         }
     }

@@ -1,7 +1,9 @@
-﻿using DddEfteling.Park.Realms.Controls;
+﻿using DddEfteling.Park.Employees.Controls;
+using DddEfteling.Park.Realms.Controls;
 using DddEfteling.Park.Rides.Boundary;
 using DddEfteling.Park.Rides.Controls;
 using DddEfteling.Park.Rides.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -14,12 +16,17 @@ namespace DddEfteling.Tests.Park.Rides.Boundaries
     {
         IRideControl rideControl;
         RideBoundary rideBoundary;
+        IMediator mediator;
+        IEmployeeControl employeeControl;
+
         public FairyTaleBoundaryTest()
         {
             IRealmControl realmControl = new RealmControl();
             ILogger<RideControl> logger = Mock.Of<ILogger<RideControl>>();
-            this.rideControl = new RideControl(realmControl, logger);
+            this.rideControl = new RideControl(realmControl, logger, employeeControl, mediator);
             this.rideBoundary = new RideBoundary(rideControl);
+            this.mediator = new Mock<IMediator>().Object;
+            this.employeeControl = new Mock<IEmployeeControl>().Object;
         }
 
         [Fact]

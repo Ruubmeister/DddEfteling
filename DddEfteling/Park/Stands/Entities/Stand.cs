@@ -1,5 +1,5 @@
-﻿using DddEfteling.Park.Common.Entities;
-using DddEfteling.Park.Realms.Entities;
+﻿using DddEfteling.Park.Realms.Entities;
+using Geolocation;
 using System.Collections.Generic;
 
 namespace DddEfteling.Park.Stands.Entities
@@ -7,7 +7,7 @@ namespace DddEfteling.Park.Stands.Entities
     public class Stand
     {
 
-        public Stand(string name, Realm realm, Coordinates coordinates, List<Product> products)
+        public Stand(string name, Realm realm, Coordinate coordinates, List<Product> products)
         {
             Name = name;
             Realm = realm;
@@ -24,6 +24,6 @@ namespace DddEfteling.Park.Stands.Entities
 
         public Realm Realm { get; }
 
-        public Coordinates Coordinates { get; }
+        public Coordinate Coordinates { get; }
     }
 }
