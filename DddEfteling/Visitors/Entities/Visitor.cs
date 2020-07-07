@@ -25,6 +25,8 @@ namespace DddEfteling.Park.Visitors.Entities
         [JsonIgnore]
         public Dictionary<DateTime, ILocation> VisitedLocations { get; } = new Dictionary<DateTime, ILocation>();
 
+        public Visitor() { }
+
         public Visitor(DateTime dateOfBirth, double length, Coordinate startLocation, Random random, IMediator mediator,
             IOptions<VisitorSettings> visitorSettings)
         {
