@@ -52,6 +52,8 @@ namespace DddEfteling.Park.Employees.Controls
                 .FirstOrDefault(employee => employee.ActiveWorkspace == null && employee.Skills.Contains(skill));
 
             employee.GoToWork(workspace, skill);
+
+            logger.LogInformation($"Employee {employee.FirstName} {employee.LastName} assigned to workspace");
         }
 
         public Employee FindEmployeeByName(String firstName, String lastName)

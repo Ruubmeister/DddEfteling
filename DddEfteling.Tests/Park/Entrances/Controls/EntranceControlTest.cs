@@ -1,6 +1,8 @@
-﻿using DddEfteling.Park.Entrances.Controls;
+﻿using Castle.Core.Logging;
+using DddEfteling.Park.Entrances.Controls;
 using DddEfteling.Park.Entrances.Entities;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NuGet.Frameworks;
 using System;
@@ -14,6 +16,7 @@ namespace DddEfteling.Tests.Park.Entrances.Controls
     {
 
         IMediator mediator;
+        ILogger<IEntranceControl> logger = new Mock<ILogger<IEntranceControl>>().Object;
 
         public EntranceControlTest()
         {
@@ -24,7 +27,7 @@ namespace DddEfteling.Tests.Park.Entrances.Controls
         [Fact]
         public void changeParkStatus_openAndClosePark_expectsStatusToBeChanged()
         {
-            EntranceControl entranceControl = new EntranceControl(mediator);
+            EntranceControl entranceControl = new EntranceControl(mediator, logger);
             entranceControl.OpenPark();
             Assert.True(entranceControl.IsOpen());
 
@@ -35,7 +38,7 @@ namespace DddEfteling.Tests.Park.Entrances.Controls
         [Fact]
         public void sellTicket_ticketForFamily_expectsTicket()
         {
-            EntranceControl entranceControl = new EntranceControl(mediator);
+            EntranceControl entranceControl = new EntranceControl(mediator, logger);
 
             Ticket ticket = entranceControl.SellTicket(TicketType.Family);
             Assert.NotNull(ticket);
@@ -46,7 +49,7 @@ namespace DddEfteling.Tests.Park.Entrances.Controls
         [Fact]
         public void sellTickets_differentTicketTypes_expectsTickets()
         {
-            EntranceControl entranceControl = new EntranceControl(mediator);
+            EntranceControl entranceControl = new EntranceControl(mediator, logger);
 
             List<TicketType> ticketTypes = new List<TicketType>();
             ticketTypes.Add(TicketType.Adult);

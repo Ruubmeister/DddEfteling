@@ -1,6 +1,4 @@
 ﻿using DddEfteling.Park.Common.Entities;
-using MediatR;
-using System;
 
 namespace DddEfteling.Park.Entrances.Entities
 {

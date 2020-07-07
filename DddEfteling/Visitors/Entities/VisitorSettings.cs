@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace DddEfteling.Park.Visitors.Entities
+﻿namespace DddEfteling.Park.Visitors.Entities
 {
     public class VisitorSettings
     {

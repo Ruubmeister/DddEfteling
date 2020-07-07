@@ -1,11 +1,9 @@
 ﻿using Geolocation;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
-using System.Diagnostics;
 
 namespace DddEfteling.Common.Controls
 {
-    public class CoordinateExtensions
+    public static class CoordinateExtensions
     {
         private static double radialNumber = Math.PI / 180;
         public static bool IsInRange(Coordinate from, Coordinate to, Double distance)

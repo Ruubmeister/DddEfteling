@@ -5,7 +5,6 @@ using DddEfteling.Park.Employees.Entities;
 using DddEfteling.Park.Realms.Controls;
 using DddEfteling.Park.Rides.Entities;
 using MediatR;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -13,7 +12,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace DddEfteling.Park.Rides.Controls
@@ -50,6 +48,7 @@ namespace DddEfteling.Park.Rides.Controls
         public void ToMaintenance(Ride ride)
         {
             ride.ToMaintenance();
+            logger.LogInformation("Ride in maintenance");
         }
 
         public Ride FindRideByName(string name)
@@ -68,6 +67,7 @@ namespace DddEfteling.Park.Rides.Controls
                 foreach (Ride ride in rides.Where(ride => ride.Status.Equals(RideStatus.Closed)))
                 {
                     ride.ToOpen();
+                    logger.LogInformation($"Ride {ride.Name} opened");
                     this.checkRequiredEmployees(ride);
                 }
             });
@@ -78,6 +78,7 @@ namespace DddEfteling.Park.Rides.Controls
             await Task.Run(() => {
                 foreach (Ride ride in rides.Where(ride => ride.Status.Equals(RideStatus.Open)))
                 {
+                    logger.LogInformation($"Ride {ride.Name} closed");
                     ride.ToClosed();
                     // Send employees home
                 }
@@ -88,9 +89,11 @@ namespace DddEfteling.Park.Rides.Controls
         {
             foreach (Skill skill in EnumExtensions.GetValues<Skill>())
             {
+                logger.LogDebug($"For ride {ride.Name} and skill {skill} checking if staff is needed");
                 List<Employee> employees = employeeControl.GetEmployees(ride);
                 if(ride.IsSkillUnderstaffed(employees, skill))
                 {
+                    logger.LogDebug($"Requesting staff for ride {ride.Name} and skill {skill}");
                     this.mediator.Send(new RideEvent(EventType.RequestEmployee, ride.Name, skill));
                 }
             }
@@ -104,9 +107,11 @@ namespace DddEfteling.Park.Rides.Controls
                 foreach(Ride toRide in rides)
                 {
                     distanceToRide[ride.Name] = ride.GetDistanceTo(toRide);
+                    logger.LogDebug($"Calculated distance from {ride.Name} to {toRide.Name}");
                 }
                 ride.DistanceToOthers = distanceToRide.OrderBy(item => item.Value).ToImmutableSortedDictionary();
             }
+            logger.LogDebug($"Ride distances calculated");
         }
 
         public Ride GetRandom()

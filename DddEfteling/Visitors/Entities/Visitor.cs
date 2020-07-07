@@ -5,7 +5,6 @@ using DddEfteling.Park.Rides.Entities;
 using DddEfteling.Visitors.Entities;
 using Geolocation;
 using MediatR;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -17,10 +16,10 @@ namespace DddEfteling.Park.Visitors.Entities
 {
     public class Visitor
     {
-        private Random random;
-        private VisitorSettings visitorSettings;
-        private IMediator mediator;
-        private VisitorLocationSelector locationSelector;
+        private readonly Random random;
+        private readonly VisitorSettings visitorSettings;
+        private readonly IMediator mediator;
+        private readonly VisitorLocationSelector locationSelector;
 
         [JsonIgnore]
         public Dictionary<DateTime, ILocation> VisitedLocations { get; } = new Dictionary<DateTime, ILocation>();
