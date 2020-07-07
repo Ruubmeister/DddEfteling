@@ -1,5 +1,4 @@
-﻿using DddEfteling.Common.Controls;
-using DddEfteling.Park.Common.Entities;
+﻿using DddEfteling.Park.Common.Entities;
 using DddEfteling.Park.Realms.Entities;
 using DddEfteling.Park.Visitors.Entities;
 using Geolocation;

@@ -5,14 +5,9 @@ using DddEfteling.Park.Realms.Controls;
 using DddEfteling.Park.Rides.Controls;
 using DddEfteling.Park.Stands.Controls;
 using DddEfteling.Park.Visitors.Controls;
-using DddEfteling.Park.Visitors.Entities;
-using Geolocation;
-using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 

@@ -11,9 +11,9 @@ namespace DddEfteling.Park.Rides.Boundary
 {
     public class RideEventHandler: INotificationHandler<EntranceEvent>
     {
-        ILogger<RideEventHandler> logger;
-        IEntranceControl entranceControl;
-        IRideControl rideControl;
+        private readonly ILogger<RideEventHandler> logger;
+        private readonly IEntranceControl entranceControl;
+        private readonly IRideControl rideControl;
 
         public RideEventHandler(ILogger<RideEventHandler> logger, IEntranceControl entranceControl,
             IRideControl rideControl)
@@ -23,7 +23,7 @@ namespace DddEfteling.Park.Rides.Boundary
             this.rideControl = rideControl;
         }
 
-        public Task Handle(EntranceEvent notification, CancellationToken token)
+        public Task Handle(EntranceEvent notification, CancellationToken cancellationToken)
         {
             if (notification.Type.Equals(EventType.StatusChanged))
             {

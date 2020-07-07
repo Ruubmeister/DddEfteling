@@ -2,15 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DddEfteling.Visitors.Entities
 {
     public class VisitorLocationSelector
     {
-        Random random;
+        readonly Random random;
 
-        private Dictionary<LocationType, int> locationNumbers = new Dictionary<LocationType, int>()
+        private readonly Dictionary<LocationType, int> locationNumbers = new Dictionary<LocationType, int>()
         {
             {LocationType.FAIRYTALE, 30 },
             {LocationType.RIDE, 60 },

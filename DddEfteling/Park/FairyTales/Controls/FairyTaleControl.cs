@@ -54,9 +54,11 @@ namespace DddEfteling.Park.FairyTales.Controls
                 foreach (FairyTale toTale in fairyTales)
                 {
                     distanceToTales[tale.Name] = tale.GetDistanceTo(toTale);
+                    logger.LogDebug($"Calculated distance from {tale.Name} to {toTale.Name}");
                 }
                 tale.DistanceToOthers = distanceToTales.OrderBy(item => item.Value).ToImmutableSortedDictionary();
             }
+            logger.LogDebug("Calculated distance to all fairy tales");
         }
         public FairyTale GetRandom()
         {
