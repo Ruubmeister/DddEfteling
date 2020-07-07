@@ -1,5 +1,7 @@
 ﻿using Geolocation;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
+using System.Diagnostics;
 
 namespace DddEfteling.Common.Controls
 {
@@ -17,8 +19,7 @@ namespace DddEfteling.Common.Controls
 
             double angle = GetRelativeBearingToClosestDirection(bearing);
 
-            double latitudeFactor = Math.Sin(angle* radialNumber);
-            double longitudeFactor = Math.Sin((90.0 - angle) * radialNumber);
+            (double latitudeFactor, double longitudeFactor) = CorrectionFactors(angle, bearing);
 
             CoordinateBoundaries boundaries = new CoordinateBoundaries(from, distance, DistanceUnit.Meters);
 
@@ -29,6 +30,20 @@ namespace DddEfteling.Common.Controls
             double newLatitude = from.Latitude + (maxLatitude - from.Latitude) * latitudeFactor;
 
             return new Coordinate(newLatitude, newLongitude);
+        }
+
+        private static (double latitudeFactor, double longitudeFactor) CorrectionFactors(double angle, double bearing)
+        {
+
+            double factor1 = Math.Sin(angle * radialNumber);
+            double factor2 = Math.Sin((90.0 - angle) * radialNumber);
+
+            if(Math.Floor(bearing/90) % 2 == 0)
+            {
+                return (latitudeFactor: factor1, longitudeFactor: factor2);
+            }
+
+            return (latitudeFactor: factor2, longitudeFactor: factor1);
         }
 
         public static double GetRelativeBearingToClosestDirection(double absoluteBearing)
