@@ -11,6 +11,9 @@ namespace DddEfteling.Park.Rides.Entities
 {
     public class Ride: Workspace, ILocation
     {
+
+        public Ride() { }
+
         public Ride(RideStatus status, Realm realm, Coordinate coordinates, String name, int minimumAge, double minimumLength, TimeSpan duration,
             int maxPersons)
         {

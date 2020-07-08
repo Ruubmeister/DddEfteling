@@ -1,4 +1,5 @@
 ﻿using DddEfteling.Park.Employees.Entities;
+using DddEfteling.Park.Rides.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,6 +21,23 @@ namespace DddEfteling.Tests.Park.Employees.Entities
             Assert.True(employee.ActiveWorkspace == null);
             Assert.True(employee.ActiveSkill == null);
             Assert.Equal(new List<Skill>() { Skill.Engineer }, employee.Skills);
+        }
+
+        [Fact]
+
+        public void GoToWorkAndStop_GoToRideAndStop_ExpectRide()
+        {
+            Ride ride = new Ride();
+            Employee employee = new Employee("Jan", "Jansen", new List<Skill>() { Skill.Engineer });
+
+            employee.GoToWork(ride, Skill.Engineer);
+            Assert.Equal(Skill.Engineer, employee.ActiveSkill );
+            Assert.Equal(ride, employee.ActiveWorkspace);
+
+            employee.StopWork();
+            Assert.Null(employee.ActiveSkill);
+            Assert.Null(employee.ActiveWorkspace);
+
         }
     }
 }
