@@ -8,6 +8,9 @@ namespace DddEfteling.Park.FairyTales.Entities
 {
     public class FairyTale : ILocation
     {
+
+        public FairyTale() { }
+
         public FairyTale(String name, Realm realm, Coordinate coordinates)
         {
             this.Name = name;

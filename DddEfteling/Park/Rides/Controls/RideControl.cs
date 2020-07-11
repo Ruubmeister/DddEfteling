@@ -24,6 +24,8 @@ namespace DddEfteling.Park.Rides.Controls
         private readonly IEmployeeControl employeeControl;
         private readonly IMediator mediator;
 
+        public RideControl() { }
+
         public RideControl(IRealmControl realmControl, ILogger<RideControl> logger, IEmployeeControl employeeControl, IMediator mediator)
         {
             this.realmControl = realmControl;

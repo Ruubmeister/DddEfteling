@@ -1,4 +1,5 @@
 ﻿
+using DddEfteling.Park.FairyTales.Entities;
 using DddEfteling.Park.Visitors.Entities;
 using Geolocation;
 using MediatR;
@@ -31,6 +32,29 @@ namespace DddEfteling.Tests.Visitors.Entities
             Assert.Equal(dateOfBirth, visitor.DateOfBirth );
             Assert.False(visitor.Guid == Guid.Empty);
             Assert.Equal(1.73, visitor.Length);
+        }
+
+        [Fact]
+        public void WatchFairyTale_LetVisitorWatchFairyTale_ExpectTookTime()
+        {
+            DateTime start = DateTime.Now;
+            Mock<IOptions<VisitorSettings>> settingsMock = new Mock<IOptions<VisitorSettings>>();
+            VisitorSettings visitorSettings = new VisitorSettings();
+            visitorSettings.FairyTaleMinVisitingSeconds = 3;
+            visitorSettings.FairyTaleMaxVisitingSeconds = 5;
+            settingsMock.Setup(setting => setting.Value).Returns(visitorSettings);
+
+            Visitor visitor = new Visitor(start, 1.73, startCoordinate, random, mediator, settingsMock.Object);
+
+            visitor.WatchFairyTale(new FairyTale());
+            DateTime end = DateTime.Now;
+
+            TimeSpan duration = end - start;
+
+            Assert.True(duration.TotalSeconds >= 3);
+
+            Assert.True(duration.TotalSeconds <= 5);
+
         }
     }
 }

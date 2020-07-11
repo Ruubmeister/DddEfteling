@@ -41,7 +41,7 @@ namespace DddEfteling
                 Task.Run(async () =>
                {
                    Random random = new Random();
-                   int maxVisitors = 1000;
+                   int maxVisitors = 200;
                    int currentVisitors = 0;
                    while (currentVisitors <= maxVisitors)
                    {
