@@ -9,7 +9,7 @@ namespace DddEfteling.Visitors.Entities
     {
         readonly Random random;
 
-        private readonly Dictionary<LocationType, int> locationNumbers = new Dictionary<LocationType, int>()
+        private Dictionary<LocationType, int> locationNumbers = new Dictionary<LocationType, int>()
         {
             {LocationType.FAIRYTALE, 30 },
             {LocationType.RIDE, 60 },
@@ -43,7 +43,7 @@ namespace DddEfteling.Visitors.Entities
                 this.locationNumbers[type] = 0;
             }
 
-            foreach (KeyValuePair<LocationType, int> entry in locationNumbers.Where(entry => !entry.Key.Equals(type)))
+            foreach (KeyValuePair<LocationType, int> entry in locationNumbers.Where(entry => !entry.Key.Equals(type)).ToList())
             {
                 int newValue = entry.Value + (reducer / 2);
                 locationNumbers[entry.Key] = newValue;

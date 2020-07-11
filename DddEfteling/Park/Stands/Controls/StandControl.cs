@@ -13,6 +13,8 @@ namespace DddEfteling.Park.Stands.Controls
 
         private readonly IRealmControl realmControl;
 
+        public StandControl() { }
+        
         public StandControl (IRealmControl realmControl) {
             this.realmControl = realmControl;
             this.stands = this.LoadStands();

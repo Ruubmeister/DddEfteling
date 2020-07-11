@@ -16,6 +16,8 @@ namespace DddEfteling.Park.FairyTales.Controls
         private readonly IRealmControl realmControl;
         private readonly ILogger logger;
 
+        public FairyTaleControl() { }
+
         public FairyTaleControl(IRealmControl realmControl, ILogger<FairyTaleControl> logger)
         {
             this.realmControl = realmControl;
