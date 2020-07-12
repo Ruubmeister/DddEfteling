@@ -11,8 +11,8 @@
     "maxPersons": 54,
     "realm": "Ruigrijk",
 	"coordinates": {
-		"lat": 51.64824,
-		"long": 5.05086
+		"lat": 51.64829,
+		"long": 5.05073
 	}
   },
   {
@@ -27,8 +27,8 @@
     "maxPersons": 200,
     "realm": "Reizenrijk",
 	"coordinates": {
-		"lat": 51.65235,
-		"long": 5.05229
+		"lat": 51.65224,
+		"long": 5.05222
 	}
   },
   {
@@ -43,8 +43,8 @@
     "maxPersons": 150,
     "realm": "Marerijk",
 	"coordinates": {
-		"lat": 51.65239,
-		"long": 5.04563
+		"lat": 51.65233,
+		"long": 5.04612
 	}
   },
   {
@@ -59,8 +59,8 @@
     "maxPersons": 70,
     "realm": "Anderrijk",
 	"coordinates": {
-		"lat": 51.64874,
-		"long": 5.04666
+		"lat": 51.64900,
+		"long": 5.04673
 	}
   },
   {
@@ -75,8 +75,8 @@
     "maxPersons": 210,
     "realm": "Anderrijk",
 	"coordinates": {
-		"lat": 51.64709,
-		"long": 5.04507
+		"lat": 51.64719,
+		"long": 5.04529
 	}
   },
   {
@@ -107,8 +107,8 @@
     "maxPersons": 50,
     "realm": "Ruigrijk",
 	"coordinates": {
-		"lat": 51.64876,
-		"long": 5.05343
+		"lat": 51.64877,
+		"long": 5.05341
 	}
   },
   {
@@ -123,8 +123,8 @@
     "maxPersons": 52,
     "realm": "Ruigrijk",
 	"coordinates": {
-		"lat": 51.64679,
-		"long": 5.05247
+		"lat": 51.64686,
+		"long": 5.05244
 	}
   },
   {
@@ -139,8 +139,8 @@
     "maxPersons": 40,
     "realm": "Reizenrijk",
 	"coordinates": {
-		"lat": 51.64823,
-		"long": 5.05356
+		"lat": 51.64820,
+		"long": 5.05352
 	}
   },
   {
@@ -155,8 +155,8 @@
     "maxPersons": 60,
     "realm": "Reizenrijk",
 	"coordinates": {
-		"lat": 51.65038,
-		"long": 5.05082
+		"lat": 51.65043,
+		"long": 5.05072
 	}
   },
   {
@@ -171,8 +171,8 @@
     "maxPersons": 250,
     "realm": "Ruigrijk",
 	"coordinates": {
-		"lat": 51.64720,
-		"long": 5.04921
+		"lat": 51.64723,
+		"long": 5.04894
 	}
   },
   {
@@ -187,8 +187,8 @@
     "maxPersons": 80,
     "realm": "Anderrijk",
 	"coordinates": {
-		"lat": 51.64866,
-		"long": 5.04882
+		"lat": 51.64876,
+		"long": 5.04853
 	}
   },
   {
@@ -203,8 +203,8 @@
     "maxPersons": 30,
     "realm": "Ruigrijk",
 	"coordinates": {
-		"lat": 51.64689,
-		"long": 5.05360
+		"lat": 51.64763,
+		"long": 5.05361
 	}
   },
   {
@@ -219,8 +219,8 @@
     "maxPersons": 200,
     "realm": "Fantasierijk",
 	"coordinates": {
-		"lat": 51.64997,
-		"long": 5.05026
+		"lat": 51.65003,
+		"long": 5.04974
 	}
   },
   {
@@ -235,8 +235,8 @@
     "maxPersons": 80,
     "realm": "Marerijk",
 	"coordinates": {
-		"lat": 51.65309,
-		"long": 5.04750
+		"lat": 51.65302,
+		"long": 5.04727
 	}
   },
   {
@@ -251,8 +251,8 @@
     "maxPersons": 50,
     "realm": "Ruigrijk",
 	"coordinates": {
-		"lat": 51.64762,
-		"long": 5.05209
+		"lat": 51.64756,
+		"long": 5.05224
 	}
   },
   {
@@ -267,8 +267,8 @@
     "maxPersons": 40,
     "realm": "Ruigrijk",
 	"coordinates": {
-		"lat": 51.65249,
-		"long": 5.05311
+		"lat": 51.65210,
+		"long": 5.05268
 	}
   }
 ]
