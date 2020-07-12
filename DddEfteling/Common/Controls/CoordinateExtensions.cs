@@ -34,25 +34,25 @@ namespace DddEfteling.Common.Controls
         {
 
             double factor1 = Math.Sin(angle * radialNumber);
-            double factor2 = Math.Sin((90.0 - angle) * radialNumber);
+            double factor2 = Math.Cos(angle * radialNumber);
 
-            if(Math.Floor(bearing/90) % 2 == 0)
+            if (Math.Floor(bearing / 90) % 2 ==0)
             {
-                return (latitudeFactor: factor1, longitudeFactor: factor2);
+                return (latitudeFactor: factor2, longitudeFactor: factor1);
             }
 
-            return (latitudeFactor: factor2, longitudeFactor: factor1);
+            return (latitudeFactor: factor1, longitudeFactor: factor2);
         }
 
         public static double GetRelativeBearingToClosestDirection(double absoluteBearing)
         {
-            //What this function does, is remove 90, 180 or 270 so the angle is between 0 and 90 for calculations
-            return absoluteBearing - (Math.Floor(absoluteBearing / 90)*90);
+            //What this function does, is remove 90, 180 or 270 so the angle is between 0 and 89.9 for calculations
+            return absoluteBearing - (Math.Floor(absoluteBearing / 90) * 90);
         }
 
         public static double GetMaxLongitudeFromBearing(CoordinateBoundaries boundary, double bearing)
         {
-            if(bearing <= 180)
+            if (bearing <= 180)
             {
                 return boundary.MaxLongitude;
             }

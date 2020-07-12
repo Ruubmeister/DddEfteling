@@ -35,7 +35,7 @@ namespace DddEfteling.Park.Rides.Controls
             this.mediator = mediator;
 
             this.logger.LogInformation($"Loaded ride count: {rides.Count}");
-            this.calculateRideDistances();
+            this.CalculateRideDistances();
         }
 
         private List<Ride> LoadRides()
@@ -70,7 +70,8 @@ namespace DddEfteling.Park.Rides.Controls
                 {
                     ride.ToOpen();
                     logger.LogInformation($"Ride {ride.Name} opened");
-                    this.checkRequiredEmployees(ride);
+                    this.CheckRequiredEmployees(ride);
+                    ride.Start();
                 }
             });
         }
@@ -87,7 +88,7 @@ namespace DddEfteling.Park.Rides.Controls
             });
         }
 
-        private void checkRequiredEmployees(Ride ride)
+        private void CheckRequiredEmployees(Ride ride)
         {
             foreach (Skill skill in EnumExtensions.GetValues<Skill>())
             {
@@ -96,12 +97,12 @@ namespace DddEfteling.Park.Rides.Controls
                 if(ride.IsSkillUnderstaffed(employees, skill))
                 {
                     logger.LogDebug($"Requesting staff for ride {ride.Name} and skill {skill}");
-                    this.mediator.Send(new RideEvent(EventType.RequestEmployee, ride.Name, skill));
+                    this.mediator.Publish(new RideEvent(EventType.RequestEmployee, ride.Name, skill));
                 }
             }
         }
 
-        private void calculateRideDistances()
+        private void CalculateRideDistances()
         {
             foreach(Ride ride in rides)
             {

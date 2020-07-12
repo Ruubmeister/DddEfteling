@@ -27,7 +27,7 @@ namespace DddEfteling.Tests.Visitors.Entities
         {
             DateTime dateOfBirth = DateTime.Now;
             dateOfBirth.Subtract(TimeSpan.FromDays(365*20));
-            Visitor visitor = new Visitor(dateOfBirth, 1.73, startCoordinate, random, mediator, settings);
+            Visitor visitor = new Visitor(dateOfBirth, 1.73, startCoordinate, random, settings);
 
             Assert.Equal(dateOfBirth, visitor.DateOfBirth );
             Assert.False(visitor.Guid == Guid.Empty);
@@ -44,7 +44,7 @@ namespace DddEfteling.Tests.Visitors.Entities
             visitorSettings.FairyTaleMaxVisitingSeconds = 5;
             settingsMock.Setup(setting => setting.Value).Returns(visitorSettings);
 
-            Visitor visitor = new Visitor(start, 1.73, startCoordinate, random, mediator, settingsMock.Object);
+            Visitor visitor = new Visitor(start, 1.73, startCoordinate, random, settingsMock.Object);
 
             visitor.WatchFairyTale(new FairyTale());
             DateTime end = DateTime.Now;
