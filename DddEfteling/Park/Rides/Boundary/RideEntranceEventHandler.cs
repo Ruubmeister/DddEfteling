@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace DddEfteling.Park.Rides.Boundary
 {
-    public class RideEventHandler: INotificationHandler<EntranceEvent>
+    public class RideEntranceEventHandler: INotificationHandler<EntranceEvent>
     {
-        private readonly ILogger<RideEventHandler> logger;
+        private readonly ILogger<RideEntranceEventHandler> logger;
         private readonly IEntranceControl entranceControl;
         private readonly IRideControl rideControl;
 
-        public RideEventHandler(ILogger<RideEventHandler> logger, IEntranceControl entranceControl,
+        public RideEntranceEventHandler(ILogger<RideEntranceEventHandler> logger, IEntranceControl entranceControl,
             IRideControl rideControl)
         {
             this.logger = logger;
@@ -36,6 +36,10 @@ namespace DddEfteling.Park.Rides.Boundary
         private void handleEntranceStatus()
         {
             if (this.entranceControl.IsOpen())
+            {
+                this.rideControl.OpenRides();
+            }
+            else
             {
                 this.rideControl.CloseRides();
             }

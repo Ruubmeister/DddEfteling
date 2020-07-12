@@ -30,12 +30,12 @@ namespace DddEfteling.Park.Employees.Boundary
             if (notification.Type.Equals(EventType.RequestEmployee))
             {
                 logger.LogInformation($"Received request for employee: {notification}");
-                commandDispatchEmployee(notification.RideName, (Skill)notification.Attachment);
+                CommandDispatchEmployee(notification.RideName, (Skill)notification.Attachment);
             }
             return Task.CompletedTask;
         }
 
-        private void commandDispatchEmployee(String rideName, Skill skill)
+        private void CommandDispatchEmployee(String rideName, Skill skill)
         {
             Ride ride = this.rideControl.FindRideByName(rideName);
 
