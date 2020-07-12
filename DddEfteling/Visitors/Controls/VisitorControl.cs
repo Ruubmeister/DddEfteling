@@ -51,7 +51,7 @@ namespace DddEfteling.Park.Visitors.Controls
             {
                 logger.LogDebug($"Adding {i} visitors");
                 // Todo: Fix hardcoded below
-                Visitor visitor = new Visitor(DateTime.Now, 1.55, startCoordinate, random, mediator, visitorSettings);
+                Visitor visitor = new Visitor(DateTime.Now, 1.55, startCoordinate, random, visitorSettings);
                 Visitors.Add(visitor);
                 KickOffVisitor(visitor);
             }
@@ -61,7 +61,7 @@ namespace DddEfteling.Park.Visitors.Controls
         {
             _ = Task.Run(async () =>
             {
-                logger.LogDebug($"Kicking off visitor {visitor.Guid}");
+                logger.LogInformation($"Kicking off visitor {visitor.Guid}");
                 LocationType? previousLocationType = null;
                 ILocation previousLocation = null;
                 string newLocationName = null;
@@ -73,7 +73,7 @@ namespace DddEfteling.Park.Visitors.Controls
 
                     if (type.Equals(previousLocationType))
                     {
-                        logger.LogDebug($"Getting new location with preferred type {type}");
+                        logger.LogInformation($"Getting new location with preferred type {type}");
                         newLocationName = GetNewClosestToLocation(visitor, previousLocation);
                     }
 
@@ -81,17 +81,17 @@ namespace DddEfteling.Park.Visitors.Controls
                     {
                         case LocationType.FAIRYTALE:
                             FairyTale fairyTale = newLocationName == null ? fairyTaleControl.GetRandom() : fairyTaleControl.FindFairyTaleByName(newLocationName);
-                            logger.LogDebug($"Walking to fairy tale {fairyTale.Name}");
+                            logger.LogInformation($"Walking to fairy tale {fairyTale.Name}");
                             visitor.WalkTo(fairyTale.Coordinates);
-                            logger.LogDebug($"Watching fairy tale {fairyTale.Name}");
+                            logger.LogInformation($"Watching fairy tale {fairyTale.Name}");
                             visitor.WatchFairyTale(fairyTale);
                             previousLocation = fairyTale;
                             break;
                         case LocationType.RIDE:
                             Ride ride = newLocationName == null ? rideControl.GetRandom() : rideControl.FindRideByName(newLocationName);
-                            logger.LogDebug($"Walking to ride ride {ride.Name}");
+                            logger.LogInformation($"Walking to ride ride {ride.Name}");
                             visitor.WalkTo(ride.Coordinates);
-                            logger.LogDebug($"Going in ride {ride.Name}");
+                            logger.LogInformation($"Going in ride {ride.Name}");
                             visitor.StepInRide(ride);
                             previousLocation = ride;
                             break;

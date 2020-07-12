@@ -27,20 +27,23 @@ namespace DddEfteling.Park.Rides.Boundary
         {
             if (notification.Type.Equals(EventType.StatusChanged))
             {
-                this.handleEntranceStatus();
+                this.logger.LogInformation("Received entrance status changed event");
+                this.HandleEntranceStatus();
             }
 
             return Task.CompletedTask;
         }
 
-        private void handleEntranceStatus()
+        private void HandleEntranceStatus()
         {
             if (this.entranceControl.IsOpen())
             {
+                this.logger.LogInformation("Invoking opening rides");
                 this.rideControl.OpenRides();
             }
             else
             {
+                this.logger.LogInformation("Invoking closing rides");
                 this.rideControl.CloseRides();
             }
         }

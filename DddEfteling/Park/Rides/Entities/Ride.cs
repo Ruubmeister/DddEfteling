@@ -5,6 +5,7 @@ using Geolocation;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace DddEfteling.Park.Rides.Entities
@@ -14,6 +15,7 @@ namespace DddEfteling.Park.Rides.Entities
 
         public Ride() { }
 
+        [SuppressMessage("csharpsquid", "S107")]
         public Ride(RideStatus status, Realm realm, Coordinate coordinates, String name, int minimumAge, double minimumLength, TimeSpan duration,
             int maxPersons)
         {

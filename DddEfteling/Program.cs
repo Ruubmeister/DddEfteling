@@ -38,20 +38,22 @@ namespace DddEfteling
                 services.GetRequiredService<IEmployeeControl>();
                 IVisitorControl visitorControl = services.GetRequiredService<IVisitorControl>();
 
-                Task.Run(async () =>
-               {
-                   Random random = new Random();
-                   int maxVisitors = 200;
-                   int currentVisitors = 0;
-                   while (currentVisitors <= maxVisitors)
-                   {
-                       int newVisitors = random.Next(10, 20);
+                entranceControl.OpenPark();
 
-                       visitorControl.AddVisitors(newVisitors);
-                       currentVisitors += newVisitors;
-                       Task.Delay(1000).Wait();
-                   }
-               });
+                _ = Task.Run(() =>
+                 {
+                     Random random = new Random();
+                     int maxVisitors = 300;
+                     int currentVisitors = 0;
+                     while (currentVisitors <= maxVisitors)
+                     {
+                         int newVisitors = random.Next(20, 30);
+
+                         visitorControl.AddVisitors(newVisitors);
+                         currentVisitors += newVisitors;
+                         Task.Delay(1000).Wait();
+                     }
+                 });
                 
 
             }

@@ -4,7 +4,6 @@ using DddEfteling.Park.FairyTales.Entities;
 using DddEfteling.Park.Rides.Entities;
 using DddEfteling.Visitors.Entities;
 using Geolocation;
-using MediatR;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -18,7 +17,6 @@ namespace DddEfteling.Park.Visitors.Entities
     {
         private readonly Random random;
         private readonly VisitorSettings visitorSettings;
-        private readonly IMediator mediator;
         private readonly VisitorLocationSelector locationSelector;
 
         [JsonIgnore]
@@ -26,7 +24,7 @@ namespace DddEfteling.Park.Visitors.Entities
 
         public Visitor() { }
 
-        public Visitor(DateTime dateOfBirth, double length, Coordinate startLocation, Random random, IMediator mediator,
+        public Visitor(DateTime dateOfBirth, double length, Coordinate startLocation, Random random,
             IOptions<VisitorSettings> visitorSettings)
         {
             Guid = Guid.NewGuid();
@@ -35,7 +33,6 @@ namespace DddEfteling.Park.Visitors.Entities
             this.CurrentLocation = startLocation;
             this.random = random;
             this.visitorSettings = visitorSettings.Value;
-            this.mediator = mediator;
             this.locationSelector = new VisitorLocationSelector(random);
         }
 
@@ -82,7 +79,7 @@ namespace DddEfteling.Park.Visitors.Entities
             Task.Run(() => {
                     while (ride.HasVisitor(this))
                     {
-                        Task.Delay(TimeSpan.FromSeconds(1)).Wait();
+                        Task.Delay(TimeSpan.FromSeconds(10)).Wait();
                     }
                 }).Wait();
         }
