@@ -18,8 +18,8 @@ namespace DddEfteling.Test.Common.Controls
             Coordinate coordinateTo1 = new Coordinate(51.652993, 5.047673);
             Coordinate destCoordinate1 = CoordinateExtensions.GetStepCoordinates(coordinate1, coordinateTo1, 10);
 
-            Assert.Equal(51.652675911111345, destCoordinate1.Latitude);
-            Assert.Equal(5.0471788553765879, destCoordinate1.Longitude);
+            Assert.Equal(51.65267743477073, destCoordinate1.Latitude);
+            Assert.Equal(5.0471763995562595, destCoordinate1.Longitude);
         }
 
         [Fact]

@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using Geolocation;
+using System.Collections.Immutable;
 
 namespace DddEfteling.Park.Common.Entities
 {
@@ -6,5 +7,8 @@ namespace DddEfteling.Park.Common.Entities
     {
         public string Name { get; }
         public ImmutableSortedDictionary<string, double> DistanceToOthers { get; set; }
+
+        public Coordinate Coordinates { get; }
+        public LocationType LocationType { get;  }
     }
 }

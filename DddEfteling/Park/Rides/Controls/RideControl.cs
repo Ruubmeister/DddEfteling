@@ -4,6 +4,7 @@ using DddEfteling.Park.Employees.Controls;
 using DddEfteling.Park.Employees.Entities;
 using DddEfteling.Park.Realms.Controls;
 using DddEfteling.Park.Rides.Entities;
+using DddEfteling.Park.Visitors.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -16,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace DddEfteling.Park.Rides.Controls
 {
-    public class RideControl: IRideControl
+    public class RideControl : IRideControl
     {
         private readonly List<Ride> rides;
         private readonly IRealmControl realmControl;
@@ -43,7 +44,7 @@ namespace DddEfteling.Park.Rides.Controls
             using StreamReader r = new StreamReader("resources/rides.json");
             string json = r.ReadToEnd();
             JsonSerializerSettings settings = new JsonSerializerSettings();
-            settings.Converters.Add(new RideConverter(realmControl));
+            settings.Converters.Add(new RideConverter(realmControl, mediator));
             return JsonConvert.DeserializeObject<List<Ride>>(json, settings);
         }
 
@@ -63,22 +64,40 @@ namespace DddEfteling.Park.Rides.Controls
             return rides;
         }
 
-        public async void OpenRides()
+        public void OpenRides()
         {
-            await Task.Run(() => {
-                foreach (Ride ride in rides.Where(ride => ride.Status.Equals(RideStatus.Closed)))
+            foreach (Ride ride in rides.Where(ride => ride.Status.Equals(RideStatus.Closed)))
+            {
+                ride.ToOpen();
+                logger.LogInformation($"Ride {ride.Name} opened");
+                this.CheckRequiredEmployees(ride);
+                this.StartRide(ride);
+            };
+        }
+
+        public void StartRide(Ride ride)
+        {
+            _ = Task.Run(() =>
+            {
+                if (ride.Status.Equals(RideStatus.Open))
                 {
-                    ride.ToOpen();
-                    logger.LogInformation($"Ride {ride.Name} opened");
-                    this.CheckRequiredEmployees(ride);
-                    ride.Start();
+                    ride.BoardVisitors();
+                    ride.Run();
+                    foreach(Visitor unboardedVisitor in ride.UnboardVisitors())
+                    {
+                        VisitorEvent idleVisitor = new VisitorEvent(EventType.Idle, unboardedVisitor.Guid,
+                        new Dictionary<string, object> { { "DateTime", DateTime.Now } });
+
+                        this.mediator.Publish(idleVisitor);
+                    }
                 }
             });
         }
 
         public async void CloseRides()
         {
-            await Task.Run(() => {
+            await Task.Run(() =>
+            {
                 foreach (Ride ride in rides.Where(ride => ride.Status.Equals(RideStatus.Open)))
                 {
                     logger.LogInformation($"Ride {ride.Name} closed");
@@ -94,7 +113,7 @@ namespace DddEfteling.Park.Rides.Controls
             {
                 logger.LogDebug($"For ride {ride.Name} and skill {skill} checking if staff is needed");
                 List<Employee> employees = employeeControl.GetEmployees(ride);
-                if(ride.IsSkillUnderstaffed(employees, skill))
+                if (ride.IsSkillUnderstaffed(employees, skill))
                 {
                     logger.LogDebug($"Requesting staff for ride {ride.Name} and skill {skill}");
                     this.mediator.Publish(new RideEvent(EventType.RequestEmployee, ride.Name, skill));
@@ -104,10 +123,10 @@ namespace DddEfteling.Park.Rides.Controls
 
         private void CalculateRideDistances()
         {
-            foreach(Ride ride in rides)
+            foreach (Ride ride in rides)
             {
                 Dictionary<string, double> distanceToRide = new Dictionary<string, double>();
-                foreach(Ride toRide in rides)
+                foreach (Ride toRide in rides)
                 {
                     distanceToRide[ride.Name] = ride.GetDistanceTo(toRide);
                     logger.LogDebug($"Calculated distance from {ride.Name} to {toRide.Name}");
@@ -134,6 +153,8 @@ namespace DddEfteling.Park.Rides.Controls
         public void CloseRides();
 
         public Ride GetRandom();
+
+        public void StartRide(Ride ride);
 
 
     }

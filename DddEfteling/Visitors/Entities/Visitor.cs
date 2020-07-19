@@ -4,6 +4,7 @@ using DddEfteling.Park.FairyTales.Entities;
 using DddEfteling.Park.Rides.Entities;
 using DddEfteling.Visitors.Entities;
 using Geolocation;
+using MediatR;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -41,7 +42,7 @@ namespace DddEfteling.Park.Visitors.Entities
             if (!VisitedLocations.ContainsValue(location)) 
             {
 
-                if(VisitedLocations.Count >= 5)
+                if(VisitedLocations.Count >= 10)
                 {
                     VisitedLocations.Remove(VisitedLocations.Keys.Min());
                 }
@@ -63,13 +64,13 @@ namespace DddEfteling.Park.Visitors.Entities
 
         public Coordinate CurrentLocation { get; set; }
 
-        public Coordinate TargetLocation { get; set; }
+        public ILocation TargetLocation { get; set; }
 
         public void WatchFairyTale(FairyTale tale)
         {
             int visitingSeconds = random.Next(visitorSettings.FairyTaleMinVisitingSeconds, visitorSettings.FairyTaleMaxVisitingSeconds);
             this.locationSelector.ReduceAndBalance(LocationType.FAIRYTALE);
-            Task.Delay(TimeSpan.FromSeconds(visitingSeconds)).Wait();
+            tale.AddVisitor(this.Guid, DateTime.Now.AddSeconds(visitingSeconds));
         }
 
         public void StepInRide(Ride ride)
@@ -84,16 +85,10 @@ namespace DddEfteling.Park.Visitors.Entities
                 }).Wait();
         }
         
-        public void WalkTo(Coordinate coordinate)
+        public void WalkToDestination(double step)
         {
-            double step = (double) random.Next(83, 166) / 100;
-            TargetLocation = coordinate;
+                this.CurrentLocation = CoordinateExtensions.GetStepCoordinates(CurrentLocation, TargetLocation.Coordinates, step);
 
-            while(!CoordinateExtensions.IsInRange(CurrentLocation, TargetLocation, step)){
-                this.CurrentLocation = CoordinateExtensions.GetStepCoordinates(CurrentLocation, TargetLocation, step);
-                step = (double)random.Next(83, 166) / 100;
-                Task.Delay(1000).Wait();
-            }
         }
     }
 }

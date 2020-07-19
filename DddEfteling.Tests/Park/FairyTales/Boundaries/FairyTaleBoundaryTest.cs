@@ -2,6 +2,7 @@
 using DddEfteling.Park.FairyTales.Controls;
 using DddEfteling.Park.FairyTales.Entities;
 using DddEfteling.Park.Realms.Controls;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -18,7 +19,8 @@ namespace DddEfteling.Tests.Park.FairyTales.Boundaries
         {
             IRealmControl realmControl = new RealmControl();
             ILogger<FairyTaleControl> logger = Mock.Of<ILogger<FairyTaleControl>>();
-            this.fairyTaleControl = new FairyTaleControl(realmControl, logger);
+            IMediator mediator = Mock.Of<IMediator>();
+            this.fairyTaleControl = new FairyTaleControl(realmControl, logger, mediator);
             this.fairyTaleBoundary = new FairyTaleBoundary(fairyTaleControl);
         }
 

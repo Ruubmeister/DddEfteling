@@ -41,6 +41,14 @@ namespace DddEfteling
                 entranceControl.OpenPark();
 
                 _ = Task.Run(() =>
+                {
+                    while (true)
+                    {
+                        visitorControl.HandleIdleVisitors();
+                    }
+                });
+
+                _ = Task.Run(() =>
                  {
                      Random random = new Random();
                      int maxVisitors = 300;

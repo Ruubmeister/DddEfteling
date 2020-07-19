@@ -1,5 +1,8 @@
-﻿using DddEfteling.Park.FairyTales.Entities;
+﻿using DddEfteling.Park.Common.Entities;
+using DddEfteling.Park.FairyTales.Entities;
 using DddEfteling.Park.Realms.Controls;
+using DddEfteling.Park.Visitors.Entities;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -15,14 +18,16 @@ namespace DddEfteling.Park.FairyTales.Controls
         private readonly List<FairyTale> fairyTales;
         private readonly IRealmControl realmControl;
         private readonly ILogger logger;
+        private readonly IMediator mediator;
 
         public FairyTaleControl() { }
 
-        public FairyTaleControl(IRealmControl realmControl, ILogger<FairyTaleControl> logger)
+        public FairyTaleControl(IRealmControl realmControl, ILogger<FairyTaleControl> logger, IMediator mediator)
         {
             this.realmControl = realmControl;
             fairyTales = LoadFairyTales();
             this.logger = logger;
+            this.mediator = mediator;
 
             calculateFairyTaleDistances();
 
@@ -46,6 +51,19 @@ namespace DddEfteling.Park.FairyTales.Controls
         public List<FairyTale> All()
         {
             return fairyTales;
+        }
+        public void RunFairyTales()
+        {
+            foreach(FairyTale tale in this.fairyTales)
+            {
+                foreach(Guid visitorGuid in tale.GetVisitorsDone())
+                {
+                    VisitorEvent idleVisitor = new VisitorEvent(EventType.Idle, visitorGuid, 
+                        new Dictionary<string, object> { { "DateTime", DateTime.Now } });
+
+                    this.mediator.Publish(idleVisitor);
+                }
+            }
         }
 
         private void calculateFairyTaleDistances()
@@ -76,5 +94,7 @@ namespace DddEfteling.Park.FairyTales.Controls
         public List<FairyTale> All();
 
         public FairyTale GetRandom();
+
+        public void RunFairyTales();
     }
 }

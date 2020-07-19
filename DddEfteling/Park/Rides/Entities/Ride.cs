@@ -27,6 +27,7 @@ namespace DddEfteling.Park.Rides.Entities
             MaxPersons = maxPersons;
             Realm = realm;
             Coordinates = coordinates;
+            LocationType = LocationType.RIDE;
 
             VisitorsInLine = new Queue<Visitor>();
             VisitorsInRide = new Queue<Visitor>();
@@ -35,6 +36,8 @@ namespace DddEfteling.Park.Rides.Entities
             setEmployeeSkillRequirement(Employees.Entities.Skill.Control, 2);
             setEmployeeSkillRequirement(Employees.Entities.Skill.Host, 3);
         }
+
+        public LocationType LocationType { get; }
 
         public ImmutableSortedDictionary<string, double> DistanceToOthers { get; set; }
 
@@ -103,20 +106,25 @@ namespace DddEfteling.Park.Rides.Entities
             });
         }
 
-        private Task Run()
+        public Task Run()
         {
             return Task.Delay((int)this.Duration.TotalMilliseconds);
         }
 
-        private void UnboardVisitors()
+        public List<Visitor> UnboardVisitors()
         {
+            List<Visitor> unboardedVisitors = new List<Visitor>();
             while (this.VisitorsInRide.Count > 0)
             {
-                this.VisitorsInRide.Dequeue();
+                Visitor visitor = this.VisitorsInRide.Dequeue();
+
+                unboardedVisitors.Add(visitor);
             }
+
+            return unboardedVisitors;
         }
 
-        private async void BoardVisitors()
+        public async void BoardVisitors()
         {
             int waitCounter = 0;
 

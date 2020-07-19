@@ -1,6 +1,7 @@
 ﻿using DddEfteling.Park.FairyTales.Controls;
 using DddEfteling.Park.FairyTales.Entities;
 using DddEfteling.Park.Rides.Controls;
+using DddEfteling.Park.Rides.Entities;
 using DddEfteling.Park.Stands.Controls;
 using DddEfteling.Park.Visitors.Controls;
 using DddEfteling.Park.Visitors.Entities;
@@ -18,15 +19,18 @@ namespace DddEfteling.Tests.Visitors.Control
         IMediator mediator = new Mock<IMediator>().Object;
         ILogger<VisitorControl> logger = new Mock<ILogger<VisitorControl>>().Object;
         IOptions<VisitorSettings> settings = new Mock<IOptions<VisitorSettings>>().Object;
-        FairyTaleControl fairyTaleControl;
-        RideControl rideControl;
+        IFairyTaleControl fairyTaleControl;
+        IRideControl rideControl;
         StandControl standControl;
 
         public VisitorControlTest()
         {
-            Mock<FairyTaleControl> fairyTaleMock = new Mock<FairyTaleControl>();
-            Mock<RideControl> rideMock = new Mock<RideControl>();
+            Mock<IFairyTaleControl> fairyTaleMock = new Mock<IFairyTaleControl>();
+            Mock<IRideControl> rideMock = new Mock<IRideControl>();
             Mock<StandControl> standMock = new Mock<StandControl>();
+
+            rideMock.Setup(control => control.GetRandom()).Returns(new Ride());
+            fairyTaleMock.Setup(control => control.GetRandom()).Returns(new FairyTale());
 
             this.fairyTaleControl = fairyTaleMock.Object;
             this.rideControl = rideMock.Object;

@@ -1,6 +1,7 @@
 ﻿using DddEfteling.Park.Realms.Controls;
 using DddEfteling.Park.Rides.Entities;
 using Geolocation;
+using MediatR;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -10,10 +11,12 @@ namespace DddEfteling.Park.Rides.Controls
     public class RideConverter : JsonConverter
     {
         private readonly IRealmControl realmControl;
+        private readonly IMediator mediator;
 
-        public RideConverter(IRealmControl realmControl)
+        public RideConverter(IRealmControl realmControl, IMediator mediator)
         {
             this.realmControl = realmControl;
+            this.mediator = mediator;
         }
 
         public override bool CanConvert(Type objectType)

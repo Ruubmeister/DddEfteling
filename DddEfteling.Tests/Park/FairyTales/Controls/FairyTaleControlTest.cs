@@ -2,6 +2,7 @@
 using DddEfteling.Park.FairyTales.Entities;
 using DddEfteling.Park.Realms.Controls;
 using DddEfteling.Tests.Park.FairyTales.Entities;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Collections.Generic;
@@ -18,7 +19,8 @@ namespace DddEfteling.Tests.Park.FairyTales.Controls
         {
             IRealmControl realmControl = new RealmControl();
             ILogger<FairyTaleControl> logger = Mock.Of<ILogger<FairyTaleControl>>();
-            this.fairyTaleControl = new FairyTaleControl(realmControl, logger);
+            IMediator mediator = Mock.Of<IMediator>();
+            this.fairyTaleControl = new FairyTaleControl(realmControl, logger, mediator);
 
         }
 

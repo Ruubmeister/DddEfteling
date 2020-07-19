@@ -2,6 +2,6 @@
 {
     public enum EventType
     {
-        StatusChanged, RequestEmployee
+        StatusChanged, RequestEmployee, Idle
     }
 }
