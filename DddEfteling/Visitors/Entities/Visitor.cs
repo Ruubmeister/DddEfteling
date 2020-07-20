@@ -23,7 +23,9 @@ namespace DddEfteling.Park.Visitors.Entities
         [JsonIgnore]
         public Dictionary<DateTime, ILocation> VisitedLocations { get; } = new Dictionary<DateTime, ILocation>();
 
-        public Visitor() { }
+        public Visitor() {
+            this.Guid = Guid.NewGuid();
+        }
 
         public Visitor(DateTime dateOfBirth, double length, Coordinate startLocation, Random random,
             IOptions<VisitorSettings> visitorSettings)
@@ -35,6 +37,16 @@ namespace DddEfteling.Park.Visitors.Entities
             this.random = random;
             this.visitorSettings = visitorSettings.Value;
             this.locationSelector = new VisitorLocationSelector(random);
+        }
+
+        public ILocation GetLastLocation()
+        {
+            if (this.VisitedLocations.Count < 1)
+            {
+                return null;
+            }
+
+            return VisitedLocations[VisitedLocations.Keys.Max()];
         }
 
         public void AddVisitedLocation(ILocation location)
@@ -70,13 +82,17 @@ namespace DddEfteling.Park.Visitors.Entities
         {
             int visitingSeconds = random.Next(visitorSettings.FairyTaleMinVisitingSeconds, visitorSettings.FairyTaleMaxVisitingSeconds);
             this.locationSelector.ReduceAndBalance(LocationType.FAIRYTALE);
-            tale.AddVisitor(this.Guid, DateTime.Now.AddSeconds(visitingSeconds));
+            this.AddVisitedLocation(tale);
+            this.TargetLocation = null;
+            tale.AddVisitor(this, DateTime.Now.AddSeconds(visitingSeconds));
         }
 
         public void StepInRide(Ride ride)
         {
             ride.AddVisitorToLine(this);
             this.locationSelector.ReduceAndBalance(LocationType.RIDE);
+            this.AddVisitedLocation(ride);
+            this.TargetLocation = null;
             Task.Run(() => {
                     while (ride.HasVisitor(this))
                     {

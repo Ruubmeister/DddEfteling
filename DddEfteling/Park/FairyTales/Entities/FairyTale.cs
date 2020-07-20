@@ -19,7 +19,7 @@ namespace DddEfteling.Park.FairyTales.Entities
             this.Name = name;
             this.Realm = realm;
             this.Coordinates = coordinates;
-            LocationType = LocationType.RIDE;
+            LocationType = LocationType.FAIRYTALE;
         }
 
         public Dictionary<Guid, DateTime> VisitorWithTimeDone { get; } = new Dictionary<Guid, DateTime>();
@@ -39,9 +39,9 @@ namespace DddEfteling.Park.FairyTales.Entities
             return GeoCalculator.GetDistance(this.Coordinates, tale.Coordinates, 2, DistanceUnit.Meters);
         }
 
-        public void AddVisitor(Guid guid, DateTime timeDone)
+        public void AddVisitor(Visitor visitor, DateTime timeDone)
         {
-            this.VisitorWithTimeDone.Add(guid, timeDone);
+            this.VisitorWithTimeDone.Add(visitor.Guid, timeDone);
         }
 
         public List<Guid> GetVisitorsDone()

@@ -45,12 +45,21 @@ namespace DddEfteling.Park.Visitors.Controls
 
         public void HandleIdleVisitors()
         {
-            List<KeyValuePair<Guid, DateTime>> currentList = IdleVisitors.ToList();
+            if (IdleVisitors.Count < 1)
+            {
+                return;
+            }
+
+            Dictionary<Guid, DateTime> copiedList = new Dictionary<Guid, DateTime>(IdleVisitors);
             IdleVisitors.Clear();
 
-            foreach (KeyValuePair<Guid, DateTime> visitorAtTime in currentList.AsEnumerable())
+            foreach (KeyValuePair<Guid, DateTime> visitorAtTime in copiedList.AsEnumerable())
             {
-                Visitor visitor = Visitors.First(visitor => visitor.Guid.Equals(visitorAtTime.Key));
+                Visitor visitor = Visitors.ToList().First(visitor => visitor.Guid.Equals(visitorAtTime.Key));
+                if(visitor.TargetLocation == null)
+                {
+                    this.SetNewLocation(visitor);
+                }
 
                 double step = (double)random.Next(83, 166) / 100;
                 TimeSpan timeIdle = DateTime.Now - visitorAtTime.Value;
@@ -99,9 +108,39 @@ namespace DddEfteling.Park.Visitors.Controls
             }
         }
 
-        private void SetNewLocation(Visitor visitor)
+        public void SetNewLocation(Visitor visitor)
         {
+            ILocation previousLocation = visitor.GetLastLocation();
 
+            LocationType type = visitor.GetLocationType(previousLocation?.LocationType);
+            logger.LogDebug($"New location type for visitor is {type}");
+
+            string newLocationName = null;
+
+            if (type.Equals(previousLocation?.LocationType))
+            {
+                logger.LogInformation($"Getting new location with preferred type {type}");
+                newLocationName = GetNewClosestToLocation(visitor, previousLocation);
+            }
+
+            switch (type)
+            {
+                case LocationType.FAIRYTALE:
+                    FairyTale fairyTale = newLocationName == null ? fairyTaleControl.GetRandom() : fairyTaleControl.FindFairyTaleByName(newLocationName);
+                    logger.LogInformation($"Walking to fairy tale {fairyTale.Name}");
+                    visitor.TargetLocation = fairyTale;
+                    break;
+                case LocationType.RIDE:
+                    Ride ride = newLocationName == null ? rideControl.GetRandom() : rideControl.FindRideByName(newLocationName);
+                    logger.LogInformation($"Walking to ride {ride.Name}");
+                    visitor.TargetLocation = ride;
+                    break;
+                case LocationType.STAND:
+                    Ride stand = rideControl.GetRandom();
+                    logger.LogInformation($"Temp: Walking to ride {stand.Name}");
+                    visitor.TargetLocation = stand;
+                    break;
+            }
         }
 
         private void KickOffVisitor(Visitor visitor)
@@ -154,5 +193,7 @@ namespace DddEfteling.Park.Visitors.Controls
         public void AddIdleVisitor(Guid visitorGuid, DateTime dateTime);
 
         public void HandleIdleVisitors();
+
+        public void SetNewLocation(Visitor visitor);
     }
 }

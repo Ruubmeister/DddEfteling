@@ -45,6 +45,7 @@ namespace DddEfteling
                     while (true)
                     {
                         visitorControl.HandleIdleVisitors();
+                        Task.Delay(1000).Wait();
                     }
                 });
 

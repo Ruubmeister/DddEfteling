@@ -1,6 +1,7 @@
 ﻿using DddEfteling.Park.Common.Entities;
 using DddEfteling.Park.FairyTales.Entities;
 using DddEfteling.Park.Realms.Controls;
+using DddEfteling.Park.Visitors.Controls;
 using DddEfteling.Park.Visitors.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DddEfteling.Park.FairyTales.Controls
 {
@@ -52,7 +54,17 @@ namespace DddEfteling.Park.FairyTales.Controls
         {
             return fairyTales;
         }
+
         public void RunFairyTales()
+        {
+            _ = Task.Run(() =>
+            {
+                this.NotifyForIdleVisitors();
+                Task.Delay(100).Wait();
+            });
+        }
+
+        public void NotifyForIdleVisitors()
         {
             foreach(FairyTale tale in this.fairyTales)
             {
@@ -96,5 +108,7 @@ namespace DddEfteling.Park.FairyTales.Controls
         public FairyTale GetRandom();
 
         public void RunFairyTales();
+
+        public void NotifyForIdleVisitors();
     }
 }
