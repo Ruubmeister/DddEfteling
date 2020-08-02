@@ -3,9 +3,11 @@ using DddEfteling.Park.Realms.Entities;
 using DddEfteling.Park.Visitors.Entities;
 using Geolocation;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace DddEfteling.Park.FairyTales.Entities
 {
@@ -22,11 +24,13 @@ namespace DddEfteling.Park.FairyTales.Entities
             LocationType = LocationType.FAIRYTALE;
         }
 
-        public Dictionary<Guid, DateTime> VisitorWithTimeDone { get; } = new Dictionary<Guid, DateTime>();
+        [JsonIgnore]
+        public ConcurrentDictionary<Guid, DateTime> VisitorWithTimeDone { get; } = new ConcurrentDictionary<Guid, DateTime>();
 
         public LocationType LocationType { get; }
 
-        public ImmutableSortedDictionary<string, double> DistanceToOthers { get; set; }
+        [JsonIgnore]
+        public SortedDictionary<double, string> DistanceToOthers { get; } = new SortedDictionary<double, string>();
 
         public string Name { get; }
 
@@ -41,7 +45,12 @@ namespace DddEfteling.Park.FairyTales.Entities
 
         public void AddVisitor(Visitor visitor, DateTime timeDone)
         {
-            this.VisitorWithTimeDone.Add(visitor.Guid, timeDone);
+            this.VisitorWithTimeDone.TryAdd(visitor.Guid, timeDone);
+        }
+
+        public void AddDistanceToOthers(double distance, String taleName)
+        {
+            this.DistanceToOthers.Add(distance, taleName);
         }
 
         public List<Guid> GetVisitorsDone()
@@ -53,7 +62,7 @@ namespace DddEfteling.Park.FairyTales.Entities
                 if(keyValuePair.Value < now)
                 {
                     result.Add(keyValuePair.Key);
-                    this.VisitorWithTimeDone.Remove(keyValuePair.Key);
+                    this.VisitorWithTimeDone.TryRemove(keyValuePair.Key, out DateTime dateTime);
                 }
             }
             return result;

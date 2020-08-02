@@ -9,6 +9,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
@@ -19,7 +20,7 @@ namespace DddEfteling.Park.Rides.Controls
 {
     public class RideControl : IRideControl
     {
-        private readonly List<Ride> rides;
+        private readonly ConcurrentBag<Ride> rides;
         private readonly IRealmControl realmControl;
         private readonly ILogger logger;
         private readonly IEmployeeControl employeeControl;
@@ -39,13 +40,13 @@ namespace DddEfteling.Park.Rides.Controls
             this.CalculateRideDistances();
         }
 
-        private List<Ride> LoadRides()
+        private ConcurrentBag<Ride> LoadRides()
         {
             using StreamReader r = new StreamReader("resources/rides.json");
             string json = r.ReadToEnd();
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.Converters.Add(new RideConverter(realmControl, mediator));
-            return JsonConvert.DeserializeObject<List<Ride>>(json, settings);
+            return new ConcurrentBag<Ride>(JsonConvert.DeserializeObject<List<Ride>>(json, settings));
         }
 
         public void ToMaintenance(Ride ride)
@@ -61,7 +62,7 @@ namespace DddEfteling.Park.Rides.Controls
 
         public List<Ride> All()
         {
-            return rides;
+            return rides.ToList();
         }
 
         public void OpenRides()
@@ -71,24 +72,42 @@ namespace DddEfteling.Park.Rides.Controls
                 ride.ToOpen();
                 logger.LogInformation($"Ride {ride.Name} opened");
                 this.CheckRequiredEmployees(ride);
-                this.StartRide(ride);
             };
         }
 
-        public void StartRide(Ride ride)
+        public void StartService()
         {
-            _ = Task.Run(() =>
+            Task.Run(() =>
             {
-                if (ride.Status.Equals(RideStatus.Open))
+                while (true)
                 {
-                    ride.BoardVisitors();
-                    ride.Run();
-                    foreach(Visitor unboardedVisitor in ride.UnboardVisitors())
+                    foreach (Ride ride in rides)
                     {
-                        VisitorEvent idleVisitor = new VisitorEvent(EventType.Idle, unboardedVisitor.Guid,
-                        new Dictionary<string, object> { { "DateTime", DateTime.Now } });
 
-                        this.mediator.Publish(idleVisitor);
+                        if (ride.EndTime > DateTime.Now)
+                        {
+                            continue;
+                        }
+
+                        List<Visitor> unboardedVisitors = ride.UnboardVisitors();
+
+                        if (ride.Status.Equals(RideStatus.Open))
+                        {
+                            ride.Start();
+                        }
+
+                        if (unboardedVisitors.Count > 0)
+                        {
+                            foreach (Visitor unboardedVisitor in unboardedVisitors)
+                            {
+                                VisitorEvent idleVisitor = new VisitorEvent(EventType.Idle, unboardedVisitor.Guid,
+                                new Dictionary<string, object> { { "DateTime", DateTime.Now } });
+
+                                this.mediator.Publish(idleVisitor);
+                            }
+                        }
+
+                        Task.Delay(100).Wait();
                     }
                 }
             });
@@ -125,13 +144,16 @@ namespace DddEfteling.Park.Rides.Controls
         {
             foreach (Ride ride in rides)
             {
-                Dictionary<string, double> distanceToRide = new Dictionary<string, double>();
                 foreach (Ride toRide in rides)
                 {
-                    distanceToRide[ride.Name] = ride.GetDistanceTo(toRide);
+                    if (ride.Equals(toRide))
+                    {
+                        continue;
+                    }
+
+                    ride.AddDistanceToOthers(ride.GetDistanceTo(toRide), toRide.Name);
                     logger.LogDebug($"Calculated distance from {ride.Name} to {toRide.Name}");
                 }
-                ride.DistanceToOthers = distanceToRide.OrderBy(item => item.Value).ToImmutableSortedDictionary();
             }
             logger.LogDebug($"Ride distances calculated");
         }
@@ -154,7 +176,7 @@ namespace DddEfteling.Park.Rides.Controls
 
         public Ride GetRandom();
 
-        public void StartRide(Ride ride);
+        public void StartService();
 
 
     }

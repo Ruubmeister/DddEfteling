@@ -6,11 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace DddEfteling.Park.Rides.Entities
 {
-    public class Ride: Workspace, ILocation
+    public class Ride : Workspace, ILocation
     {
 
         public Ride() { }
@@ -39,13 +40,18 @@ namespace DddEfteling.Park.Rides.Entities
 
         public LocationType LocationType { get; }
 
-        public ImmutableSortedDictionary<string, double> DistanceToOthers { get; set; }
+        [JsonIgnore]
+        public SortedDictionary<double, string> DistanceToOthers { get; } = new SortedDictionary<double, string>();
 
         public void ToMaintenance()
         {
             this.Status = RideStatus.Maintenance;
             this.VisitorsInLine = new Queue<Visitor>();
             this.VisitorsInRide = new Queue<Visitor>();
+        }
+        public void AddDistanceToOthers(double distance, String rideName)
+        {
+            this.DistanceToOthers.Add(distance, rideName);
         }
 
         public void ToOpen()
@@ -63,7 +69,7 @@ namespace DddEfteling.Park.Rides.Entities
 
         public string Name { get; }
 
-        public int MinimumAge {get;}
+        public int MinimumAge { get; }
 
         public double MinimumLength { get; }
 
@@ -76,6 +82,8 @@ namespace DddEfteling.Park.Rides.Entities
         private Queue<Visitor> VisitorsInRide { get; set; }
 
         public Coordinate Coordinates { get; }
+
+        public DateTime EndTime { get; private set; }
 
         public bool HasVisitor(Visitor visitor)
         {
@@ -93,22 +101,13 @@ namespace DddEfteling.Park.Rides.Entities
             return false;
         }
 
-        public async void Start()
+        public void Start()
         {
-            await Task.Run(async () =>
+            if (Status.Equals(RideStatus.Open))
             {
-                while (Status.Equals(RideStatus.Open))
-                {
-                    BoardVisitors();
-                    await Run();
-                    UnboardVisitors();
-                }
-            });
-        }
-
-        public Task Run()
-        {
-            return Task.Delay((int)this.Duration.TotalMilliseconds);
+                BoardVisitors();
+                this.EndTime = DateTime.Now.Add(Duration);
+            }
         }
 
         public List<Visitor> UnboardVisitors()
@@ -124,24 +123,13 @@ namespace DddEfteling.Park.Rides.Entities
             return unboardedVisitors;
         }
 
-        public async void BoardVisitors()
+        public void BoardVisitors()
         {
-            int waitCounter = 0;
-
-            while(this.VisitorsInRide.Count <= this.MaxPersons)
+            while (this.VisitorsInRide.Count <= this.MaxPersons)
             {
                 if(this.VisitorsInLine.Count < 1)
                 {
-                    if(waitCounter > 5)
-                    {
-                        break;
-                    }
-
-                    waitCounter++;
-
-                    await Task.Delay(1000);
-
-                    continue;
+                    return;
                 }
 
                 this.VisitorsInRide.Enqueue(this.VisitorsInLine.Dequeue());

@@ -76,6 +76,7 @@ namespace DddEfteling.Park.Visitors.Entities
 
         public Coordinate CurrentLocation { get; set; }
 
+        [JsonIgnore]
         public ILocation TargetLocation { get; set; }
 
         public void WatchFairyTale(FairyTale tale)
@@ -93,12 +94,6 @@ namespace DddEfteling.Park.Visitors.Entities
             this.locationSelector.ReduceAndBalance(LocationType.RIDE);
             this.AddVisitedLocation(ride);
             this.TargetLocation = null;
-            Task.Run(() => {
-                    while (ride.HasVisitor(this))
-                    {
-                        Task.Delay(TimeSpan.FromSeconds(10)).Wait();
-                    }
-                }).Wait();
         }
         
         public void WalkToDestination(double step)

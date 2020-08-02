@@ -4,6 +4,7 @@ using DddEfteling.Park.Employees.Entities;
 using DddEfteling.Park.Rides.Entities;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,14 +13,14 @@ namespace DddEfteling.Park.Employees.Controls
     public class EmployeeControl: IEmployeeControl
     {
 
-        private HashSet<Employee> Employees { get; }
+        private ConcurrentBag<Employee> Employees { get; }
 
         private readonly INameService nameService;
         private readonly ILogger<EmployeeControl> logger;
 
         public EmployeeControl(INameService nameService, ILogger<EmployeeControl> logger)
         {
-            Employees = new HashSet<Employee>();
+            Employees = new ConcurrentBag<Employee>();
             this.nameService = nameService;
             this.logger = logger;
         }

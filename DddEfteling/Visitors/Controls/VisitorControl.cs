@@ -11,6 +11,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace DddEfteling.Park.Visitors.Controls
 
         private Dictionary<Guid, DateTime> IdleVisitors = new Dictionary<Guid, DateTime>();
 
-        private List<Visitor> Visitors { get; } = new List<Visitor>();
+        private ConcurrentBag<Visitor> Visitors { get; } = new ConcurrentBag<Visitor>();
 
         public VisitorControl(IMediator mediator, IOptions<VisitorSettings> settings, ILogger<VisitorControl> logger,
             IFairyTaleControl fairyTaleControl, IRideControl rideControl, IStandControl standControl)
@@ -47,8 +48,11 @@ namespace DddEfteling.Park.Visitors.Controls
         {
             if (IdleVisitors.Count < 1)
             {
+                this.logger.LogInformation("No idle visitors found");
                 return;
             }
+
+            this.logger.LogDebug("Parsing idle visitors");
 
             Dictionary<Guid, DateTime> copiedList = new Dictionary<Guid, DateTime>(IdleVisitors);
             IdleVisitors.Clear();
@@ -61,7 +65,7 @@ namespace DddEfteling.Park.Visitors.Controls
                     this.SetNewLocation(visitor);
                 }
 
-                double step = (double)random.Next(83, 166) / 100;
+                double step = (double)random.Next(50, 150) / 100;
                 TimeSpan timeIdle = DateTime.Now - visitorAtTime.Value;
 
                 double correctedStep = timeIdle.TotalSeconds * step;
@@ -70,10 +74,12 @@ namespace DddEfteling.Park.Visitors.Controls
                 {
                     if (visitor.TargetLocation.LocationType.Equals(LocationType.RIDE))
                     {
+                        this.logger.LogInformation($"Visitor {visitor.Guid} stepping into ride {visitor.TargetLocation.Name}");
                         visitor.StepInRide((Ride)visitor.TargetLocation);
                     }
                     else if (visitor.TargetLocation.LocationType.Equals(LocationType.FAIRYTALE))
                     {
+                        this.logger.LogInformation($"Visitor {visitor.Guid} watching fairytale {visitor.TargetLocation.Name}");
                         visitor.WatchFairyTale((FairyTale)visitor.TargetLocation);
                     }
                 }
@@ -93,7 +99,7 @@ namespace DddEfteling.Park.Visitors.Controls
 
         public List<Visitor> All()
         {
-            return Visitors;
+            return Visitors.ToList();
         }
 
         public void AddVisitors(int number)
@@ -171,7 +177,7 @@ namespace DddEfteling.Park.Visitors.Controls
 
         private string GetNewClosestToLocation(Visitor visitor, ILocation location)
         {
-            return FilterNotVisited(visitor, location.DistanceToOthers.Keys.ToList()).First();
+            return FilterNotVisited(visitor, location.DistanceToOthers.Values.ToList()).First();
         }
 
         private List<string> FilterNotVisited(Visitor visitor, List<string> locationNames)
