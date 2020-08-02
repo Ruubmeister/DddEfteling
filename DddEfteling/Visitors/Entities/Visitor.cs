@@ -4,13 +4,11 @@ using DddEfteling.Park.FairyTales.Entities;
 using DddEfteling.Park.Rides.Entities;
 using DddEfteling.Visitors.Entities;
 using Geolocation;
-using MediatR;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace DddEfteling.Park.Visitors.Entities
 {

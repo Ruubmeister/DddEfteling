@@ -14,7 +14,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DddEfteling.Park.Visitors.Controls
 {
@@ -29,7 +28,7 @@ namespace DddEfteling.Park.Visitors.Controls
         private readonly IRideControl rideControl;
         private readonly IStandControl standControl;
 
-        private Dictionary<Guid, DateTime> IdleVisitors = new Dictionary<Guid, DateTime>();
+        private readonly Dictionary<Guid, DateTime> IdleVisitors = new Dictionary<Guid, DateTime>();
 
         private ConcurrentBag<Visitor> Visitors { get; } = new ConcurrentBag<Visitor>();
 

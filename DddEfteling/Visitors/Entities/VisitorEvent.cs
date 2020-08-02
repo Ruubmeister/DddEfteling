@@ -11,7 +11,7 @@ namespace DddEfteling.Park.Visitors.Entities
             this.VisitorGuid = visitorGuid;
         }
 
-        public VisitorEvent(EventType type, Guid visitorGuid, Dictionary<string, object> payload = null) : base(type)
+        public VisitorEvent(EventType type, Guid visitorGuid, Dictionary<string, object> payload) : base(type)
         {
             this.VisitorGuid = visitorGuid;
             this.Payload = payload;

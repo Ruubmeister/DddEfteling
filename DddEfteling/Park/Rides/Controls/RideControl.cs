@@ -11,7 +11,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -72,7 +71,7 @@ namespace DddEfteling.Park.Rides.Controls
                 ride.ToOpen();
                 logger.LogInformation($"Ride {ride.Name} opened");
                 this.CheckRequiredEmployees(ride);
-            };
+            }
         }
 
         public void StartService()

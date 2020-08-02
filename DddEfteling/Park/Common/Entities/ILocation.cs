@@ -1,6 +1,5 @@
 ﻿using Geolocation;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Text.Json.Serialization;
 
 namespace DddEfteling.Park.Common.Entities

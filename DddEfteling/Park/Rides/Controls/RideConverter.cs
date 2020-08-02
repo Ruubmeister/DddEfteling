@@ -11,12 +11,10 @@ namespace DddEfteling.Park.Rides.Controls
     public class RideConverter : JsonConverter
     {
         private readonly IRealmControl realmControl;
-        private readonly IMediator mediator;
 
-        public RideConverter(IRealmControl realmControl, IMediator mediator)
+        public RideConverter(IRealmControl realmControl)
         {
             this.realmControl = realmControl;
-            this.mediator = mediator;
         }
 
         public override bool CanConvert(Type objectType)
