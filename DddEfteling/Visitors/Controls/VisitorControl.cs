@@ -1,4 +1,5 @@
-﻿using DddEfteling.Park.Common.Entities;
+﻿using DddEfteling.Common.Controls;
+using DddEfteling.Park.Common.Entities;
 using DddEfteling.Park.FairyTales.Controls;
 using DddEfteling.Park.FairyTales.Entities;
 using DddEfteling.Park.Rides.Controls;
@@ -10,9 +11,9 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DddEfteling.Park.Visitors.Controls
 {
@@ -27,7 +28,9 @@ namespace DddEfteling.Park.Visitors.Controls
         private readonly IRideControl rideControl;
         private readonly IStandControl standControl;
 
-        private List<Visitor> Visitors { get; } = new List<Visitor>();
+        private readonly Dictionary<Guid, DateTime> IdleVisitors = new Dictionary<Guid, DateTime>();
+
+        private ConcurrentBag<Visitor> Visitors { get; } = new ConcurrentBag<Visitor>();
 
         public VisitorControl(IMediator mediator, IOptions<VisitorSettings> settings, ILogger<VisitorControl> logger,
             IFairyTaleControl fairyTaleControl, IRideControl rideControl, IStandControl standControl)
@@ -40,9 +43,62 @@ namespace DddEfteling.Park.Visitors.Controls
             this.standControl = standControl;
         }
 
+        public void HandleIdleVisitors()
+        {
+            if (IdleVisitors.Count < 1)
+            {
+                this.logger.LogInformation("No idle visitors found");
+                return;
+            }
+
+            this.logger.LogDebug("Parsing idle visitors");
+
+            Dictionary<Guid, DateTime> copiedList = new Dictionary<Guid, DateTime>(IdleVisitors);
+            IdleVisitors.Clear();
+
+            foreach (KeyValuePair<Guid, DateTime> visitorAtTime in copiedList.AsEnumerable())
+            {
+                Visitor visitor = Visitors.ToList().First(visitor => visitor.Guid.Equals(visitorAtTime.Key));
+                if(visitor.TargetLocation == null)
+                {
+                    this.SetNewLocation(visitor);
+                }
+
+                double step = (double)random.Next(50, 150) / 100;
+                TimeSpan timeIdle = DateTime.Now - visitorAtTime.Value;
+
+                double correctedStep = timeIdle.TotalSeconds * step;
+
+                if (CoordinateExtensions.IsInRange(visitor.CurrentLocation, visitor.TargetLocation.Coordinates, correctedStep))
+                {
+                    if (visitor.TargetLocation.LocationType.Equals(LocationType.RIDE))
+                    {
+                        this.logger.LogInformation($"Visitor {visitor.Guid} stepping into ride {visitor.TargetLocation.Name}");
+                        visitor.StepInRide((Ride)visitor.TargetLocation);
+                    }
+                    else if (visitor.TargetLocation.LocationType.Equals(LocationType.FAIRYTALE))
+                    {
+                        this.logger.LogInformation($"Visitor {visitor.Guid} watching fairytale {visitor.TargetLocation.Name}");
+                        visitor.WatchFairyTale((FairyTale)visitor.TargetLocation);
+                    }
+                }
+                else
+                {
+                    visitor.WalkToDestination(correctedStep);
+
+                    Dictionary<string, object> payload = new Dictionary<string, object>
+                    {
+                        { "DateTime", DateTime.Now }
+                    };
+
+                    this.mediator.Publish(new VisitorEvent(EventType.Idle, visitor.Guid, payload));
+                }
+            }
+        }
+
         public List<Visitor> All()
         {
-            return Visitors;
+            return Visitors.ToList();
         }
 
         public void AddVisitors(int number)
@@ -57,52 +113,70 @@ namespace DddEfteling.Park.Visitors.Controls
             }
         }
 
-        private async void KickOffVisitor(Visitor visitor)
+        public void SetNewLocation(Visitor visitor)
         {
-            _ = Task.Run(async () =>
+            ILocation previousLocation = visitor.GetLastLocation();
+
+            LocationType type = visitor.GetLocationType(previousLocation?.LocationType);
+            logger.LogDebug($"New location type for visitor is {type}");
+
+            string newLocationName = null;
+
+            if (type.Equals(previousLocation?.LocationType))
             {
-                logger.LogInformation($"Kicking off visitor {visitor.Guid}");
-                LocationType? previousLocationType = null;
-                ILocation previousLocation = null;
-                string newLocationName = null;
+                logger.LogInformation($"Getting new location with preferred type {type}");
+                newLocationName = GetNewClosestToLocation(visitor, previousLocation);
+            }
 
-                while (true)
+            switch (type)
+            {
+                case LocationType.FAIRYTALE:
+                    FairyTale fairyTale = newLocationName == null ? fairyTaleControl.GetRandom() : fairyTaleControl.FindFairyTaleByName(newLocationName);
+                    logger.LogInformation($"Walking to fairy tale {fairyTale.Name}");
+                    visitor.TargetLocation = fairyTale;
+                    break;
+                case LocationType.RIDE:
+                    Ride ride = newLocationName == null ? rideControl.GetRandom() : rideControl.FindRideByName(newLocationName);
+                    logger.LogInformation($"Walking to ride {ride.Name}");
+                    visitor.TargetLocation = ride;
+                    break;
+                case LocationType.STAND:
+                    Ride stand = rideControl.GetRandom();
+                    logger.LogInformation($"Temp: Walking to ride {stand.Name}");
+                    visitor.TargetLocation = stand;
+                    break;
+            }
+        }
+
+        private void KickOffVisitor(Visitor visitor)
+        {
+            logger.LogInformation($"Kicking off visitor {visitor.Guid}");
+            LocationType type = visitor.GetLocationType(null);
+
+            switch (type)
+            {
+                case LocationType.FAIRYTALE:
+                    FairyTale tale = fairyTaleControl.GetRandom();
+                    visitor.TargetLocation = tale;
+                    break;
+                case LocationType.RIDE:
+                    Ride ride = rideControl.GetRandom();
+                    visitor.TargetLocation = ride;
+                    break;
+            }
+
+            Dictionary<string, object> payload = new Dictionary<string, object>
                 {
-                    LocationType type = visitor.GetLocationType(previousLocationType);
-                    logger.LogDebug($"New location type for visitor is {type}");
+                    { "DateTime", DateTime.Now }
+                };
 
-                    if (type.Equals(previousLocationType))
-                    {
-                        logger.LogInformation($"Getting new location with preferred type {type}");
-                        newLocationName = GetNewClosestToLocation(visitor, previousLocation);
-                    }
+            this.mediator.Publish(new VisitorEvent(EventType.Idle, visitor.Guid, payload));
 
-                    switch (type)
-                    {
-                        case LocationType.FAIRYTALE:
-                            FairyTale fairyTale = newLocationName == null ? fairyTaleControl.GetRandom() : fairyTaleControl.FindFairyTaleByName(newLocationName);
-                            logger.LogInformation($"Walking to fairy tale {fairyTale.Name}");
-                            visitor.WalkTo(fairyTale.Coordinates);
-                            logger.LogInformation($"Watching fairy tale {fairyTale.Name}");
-                            visitor.WatchFairyTale(fairyTale);
-                            previousLocation = fairyTale;
-                            break;
-                        case LocationType.RIDE:
-                            Ride ride = newLocationName == null ? rideControl.GetRandom() : rideControl.FindRideByName(newLocationName);
-                            logger.LogInformation($"Walking to ride ride {ride.Name}");
-                            visitor.WalkTo(ride.Coordinates);
-                            logger.LogInformation($"Going in ride {ride.Name}");
-                            visitor.StepInRide(ride);
-                            previousLocation = ride;
-                            break;
-                    }
-                }
-            });
         }
 
         private string GetNewClosestToLocation(Visitor visitor, ILocation location)
         {
-            return FilterNotVisited(visitor, location.DistanceToOthers.Keys.ToList()).First();
+            return FilterNotVisited(visitor, location.DistanceToOthers.Values.ToList()).First();
         }
 
         private List<string> FilterNotVisited(Visitor visitor, List<string> locationNames)
@@ -110,11 +184,21 @@ namespace DddEfteling.Park.Visitors.Controls
             List<string> visitedLocations = visitor.VisitedLocations.Values.Select(visited => visited.Name).ToList();
             return locationNames.Where(loc => !visitedLocations.Contains(loc)).ToList();
         }
+        public void AddIdleVisitor(Guid visitorGuid, DateTime dateTime)
+        {
+            this.IdleVisitors.Add(visitorGuid, dateTime);
+        }
     }
 
     public interface IVisitorControl
     {
         public void AddVisitors(int number);
         public List<Visitor> All();
+
+        public void AddIdleVisitor(Guid visitorGuid, DateTime dateTime);
+
+        public void HandleIdleVisitors();
+
+        public void SetNewLocation(Visitor visitor);
     }
 }

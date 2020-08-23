@@ -4,13 +4,12 @@ using DddEfteling.Park.Visitors.Entities;
 using Geolocation;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace DddEfteling.Park.Rides.Entities
 {
-    public class Ride: Workspace, ILocation
+    public class Ride : Workspace, ILocation
     {
 
         public Ride() { }
@@ -27,6 +26,7 @@ namespace DddEfteling.Park.Rides.Entities
             MaxPersons = maxPersons;
             Realm = realm;
             Coordinates = coordinates;
+            LocationType = LocationType.RIDE;
 
             VisitorsInLine = new Queue<Visitor>();
             VisitorsInRide = new Queue<Visitor>();
@@ -36,13 +36,20 @@ namespace DddEfteling.Park.Rides.Entities
             setEmployeeSkillRequirement(Employees.Entities.Skill.Host, 3);
         }
 
-        public ImmutableSortedDictionary<string, double> DistanceToOthers { get; set; }
+        public LocationType LocationType { get; }
+
+        [JsonIgnore]
+        public SortedDictionary<double, string> DistanceToOthers { get; } = new SortedDictionary<double, string>();
 
         public void ToMaintenance()
         {
             this.Status = RideStatus.Maintenance;
             this.VisitorsInLine = new Queue<Visitor>();
             this.VisitorsInRide = new Queue<Visitor>();
+        }
+        public void AddDistanceToOthers(double distance, String rideName)
+        {
+            this.DistanceToOthers.Add(distance, rideName);
         }
 
         public void ToOpen()
@@ -60,7 +67,7 @@ namespace DddEfteling.Park.Rides.Entities
 
         public string Name { get; }
 
-        public int MinimumAge {get;}
+        public int MinimumAge { get; }
 
         public double MinimumLength { get; }
 
@@ -73,6 +80,8 @@ namespace DddEfteling.Park.Rides.Entities
         private Queue<Visitor> VisitorsInRide { get; set; }
 
         public Coordinate Coordinates { get; }
+
+        public DateTime EndTime { get; private set; }
 
         public bool HasVisitor(Visitor visitor)
         {
@@ -90,50 +99,35 @@ namespace DddEfteling.Park.Rides.Entities
             return false;
         }
 
-        public async void Start()
+        public void Start()
         {
-            await Task.Run(async () =>
+            if (Status.Equals(RideStatus.Open))
             {
-                while (Status.Equals(RideStatus.Open))
-                {
-                    BoardVisitors();
-                    await Run();
-                    UnboardVisitors();
-                }
-            });
-        }
-
-        private Task Run()
-        {
-            return Task.Delay((int)this.Duration.TotalMilliseconds);
-        }
-
-        private void UnboardVisitors()
-        {
-            while (this.VisitorsInRide.Count > 0)
-            {
-                this.VisitorsInRide.Dequeue();
+                BoardVisitors();
+                this.EndTime = DateTime.Now.Add(Duration);
             }
         }
 
-        private async void BoardVisitors()
+        public List<Visitor> UnboardVisitors()
         {
-            int waitCounter = 0;
+            List<Visitor> unboardedVisitors = new List<Visitor>();
+            while (this.VisitorsInRide.Count > 0)
+            {
+                Visitor visitor = this.VisitorsInRide.Dequeue();
 
-            while(this.VisitorsInRide.Count <= this.MaxPersons)
+                unboardedVisitors.Add(visitor);
+            }
+
+            return unboardedVisitors;
+        }
+
+        public void BoardVisitors()
+        {
+            while (this.VisitorsInRide.Count <= this.MaxPersons)
             {
                 if(this.VisitorsInLine.Count < 1)
                 {
-                    if(waitCounter > 5)
-                    {
-                        break;
-                    }
-
-                    waitCounter++;
-
-                    await Task.Delay(1000);
-
-                    continue;
+                    return;
                 }
 
                 this.VisitorsInRide.Enqueue(this.VisitorsInLine.Dequeue());

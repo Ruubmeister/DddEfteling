@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.Extensions.Options;
 using Moq;
 using System;
+using System.Linq;
 using Xunit;
 
 namespace DddEfteling.Tests.Visitors.Entities
@@ -45,9 +46,11 @@ namespace DddEfteling.Tests.Visitors.Entities
             settingsMock.Setup(setting => setting.Value).Returns(visitorSettings);
 
             Visitor visitor = new Visitor(start, 1.73, startCoordinate, random, settingsMock.Object);
+            FairyTale tale = new FairyTale();
 
-            visitor.WatchFairyTale(new FairyTale());
-            DateTime end = DateTime.Now;
+            visitor.WatchFairyTale(tale);
+
+            DateTime end = tale.VisitorWithTimeDone.First(keyValue => keyValue.Key.Equals(visitor.Guid)).Value;
 
             TimeSpan duration = end - start;
 

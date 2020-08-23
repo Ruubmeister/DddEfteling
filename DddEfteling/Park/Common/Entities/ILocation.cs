@@ -1,10 +1,17 @@
-﻿using System.Collections.Immutable;
+﻿using Geolocation;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace DddEfteling.Park.Common.Entities
 {
     public interface ILocation
     {
         public string Name { get; }
-        public ImmutableSortedDictionary<string, double> DistanceToOthers { get; set; }
+
+        [JsonIgnore]
+        public SortedDictionary<double, string> DistanceToOthers { get; }
+
+        public Coordinate Coordinates { get; }
+        public LocationType LocationType { get;  }
     }
 }

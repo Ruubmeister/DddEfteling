@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace DddEfteling.Park.Visitors.Entities
 {
@@ -22,7 +21,9 @@ namespace DddEfteling.Park.Visitors.Entities
         [JsonIgnore]
         public Dictionary<DateTime, ILocation> VisitedLocations { get; } = new Dictionary<DateTime, ILocation>();
 
-        public Visitor() { }
+        public Visitor() {
+            this.Guid = Guid.NewGuid();
+        }
 
         public Visitor(DateTime dateOfBirth, double length, Coordinate startLocation, Random random,
             IOptions<VisitorSettings> visitorSettings)
@@ -36,12 +37,22 @@ namespace DddEfteling.Park.Visitors.Entities
             this.locationSelector = new VisitorLocationSelector(random);
         }
 
+        public ILocation GetLastLocation()
+        {
+            if (this.VisitedLocations.Count < 1)
+            {
+                return null;
+            }
+
+            return VisitedLocations[VisitedLocations.Keys.Max()];
+        }
+
         public void AddVisitedLocation(ILocation location)
         {
             if (!VisitedLocations.ContainsValue(location)) 
             {
 
-                if(VisitedLocations.Count >= 5)
+                if(VisitedLocations.Count >= 10)
                 {
                     VisitedLocations.Remove(VisitedLocations.Keys.Min());
                 }
@@ -63,37 +74,30 @@ namespace DddEfteling.Park.Visitors.Entities
 
         public Coordinate CurrentLocation { get; set; }
 
-        public Coordinate TargetLocation { get; set; }
+        [JsonIgnore]
+        public ILocation TargetLocation { get; set; }
 
         public void WatchFairyTale(FairyTale tale)
         {
             int visitingSeconds = random.Next(visitorSettings.FairyTaleMinVisitingSeconds, visitorSettings.FairyTaleMaxVisitingSeconds);
             this.locationSelector.ReduceAndBalance(LocationType.FAIRYTALE);
-            Task.Delay(TimeSpan.FromSeconds(visitingSeconds)).Wait();
+            this.AddVisitedLocation(tale);
+            this.TargetLocation = null;
+            tale.AddVisitor(this, DateTime.Now.AddSeconds(visitingSeconds));
         }
 
         public void StepInRide(Ride ride)
         {
             ride.AddVisitorToLine(this);
             this.locationSelector.ReduceAndBalance(LocationType.RIDE);
-            Task.Run(() => {
-                    while (ride.HasVisitor(this))
-                    {
-                        Task.Delay(TimeSpan.FromSeconds(10)).Wait();
-                    }
-                }).Wait();
+            this.AddVisitedLocation(ride);
+            this.TargetLocation = null;
         }
         
-        public void WalkTo(Coordinate coordinate)
+        public void WalkToDestination(double step)
         {
-            double step = (double) random.Next(83, 166) / 100;
-            TargetLocation = coordinate;
+                this.CurrentLocation = CoordinateExtensions.GetStepCoordinates(CurrentLocation, TargetLocation.Coordinates, step);
 
-            while(!CoordinateExtensions.IsInRange(CurrentLocation, TargetLocation, step)){
-                this.CurrentLocation = CoordinateExtensions.GetStepCoordinates(CurrentLocation, TargetLocation, step);
-                step = (double)random.Next(83, 166) / 100;
-                Task.Delay(1000).Wait();
-            }
         }
     }
 }

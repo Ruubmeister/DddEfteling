@@ -4,21 +4,22 @@ using DddEfteling.Park.Employees.Controls;
 using DddEfteling.Park.Employees.Entities;
 using DddEfteling.Park.Realms.Controls;
 using DddEfteling.Park.Rides.Entities;
+using DddEfteling.Park.Visitors.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace DddEfteling.Park.Rides.Controls
 {
-    public class RideControl: IRideControl
+    public class RideControl : IRideControl
     {
-        private readonly List<Ride> rides;
+        private readonly ConcurrentBag<Ride> rides;
         private readonly IRealmControl realmControl;
         private readonly ILogger logger;
         private readonly IEmployeeControl employeeControl;
@@ -38,13 +39,13 @@ namespace DddEfteling.Park.Rides.Controls
             this.CalculateRideDistances();
         }
 
-        private List<Ride> LoadRides()
+        private ConcurrentBag<Ride> LoadRides()
         {
             using StreamReader r = new StreamReader("resources/rides.json");
             string json = r.ReadToEnd();
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.Converters.Add(new RideConverter(realmControl));
-            return JsonConvert.DeserializeObject<List<Ride>>(json, settings);
+            return new ConcurrentBag<Ride>(JsonConvert.DeserializeObject<List<Ride>>(json, settings));
         }
 
         public void ToMaintenance(Ride ride)
@@ -60,25 +61,61 @@ namespace DddEfteling.Park.Rides.Controls
 
         public List<Ride> All()
         {
-            return rides;
+            return rides.ToList();
         }
 
-        public async void OpenRides()
+        public void OpenRides()
         {
-            await Task.Run(() => {
-                foreach (Ride ride in rides.Where(ride => ride.Status.Equals(RideStatus.Closed)))
+            foreach (Ride ride in rides.Where(ride => ride.Status.Equals(RideStatus.Closed)))
+            {
+                ride.ToOpen();
+                logger.LogInformation($"Ride {ride.Name} opened");
+                this.CheckRequiredEmployees(ride);
+            }
+        }
+
+        public void StartService()
+        {
+            Task.Run(() =>
+            {
+                while (true)
                 {
-                    ride.ToOpen();
-                    logger.LogInformation($"Ride {ride.Name} opened");
-                    this.CheckRequiredEmployees(ride);
-                    ride.Start();
+                    foreach (Ride ride in rides)
+                    {
+
+                        if (ride.EndTime > DateTime.Now)
+                        {
+                            continue;
+                        }
+
+                        List<Visitor> unboardedVisitors = ride.UnboardVisitors();
+
+                        if (ride.Status.Equals(RideStatus.Open))
+                        {
+                            ride.Start();
+                        }
+
+                        if (unboardedVisitors.Count > 0)
+                        {
+                            foreach (Visitor unboardedVisitor in unboardedVisitors)
+                            {
+                                VisitorEvent idleVisitor = new VisitorEvent(EventType.Idle, unboardedVisitor.Guid,
+                                new Dictionary<string, object> { { "DateTime", DateTime.Now } });
+
+                                this.mediator.Publish(idleVisitor);
+                            }
+                        }
+
+                        Task.Delay(100).Wait();
+                    }
                 }
             });
         }
 
         public async void CloseRides()
         {
-            await Task.Run(() => {
+            await Task.Run(() =>
+            {
                 foreach (Ride ride in rides.Where(ride => ride.Status.Equals(RideStatus.Open)))
                 {
                     logger.LogInformation($"Ride {ride.Name} closed");
@@ -94,7 +131,7 @@ namespace DddEfteling.Park.Rides.Controls
             {
                 logger.LogDebug($"For ride {ride.Name} and skill {skill} checking if staff is needed");
                 List<Employee> employees = employeeControl.GetEmployees(ride);
-                if(ride.IsSkillUnderstaffed(employees, skill))
+                if (ride.IsSkillUnderstaffed(employees, skill))
                 {
                     logger.LogDebug($"Requesting staff for ride {ride.Name} and skill {skill}");
                     this.mediator.Publish(new RideEvent(EventType.RequestEmployee, ride.Name, skill));
@@ -104,15 +141,18 @@ namespace DddEfteling.Park.Rides.Controls
 
         private void CalculateRideDistances()
         {
-            foreach(Ride ride in rides)
+            foreach (Ride ride in rides)
             {
-                Dictionary<string, double> distanceToRide = new Dictionary<string, double>();
-                foreach(Ride toRide in rides)
+                foreach (Ride toRide in rides)
                 {
-                    distanceToRide[ride.Name] = ride.GetDistanceTo(toRide);
+                    if (ride.Equals(toRide))
+                    {
+                        continue;
+                    }
+
+                    ride.AddDistanceToOthers(ride.GetDistanceTo(toRide), toRide.Name);
                     logger.LogDebug($"Calculated distance from {ride.Name} to {toRide.Name}");
                 }
-                ride.DistanceToOthers = distanceToRide.OrderBy(item => item.Value).ToImmutableSortedDictionary();
             }
             logger.LogDebug($"Ride distances calculated");
         }
@@ -134,6 +174,8 @@ namespace DddEfteling.Park.Rides.Controls
         public void CloseRides();
 
         public Ride GetRandom();
+
+        public void StartService();
 
 
     }

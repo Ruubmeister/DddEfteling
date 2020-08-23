@@ -4,6 +4,7 @@ using DddEfteling.Park.Realms.Entities;
 using DddEfteling.Park.Rides.Controls;
 using DddEfteling.Park.Rides.Entities;
 using Geolocation;
+using MediatR;
 using Moq;
 using Newtonsoft.Json;
 using System;
