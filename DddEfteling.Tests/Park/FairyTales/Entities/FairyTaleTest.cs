@@ -32,8 +32,8 @@ namespace DddEfteling.Tests.Park.FairyTales.Entities
 
             FairyTale tale = new FairyTale();
 
-            tale.AddVisitor(visitor1.Guid, DateTime.Now);
-            tale.AddVisitor(visitor2.Guid, DateTime.Now.AddSeconds(1));
+            tale.AddVisitor(visitor1, DateTime.Now);
+            tale.AddVisitor(visitor2, DateTime.Now.AddSeconds(1));
 
             Assert.Single(tale.GetVisitorsDone());
             System.Threading.Tasks.Task.Delay(1000).Wait();

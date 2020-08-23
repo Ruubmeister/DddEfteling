@@ -44,7 +44,7 @@ namespace DddEfteling.Park.Rides.Controls
             using StreamReader r = new StreamReader("resources/rides.json");
             string json = r.ReadToEnd();
             JsonSerializerSettings settings = new JsonSerializerSettings();
-            settings.Converters.Add(new RideConverter(realmControl, mediator));
+            settings.Converters.Add(new RideConverter(realmControl));
             return new ConcurrentBag<Ride>(JsonConvert.DeserializeObject<List<Ride>>(json, settings));
         }
 
