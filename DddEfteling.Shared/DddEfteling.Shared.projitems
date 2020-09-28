@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>7ffaae16-8891-446b-a1ee-f3d726253827</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>DddEfteling.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Boundary\EmployeeClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundary\EmployeeDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundary\FairyTaleClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundary\FairyTaleDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundary\ILocationDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundary\RestClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundary\RideClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundary\RideDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundary\StandClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundary\StandDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundary\VisitorDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundary\WorkplaceDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\CoordinateExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\EnumExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\NameService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\StringExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\Event.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\EventSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\EventType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\ILocation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\LocationType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\WorkplaceSkill.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\Workplace.cs" />
+  </ItemGroup>
+</Project>

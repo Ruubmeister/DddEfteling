@@ -1,7 +1,7 @@
-﻿using DddEfteling.Park.Common.Control;
-using DddEfteling.Park.Common.Entities;
-using DddEfteling.Park.Employees.Entities;
-using DddEfteling.Park.Rides.Entities;
+﻿using DddEfteling.Park.Employees.Entities;
+using DddEfteling.Shared.Boundary;
+using DddEfteling.Shared.Controls;
+using DddEfteling.Shared.Entities;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
@@ -25,20 +25,20 @@ namespace DddEfteling.Park.Employees.Controls
             this.logger = logger;
         }
 
-        public static List<Skill> GetPossibleSkillsFromSkill(Skill skill) =>
+        public static List<WorkplaceSkill> GetPossibleSkillsFromSkill(WorkplaceSkill skill) =>
             skill switch
             {
-                Skill.Control => new List<Skill>() { Skill.Control, Skill.Host },
-                Skill.Cook => new List<Skill>() { Skill.Cook },
-                Skill.Engineer => new List<Skill>() { Skill.Engineer },
-                Skill.Host => new List<Skill>() { Skill.Host, Skill.Sell },
-                Skill.Sell => new List<Skill>() { Skill.Sell, Skill.Host },
+                WorkplaceSkill.Control => new List<WorkplaceSkill>() { WorkplaceSkill.Control, WorkplaceSkill.Host },
+                WorkplaceSkill.Cook => new List<WorkplaceSkill>() { WorkplaceSkill.Cook },
+                WorkplaceSkill.Engineer => new List<WorkplaceSkill>() { WorkplaceSkill.Engineer },
+                WorkplaceSkill.Host => new List<WorkplaceSkill>() { WorkplaceSkill.Host, WorkplaceSkill.Sell },
+                WorkplaceSkill.Sell => new List<WorkplaceSkill>() { WorkplaceSkill.Sell, WorkplaceSkill.Host },
                 _ => throw new NotImplementedException()
             };
 
-        public Employee HireEmployee(String firstName, String lastName, Skill skill)
+        public Employee HireEmployee(String firstName, String lastName, WorkplaceSkill skill)
         {
-            List<Skill> skills = GetPossibleSkillsFromSkill(skill);
+            List<WorkplaceSkill> skills = GetPossibleSkillsFromSkill(skill);
 
             Employee employee = new Employee(firstName, lastName, skills);
             Employees.Add(employee);
@@ -47,12 +47,12 @@ namespace DddEfteling.Park.Employees.Controls
             return employee;
         }
 
-        public void AssignEmployee(Workspace workspace, Skill skill)
+        public void AssignEmployee(WorkplaceDto workplace, WorkplaceSkill skill)
         {
             Employee employee = Employees.DefaultIfEmpty(HireEmployee(nameService.RandomFirstName(), nameService.RandomLastName(), skill))
-                .FirstOrDefault(employee => employee.ActiveWorkspace == null && employee.Skills.Contains(skill));
+                .FirstOrDefault(employee => employee.ActiveWorkplace == null && employee.Skills.Contains(skill));
 
-            employee.GoToWork(workspace, skill);
+            employee.GoToWork(workplace, skill);
 
             logger.LogInformation($"Employee {employee.FirstName} {employee.LastName} assigned to workspace");
         }
@@ -62,18 +62,18 @@ namespace DddEfteling.Park.Employees.Controls
             return Employees.FirstOrDefault(employee => employee.FirstName == firstName && employee.LastName == lastName);
         }
 
-        public List<Employee> GetEmployees(Ride ride)
+        public List<Employee> GetEmployees(WorkplaceDto workplace)
         {
-            return Employees.Where(employee => employee.ActiveWorkspace.Equals(ride)).ToList();
+            return Employees.Where(employee => employee.ActiveWorkplace.Equals(workplace)).ToList();
         }
     }
 
     public interface IEmployeeControl
     {
-        public Employee HireEmployee(String firstName, String lastName, Skill skill);
-        public void AssignEmployee(Workspace workspace, Skill skill);
+        public Employee HireEmployee(String firstName, String lastName, WorkplaceSkill skill);
+        public void AssignEmployee(WorkplaceDto workplace, WorkplaceSkill skill);
         public Employee FindEmployeeByName(String firstName, String lastName);
 
-        public List<Employee> GetEmployees(Ride ride);
+        public List<Employee> GetEmployees(WorkplaceDto workplace);
     }
 }
