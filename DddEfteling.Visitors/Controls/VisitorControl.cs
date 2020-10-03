@@ -1,7 +1,7 @@
-﻿using DddEfteling.Rides.Boundary;
-using DddEfteling.Shared.Boundary;
+﻿using DddEfteling.Shared.Boundary;
 using DddEfteling.Shared.Controls;
 using DddEfteling.Shared.Entities;
+using DddEfteling.Visitors.Boundary;
 using DddEfteling.Visitors.Entities;
 using Geolocation;
 using MediatR;
@@ -18,19 +18,20 @@ namespace DddEfteling.Visitors.Controls
     {
         private readonly Random random = new Random();
         private readonly IMediator mediator;
-        private readonly RideClient rideClient;
-        private readonly FairyTaleClient fairyTaleClient;
+        private readonly IRideClient rideClient;
+        private readonly IFairyTaleClient fairyTaleClient;
         private readonly IOptions<VisitorSettings> visitorSettings;
         private readonly Coordinate startCoordinate = new Coordinate(51.649175, 5.045545);
         private readonly ILogger<VisitorControl> logger;
-        private readonly EventProducer eventProducer;
+        private readonly IEventProducer eventProducer;
 
         private readonly Dictionary<Guid, DateTime> IdleVisitors = new Dictionary<Guid, DateTime>();
+        private readonly ConcurrentDictionary<Guid, DateTime> BusyVisitors = new ConcurrentDictionary<Guid, DateTime>();
 
         private ConcurrentBag<Visitor> Visitors { get; } = new ConcurrentBag<Visitor>();
 
         public VisitorControl(IMediator mediator, IOptions<VisitorSettings> settings, ILogger<VisitorControl> logger,
-            RideClient rideClient, FairyTaleClient fairyTaleClient, EventProducer eventProducer)
+            IRideClient rideClient, IFairyTaleClient fairyTaleClient, IEventProducer eventProducer)
         {
             this.mediator = mediator;
             this.visitorSettings = settings;
@@ -56,7 +57,7 @@ namespace DddEfteling.Visitors.Controls
             foreach (KeyValuePair<Guid, DateTime> visitorAtTime in copiedList.AsEnumerable())
             {
                 Visitor visitor = Visitors.ToList().First(visitor => visitor.Guid.Equals(visitorAtTime.Key));
-                if(visitor.TargetLocation == null)
+                if (visitor.TargetLocation == null)
                 {
                     this.SetNewLocation(visitor);
                 }
@@ -70,18 +71,20 @@ namespace DddEfteling.Visitors.Controls
                 {
                     var eventPayload = new Dictionary<string, string>
                         {
-                            {"visitor", visitor.Guid.ToString() }
+                            {"Visitor", visitor.Guid.ToString() }
                         };
 
                     if (visitor.TargetLocation.LocationType.Equals(LocationType.RIDE))
                     {
                         this.logger.LogInformation($"Visitor {visitor.Guid} stepping into ride {visitor.TargetLocation.Name}");
+                        eventPayload.Add("Ride", visitor.TargetLocation.Guid.ToString());
                         Event stepInRideLine = new Event(EventType.StepInRideLine, EventSource.Visitor, eventPayload);
                         eventProducer.Produce(stepInRideLine);
                     }
                     else if (visitor.TargetLocation.LocationType.Equals(LocationType.FAIRYTALE))
                     {
                         this.logger.LogInformation($"Visitor {visitor.Guid} watching fairytale {visitor.TargetLocation.Name}");
+                        eventPayload.Add("FairyTale", visitor.TargetLocation.Guid.ToString());
                         Event watchingFairyTale = new Event(EventType.WatchingFairyTale, EventSource.Visitor, eventPayload);
                         eventProducer.Produce(watchingFairyTale);
                     }
@@ -96,6 +99,26 @@ namespace DddEfteling.Visitors.Controls
                     };
 
                     this.mediator.Publish(new VisitorEvent(EventType.Idle, visitor.Guid, payload));
+                }
+            }
+        }
+
+        public void HandleBusyVisitors()
+        {
+            if (this.BusyVisitors.Any())
+            {
+                foreach (KeyValuePair<Guid, DateTime> visitorBusyTime in this.BusyVisitors)
+                {
+                    if (visitorBusyTime.Value <= DateTime.Now)
+                    {
+                        Dictionary<string, object> payload = new Dictionary<string, object>
+                    {
+                        { "DateTime", DateTime.Now }
+                    };
+
+                        this.mediator.Publish(new VisitorEvent(EventType.Idle, visitorBusyTime.Key, payload));
+                        this.BusyVisitors.TryRemove(visitorBusyTime.Key, out _);
+                    }
                 }
             }
         }
@@ -212,6 +235,14 @@ namespace DddEfteling.Visitors.Controls
         {
             this.IdleVisitors.Add(visitorGuid, dateTime);
         }
+
+        public void AddBusyVisitor(Guid visitorGuid, DateTime dateTime)
+        {
+            if (!this.BusyVisitors.ContainsKey(visitorGuid))
+            {
+                this.BusyVisitors.TryAdd(visitorGuid, dateTime);
+            }
+        }
     }
 
     public interface IVisitorControl
@@ -224,5 +255,7 @@ namespace DddEfteling.Visitors.Controls
         public void HandleIdleVisitors();
 
         public void SetNewLocation(Visitor visitor);
+
+        public void AddBusyVisitor(Guid visitorGuid, DateTime dateTime);
     }
 }

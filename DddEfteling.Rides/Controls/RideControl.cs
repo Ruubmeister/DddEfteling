@@ -17,17 +17,19 @@ namespace DddEfteling.Rides.Controls
     {
         private readonly ConcurrentBag<Ride> rides;
         private readonly ILogger logger;
-        private readonly EventProducer eventProducer;
-        private readonly EmployeeClient employeeClient;
+        private readonly IEventProducer eventProducer;
+        private readonly IEmployeeClient employeeClient;
+        private readonly IVisitorClient visitorClient;
 
         public RideControl() { }
 
-        public RideControl(ILogger<RideControl> logger, EventProducer eventProducer, EmployeeClient employeeClient)
+        public RideControl(ILogger<RideControl> logger, IEventProducer eventProducer, IEmployeeClient employeeClient, IVisitorClient visitorClient)
         {
             this.rides = LoadRides();
             this.logger = logger;
             this.eventProducer = eventProducer;
             this.employeeClient = employeeClient;
+            this.visitorClient = visitorClient;
 
             this.logger.LogInformation($"Loaded ride count: {rides.Count}");
             this.CalculateRideDistances();
@@ -155,6 +157,37 @@ namespace DddEfteling.Rides.Controls
         {
             return this.rides.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
         }
+
+        public void HandleEmployeeChangedWorkplace(WorkplaceDto workplace, Guid employee, WorkplaceSkill skill)
+        {
+            if(this.rides.Where(ride => ride.Guid.Equals(workplace.Guid)).Any())
+            {
+                Ride ride = rides.Where(ride => ride.Guid.Equals(workplace.Guid)).First();
+
+                ride.AddEmployee(employee, skill);
+            }
+        }
+
+        public void HandleVisitorSteppingInRideLine(Guid visitorGuid, Guid rideGuid)
+        {
+            Ride ride = rides.Where(ride => ride.Guid.Equals(rideGuid)).First();
+            if (ride.Status.Equals(RideStatus.Open))
+            {
+                VisitorDto visitor = visitorClient.GetVisitor(visitorGuid).Result;
+                ride.AddVisitorToLine(visitor);
+            }
+            else
+            {
+                var payload = new Dictionary<string, string>
+                            {
+                                { "visitors", visitorGuid.ToString() }
+                            };
+
+                Event unboardedEvent = new Event(EventType.VisitorsUnboarded, EventSource.Ride, payload);
+                eventProducer.Produce(unboardedEvent);
+            }
+
+        }
     }
 
     public interface IRideControl
@@ -172,7 +205,8 @@ namespace DddEfteling.Rides.Controls
         public void StartService();
 
         public Ride NearestRide(Guid rideGuid, List<Guid> exclusionList);
+        public void HandleVisitorSteppingInRideLine(Guid visitorGuid, Guid rideGuid);
 
-
+        public void HandleEmployeeChangedWorkplace(WorkplaceDto workplace, Guid employee, WorkplaceSkill skill);
     }
 }

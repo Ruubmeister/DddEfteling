@@ -2,6 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DddEfteling.Rides.Boundaries;
+using DddEfteling.Rides.Boundary;
+using DddEfteling.Rides.Controls;
+using DddEfteling.Shared.Boundary;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +30,11 @@ namespace DddEfteling.Rides
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSingleton<IEventConsumer, EventConsumer>();
+            services.AddSingleton<IEventProducer, EventProducer>();
+            services.AddSingleton<IEmployeeClient, EmployeeClient>();
+            services.AddSingleton<IVisitorClient, VisitorClient>();
+            services.AddSingleton<IRideControl, RideControl>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

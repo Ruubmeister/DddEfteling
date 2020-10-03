@@ -2,6 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DddEfteling.FairyTales.Boundaries;
+using DddEfteling.FairyTales.Boundary;
+using DddEfteling.FairyTales.Controls;
+using DddEfteling.Shared.Boundary;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +30,9 @@ namespace DddEfteling.FairyTales
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSingleton<IEventProducer, EventProducer>();
+            services.AddSingleton<IEventConsumer, EventConsumer>();
+            services.AddSingleton<IFairyTaleControl, FairyTaleControl>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,8 +46,6 @@ namespace DddEfteling.FairyTales
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

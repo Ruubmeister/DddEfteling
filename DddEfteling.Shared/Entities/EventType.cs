@@ -2,6 +2,7 @@
 {
     public enum EventType
     {
-        StatusChanged, RequestEmployee, Idle, VisitorsUnboarded, StepInRideLine, WatchingFairyTale
+        StatusChanged, RequestEmployee, Idle, VisitorsUnboarded, StepInRideLine, WatchingFairyTale, ArrivedAtFairyTale,
+        EmployeeChangedWorkplace
     }
 }

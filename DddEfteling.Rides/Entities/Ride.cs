@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using DddEfteling.Shared.Boundary;
+using System.Security.Policy;
 
 namespace DddEfteling.Rides.Entities
 {
@@ -83,6 +84,13 @@ namespace DddEfteling.Rides.Entities
         public Coordinate Coordinates { get; }
 
         public DateTime EndTime { get; private set; }
+
+        public Dictionary<Guid, WorkplaceSkill> employeesToSkill { get; }
+
+        public void AddEmployee(Guid guid, WorkplaceSkill skill)
+        {
+            this.employeesToSkill.Add(guid, skill);
+        }
 
         public bool HasVisitor(VisitorDto visitor)
         {

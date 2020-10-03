@@ -2,9 +2,9 @@
 using DddEfteling.Shared.Entities;
 using Newtonsoft.Json;
 
-namespace DddEfteling.Rides.Boundary
+namespace DddEfteling.Visitors.Boundary
 {
-    public class EventProducer
+    public class EventProducer: IEventProducer
     {
         private readonly ProducerConfig config = new ProducerConfig
         {
@@ -26,5 +26,10 @@ namespace DddEfteling.Rides.Boundary
 
             await Producer.ProduceAsync("events", message);
         }
+    }
+
+    public interface IEventProducer
+    {
+        public void Produce(Event eventOut);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
@@ -6,8 +7,13 @@ using System.Threading.Tasks;
 
 namespace DddEfteling.Shared.Boundary
 {
-    public class FairyTaleClient : RestClient
+    public class FairyTaleClient : RestClient, IFairyTaleClient
     {
+        public FairyTaleClient(IConfiguration Configuration)
+        {
+            this.setBaseUri(Configuration["FairyTaleUrl"]);
+        }
+
         public async Task<List<FairyTaleDto>> GetFairyTalesAsync()
         {
             string url = "/api/v1/fairy-tales";
@@ -31,5 +37,15 @@ namespace DddEfteling.Shared.Boundary
 
             return await JsonSerializer.DeserializeAsync<FairyTaleDto>(await GetResource(url, urlParams));
         }
+    }
+
+    public interface IFairyTaleClient
+    {
+        public Task<List<FairyTaleDto>> GetFairyTalesAsync();
+
+        public Task<FairyTaleDto> GetRandomFairyTaleAsync();
+
+        public Task<FairyTaleDto> GetNearestFairyTale(Guid guid, List<Guid> excludedGuid);
+
     }
 }

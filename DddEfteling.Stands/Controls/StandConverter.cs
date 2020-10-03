@@ -26,7 +26,6 @@ namespace DddEfteling.Stands.Controls
 
             return new Stand(
                 obj["name"].ToString(),
-                realmControl.FindRealmByName(obj["realm"].ToString()),
                 new Coordinate(double.Parse(obj["coordinates"]["lat"].ToString()), double.Parse(obj["coordinates"]["long"].ToString())),
                 products
                 );

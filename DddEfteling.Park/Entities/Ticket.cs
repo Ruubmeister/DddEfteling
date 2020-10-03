@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DddEfteling.Park.Entrances.Entities
+namespace DddEfteling.Park.Entities
 {
     public class Ticket
     {

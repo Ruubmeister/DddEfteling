@@ -1,6 +1,5 @@
 ﻿using DddEfteling.Shared.Entities;
 using DddEfteling.FairyTales.Entities;
-using MediatR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -8,7 +7,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using DddEfteling.FairyTales.Boundary;
 
 namespace DddEfteling.FairyTales.Controls
 {
@@ -16,13 +15,16 @@ namespace DddEfteling.FairyTales.Controls
     {
         private readonly ConcurrentBag<FairyTale> fairyTales;
         private readonly ILogger logger;
+        private readonly Random random = new Random();
+        private readonly IEventProducer eventProducer;
 
         public FairyTaleControl() { }
 
-        public FairyTaleControl(ILogger<FairyTaleControl> logger)
+        public FairyTaleControl(ILogger<FairyTaleControl> logger, IEventProducer eventProducer)
         {
             fairyTales = LoadFairyTales();
             this.logger = logger;
+            this.eventProducer = eventProducer;
 
             CalculateFairyTaleDistances();
 
@@ -78,6 +80,26 @@ namespace DddEfteling.FairyTales.Controls
         {
             return this.fairyTales.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
         }
+
+        public void HandleVisitorArrivingAtFairyTale(Guid visitor)
+        {
+            var payload = new Dictionary<string, string>()
+            {
+                {"Visitor", visitor.ToString() },
+                {"EndDateTime", GetEndDateTimeForVisitorWatchingFairyTale().ToString() }
+            };
+
+            var outgoingEvent = new Event(EventType.WatchingFairyTale, EventSource.FairyTale, payload);
+            this.eventProducer.Produce(outgoingEvent);
+        }
+
+        public DateTime GetEndDateTimeForVisitorWatchingFairyTale()
+        {
+            // Todo: Lets make this into settings later
+
+            int watchInSeconds = this.random.Next(120, 300);
+            return DateTime.Now.AddSeconds(watchInSeconds);
+        }
     }
 
 
@@ -90,6 +112,8 @@ namespace DddEfteling.FairyTales.Controls
         public FairyTale GetRandom();
 
         public FairyTale NearestFairyTale(Guid fairyTaleGuid, List<Guid> exclusionList);
+
+        public void HandleVisitorArrivingAtFairyTale(Guid visitor);
 
     }
 }

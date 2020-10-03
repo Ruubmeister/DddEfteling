@@ -1,35 +1,38 @@
-﻿using DddEfteling.Park.Entrances.Entities;
-using MediatR;
+﻿using DddEfteling.Park.Boundaries;
+using DddEfteling.Park.Entities;
+using DddEfteling.Shared.Entities;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DddEfteling.Park.Entrances.Controls
+namespace DddEfteling.Park.Controls
 {
     public class EntranceControl: IEntranceControl
     {
         private EntranceStatus status;
-        private readonly IMediator mediator;
         private readonly ILogger<IEntranceControl> logger;
+        private readonly IEventProducer eventProducer;
         
-        public EntranceControl(IMediator mediator, ILogger<IEntranceControl> logger)
+        public EntranceControl(ILogger<IEntranceControl> logger, IEventProducer eventProducer)
         {
-            this.mediator = mediator;
             this.logger = logger;
+            this.eventProducer = eventProducer;
         }
 
-        public async void OpenPark()
+        public void OpenPark()
         {
             this.status = EntranceStatus.Open;
-            logger.LogInformation("Park is opened");
-            await mediator.Publish(new EntranceEvent(Common.Entities.EventType.StatusChanged));
+            logger.LogInformation("Park has opened");
+            Event eventOut = new Event(EventType.StatusChanged, EventSource.Park, new Dictionary<string, string>() { { "Status", "Open" } });
+            eventProducer.Produce(eventOut);
         }
 
-        public async void ClosePark()
+        public void ClosePark()
         {
             this.status = EntranceStatus.Closed;
-            logger.LogInformation("Park is closed");
-            await mediator.Publish(new EntranceEvent(Common.Entities.EventType.StatusChanged));
+            logger.LogInformation("Park has closed");
+            Event eventOut = new Event(EventType.StatusChanged, EventSource.Park, new Dictionary<string, string>() { { "Status", "Closed" } });
+            eventProducer.Produce(eventOut);
         }
 
         public bool IsOpen()

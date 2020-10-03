@@ -1,14 +1,16 @@
-﻿using DddEfteling.Park.Employees.Entities;
+﻿using DddEfteling.Park.Boundaries;
+using DddEfteling.Park.Entities;
 using DddEfteling.Shared.Boundary;
 using DddEfteling.Shared.Controls;
 using DddEfteling.Shared.Entities;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DddEfteling.Park.Employees.Controls
+namespace DddEfteling.Park.Controls
 {
     public class EmployeeControl: IEmployeeControl
     {
@@ -17,12 +19,14 @@ namespace DddEfteling.Park.Employees.Controls
 
         private readonly INameService nameService;
         private readonly ILogger<EmployeeControl> logger;
+        private readonly IEventProducer eventProducer;
 
-        public EmployeeControl(INameService nameService, ILogger<EmployeeControl> logger)
+        public EmployeeControl(INameService nameService, ILogger<EmployeeControl> logger, IEventProducer eventProducer)
         {
             Employees = new ConcurrentBag<Employee>();
             this.nameService = nameService;
             this.logger = logger;
+            this.eventProducer = eventProducer;
         }
 
         public static List<WorkplaceSkill> GetPossibleSkillsFromSkill(WorkplaceSkill skill) =>
@@ -53,6 +57,15 @@ namespace DddEfteling.Park.Employees.Controls
                 .FirstOrDefault(employee => employee.ActiveWorkplace == null && employee.Skills.Contains(skill));
 
             employee.GoToWork(workplace, skill);
+
+            var payload = new Dictionary<string, string>()
+            {
+                { "Employee", employee.Guid.ToString()},
+                {"Workplace", JsonConvert.SerializeObject(workplace) },
+                {"Skill", skill.ToString() }
+            };
+            Event outgoingEvent = new Event(EventType.EmployeeChangedWorkplace, EventSource.Employee, payload);
+            eventProducer.Produce(outgoingEvent);
 
             logger.LogInformation($"Employee {employee.FirstName} {employee.LastName} assigned to workspace");
         }

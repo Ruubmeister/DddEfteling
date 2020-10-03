@@ -1,10 +1,10 @@
-﻿using DddEfteling.Park.Realms.Entities;
+﻿using DddEfteling.Park.Entities;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace DddEfteling.Park.Realms.Controls
+namespace DddEfteling.Park.Controls
 {
     public class RealmControl: IRealmControl
     {

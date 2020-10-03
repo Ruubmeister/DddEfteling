@@ -1,10 +1,10 @@
-﻿using DddEfteling.Park.Realms.Controls;
-using DddEfteling.Park.Rides.Entities;
+﻿using DddEfteling.Park.Controls;
+using DddEfteling.Shared.Boundary;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace DddEfteling.Park.Realms.Entities
+namespace DddEfteling.Park.Entities
 {
     [JsonConverter(typeof(RealmConverter))]
     public class Realm
@@ -15,7 +15,7 @@ namespace DddEfteling.Park.Realms.Entities
         }
         public String Name { get; }
 
-        public List<Ride> Rides { get; set; }
+        public List<RideDto> Rides { get; set; }
 
     }
 }

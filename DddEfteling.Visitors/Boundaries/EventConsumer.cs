@@ -1,5 +1,7 @@
 ﻿using Confluent.Kafka;
+using DddEfteling.Shared.Boundary;
 using DddEfteling.Shared.Entities;
+using DddEfteling.Visitors.Controls;
 using Newtonsoft.Json;
 using System;
 using System.Text;
@@ -7,47 +9,39 @@ using System.Threading;
 
 namespace DddEfteling.Visitors.Boundaries
 {
-    public class EventConsumer
+    public class EventConsumer: KafkaConsumer, IEventConsumer
     {
-        ConsumerConfig config = new ConsumerConfig
+
+        private readonly IVisitorControl visitorControl;
+
+        public EventConsumer(IVisitorControl visitorControl): base("events", "192.168.1.247:9092", "visitors")
         {
-            GroupId = "visitors",
-            BootstrapServers = "192.168.1.247:9092",
-            AutoOffsetReset = AutoOffsetReset.Latest
-        };
+            
+            this.visitorControl = visitorControl;
+        }
 
-        public void Listen()
+        protected override void HandleMessage(string incomingMessage)
         {
-            using var c = new ConsumerBuilder<Ignore, string>(config).Build();
-            c.Subscribe("events");
 
-            // Because Consume is a blocking call, we want to capture Ctrl+C and use a cancellation token to get out of our while loop and close the consumer gracefully.
-            var cts = new CancellationTokenSource();
-            Console.CancelKeyPress += (_, e) =>
-            {
-                e.Cancel = true;
-                cts.Cancel();
-            };
+            Event incomingEvent = JsonConvert.DeserializeObject<Event>(incomingMessage);
 
-            try
+            if (incomingEvent.Type.Equals(EventType.VisitorsUnboarded))
             {
-                while (true)
+                // Here we wanna do some stuff with unboarded visitors
+            }
+            else if (incomingEvent.Type.Equals(EventType.WatchingFairyTale))
+            {
+                if (incomingEvent.Payload.TryGetValue("Visitor", out string visitorGuid) &&
+                incomingEvent.Payload.TryGetValue("EndDateTime", out string endDateTime))
                 {
-                    // Consume a message from the test topic. Pass in a cancellation token so we can break out of our loop when Ctrl+C is pressed
-                    var cr = c.Consume(cts.Token);
-                    Event incomingMessage = JsonConvert.DeserializeObject<Event>(cr.Message.Value);
-                    if (incomingMessage.Type.Equals(EventType.VisitorsUnboarded)){
-                        // Here we wanna do some stuff with unboarded visitors
-                    }
+                    this.visitorControl.AddBusyVisitor(Guid.Parse(visitorGuid), DateTime.Parse(endDateTime));
                 }
             }
-            catch (OperationCanceledException)
-            {
-            }
-            finally
-            {
-                c.Close();
-            }
         }
+    }
+
+    public interface IEventConsumer
+    {
+        public void Listen();
     }
 }

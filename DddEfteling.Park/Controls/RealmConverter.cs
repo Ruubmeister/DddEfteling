@@ -1,9 +1,9 @@
-﻿using DddEfteling.Park.Realms.Entities;
+﻿using DddEfteling.Park.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 
-namespace DddEfteling.Park.Realms.Controls
+namespace DddEfteling.Park.Controls
 {
     public class RealmConverter: JsonConverter
     {

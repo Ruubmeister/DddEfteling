@@ -1,12 +1,12 @@
-using DddEfteling.Park.Employees.Controls;
-using DddEfteling.Park.Entrances.Controls;
-using DddEfteling.Park.Realms.Controls;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
+using DddEfteling.Shared.Controls;
+using DddEfteling.Park.Boundaries;
+using DddEfteling.Park.Controls;
 
 namespace DddEfteling
 {
@@ -24,10 +24,10 @@ namespace DddEfteling
         */
         public void ConfigureServices(IServiceCollection services)
         {
-            var visitorSettingsSection = Configuration.GetSection("VisitorSettings");
-            services.Configure<VisitorSettings>(visitorSettingsSection);
 
             services.AddMediatR(typeof(Startup));
+            services.AddSingleton<IEventProducer, EventProducer>();
+            services.AddSingleton<INameService, NameService>();
             services.AddSingleton<IRealmControl, RealmControl>();
             services.AddSingleton<IEntranceControl, EntranceControl>();
             services.AddSingleton<IEmployeeControl, EmployeeControl>();

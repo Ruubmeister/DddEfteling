@@ -1,4 +1,4 @@
-﻿namespace DddEfteling.Park.Entrances.Entities
+﻿namespace DddEfteling.Park.Entities
 {
     public enum TicketType
     {

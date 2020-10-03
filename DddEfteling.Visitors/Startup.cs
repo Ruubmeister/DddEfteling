@@ -2,6 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DddEfteling.Shared.Boundary;
+using DddEfteling.Visitors.Boundaries;
+using DddEfteling.Visitors.Boundary;
+using DddEfteling.Visitors.Controls;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +31,12 @@ namespace DddEfteling.Visitors
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSingleton<IEventProducer, EventProducer>();
+            services.AddSingleton<IEventConsumer, EventConsumer>();
+            services.AddSingleton<IRideClient, RideClient>();
+            services.AddSingleton<IFairyTaleClient, FairyTaleClient>();
+            services.AddSingleton<IVisitorControl, VisitorControl>();
+            services.AddMediatR(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

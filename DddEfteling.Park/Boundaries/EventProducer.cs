@@ -2,9 +2,9 @@
 using DddEfteling.Shared.Entities;
 using Newtonsoft.Json;
 
-namespace DddEfteling.Rides.Boundary
+namespace DddEfteling.Park.Boundaries
 {
-    public class EventProducer: IEventProducer
+    public class EventProducer : IEventProducer
     {
         private readonly ProducerConfig config = new ProducerConfig
         {
@@ -18,7 +18,8 @@ namespace DddEfteling.Rides.Boundary
             this.Producer = new ProducerBuilder<Null, string>(config).Build();
         }
 
-        public async void Produce(Event eventOut){
+        public async void Produce(Event eventOut)
+        {
             var message = new Message<Null, string>
             {
                 Value = JsonConvert.SerializeObject(eventOut)

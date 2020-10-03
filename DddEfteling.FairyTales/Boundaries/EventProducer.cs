@@ -2,7 +2,7 @@
 using DddEfteling.Shared.Entities;
 using Newtonsoft.Json;
 
-namespace DddEfteling.Rides.Boundary
+namespace DddEfteling.FairyTales.Boundary
 {
     public class EventProducer: IEventProducer
     {
