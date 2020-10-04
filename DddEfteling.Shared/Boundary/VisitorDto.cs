@@ -16,6 +16,8 @@ namespace DddEfteling.Shared.Boundary
 
         public Coordinate CurrentLocation { get; set; }
 
+        public VisitorDto() { }
+
         public VisitorDto(Guid guid, DateTime dateOfBirth, double length, Coordinate currentLocation)
         {
             this.Guid = guid;

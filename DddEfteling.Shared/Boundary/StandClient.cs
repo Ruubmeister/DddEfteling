@@ -14,15 +14,15 @@ namespace DddEfteling.Shared.Boundary
             this.setBaseUri(Configuration["StandUrl"]);
         }
 
-        public async Task<List<StandDto>> GetStandsAsync()
+        public List<StandDto> GetStandsAsync()
         {
             string url = "/api/v1/stands";
-            return await JsonSerializer.DeserializeAsync<List<StandDto>>(await GetResource(url));
+            return JsonSerializer.Deserialize<List<StandDto>>(GetResource(url));
         }
     }
 
     public interface IStandClient
     {
-        public Task<List<StandDto>> GetStandsAsync();
+        public List<StandDto> GetStandsAsync();
     }
 }

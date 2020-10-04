@@ -2,8 +2,11 @@
 using DddEfteling.Shared.Boundary;
 using DddEfteling.Shared.Entities;
 using DddEfteling.Visitors.Controls;
+using DddEfteling.Visitors.Entities;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -14,7 +17,7 @@ namespace DddEfteling.Visitors.Boundaries
 
         private readonly IVisitorControl visitorControl;
 
-        public EventConsumer(IVisitorControl visitorControl): base("events", "192.168.1.247:9092", "visitors")
+        public EventConsumer(IVisitorControl visitorControl): base("domainEvents", "192.168.1.247:9092", "visitors")
         {
             
             this.visitorControl = visitorControl;
@@ -27,7 +30,12 @@ namespace DddEfteling.Visitors.Boundaries
 
             if (incomingEvent.Type.Equals(EventType.VisitorsUnboarded))
             {
-                // Here we wanna do some stuff with unboarded visitors
+                List<Guid> visitors = JsonConvert.DeserializeObject<List<Guid>>(incomingEvent.Payload.Where(item => item.Key.Equals("Visitors")).First().Value);
+                DateTime dateTime = JsonConvert.DeserializeObject<DateTime>(incomingEvent.Payload.Where(item => item.Key.Equals("DateTime")).First().Value);
+                foreach (Guid visitorGuid in visitors)
+                {
+                    visitorControl.AddIdleVisitor(visitorGuid, dateTime);
+                }
             }
             else if (incomingEvent.Type.Equals(EventType.WatchingFairyTale))
             {

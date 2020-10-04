@@ -70,42 +70,37 @@ namespace DddEfteling.Rides.Controls
             }
         }
 
-        public void StartService()
+        public void HandleOpenRides()
         {
-            Task.Run(() =>
+            foreach (Ride ride in rides.Where(ride => ride.Status.Equals(RideStatus.Open)))
             {
-                while (true)
+
+                if (ride.EndTime > DateTime.Now)
                 {
-                    foreach (Ride ride in rides)
-                    {
-
-                        if (ride.EndTime > DateTime.Now)
-                        {
-                            continue;
-                        }
-
-                        List<VisitorDto> unboardedVisitors = ride.UnboardVisitors();
-
-                        if (ride.Status.Equals(RideStatus.Open))
-                        {
-                            ride.Start();
-                        }
-
-                        if (unboardedVisitors.Count > 0)
-                        {
-                            var payload = new Dictionary<string, string>
-                            {
-                                { "visitors", unboardedVisitors.ConvertAll(visitor => visitor.Guid).ToString() }
-                            };
-
-                            Event unboardedEvent = new Event(EventType.VisitorsUnboarded, EventSource.Ride, payload);
-                            eventProducer.Produce(unboardedEvent);
-                        }
-
-                        Task.Delay(100).Wait();
-                    }
+                    continue;
                 }
-            });
+
+                List<VisitorDto> unboardedVisitors = ride.UnboardVisitors();
+
+                if (ride.Status.Equals(RideStatus.Open))
+                {
+                    ride.Start();
+                }
+
+                if (unboardedVisitors.Count > 0)
+                {
+                    var payload = new Dictionary<string, string>
+                    {
+                        { "Visitors", JsonConvert.SerializeObject(unboardedVisitors.ConvertAll(visitor => visitor.Guid)) },
+                        { "DateTime", JsonConvert.SerializeObject(DateTime.Now)}
+                    };
+
+                    Event unboardedEvent = new Event(EventType.VisitorsUnboarded, EventSource.Ride, payload);
+                    eventProducer.Produce(unboardedEvent);
+                }
+
+                Task.Delay(100).Wait();
+            }
         }
 
         public async void CloseRides()
@@ -173,7 +168,7 @@ namespace DddEfteling.Rides.Controls
             Ride ride = rides.Where(ride => ride.Guid.Equals(rideGuid)).First();
             if (ride.Status.Equals(RideStatus.Open))
             {
-                VisitorDto visitor = visitorClient.GetVisitor(visitorGuid).Result;
+                VisitorDto visitor = visitorClient.GetVisitor(visitorGuid);
                 ride.AddVisitorToLine(visitor);
             }
             else
@@ -202,7 +197,7 @@ namespace DddEfteling.Rides.Controls
 
         public Ride GetRandom();
 
-        public void StartService();
+        public void HandleOpenRides();
 
         public Ride NearestRide(Guid rideGuid, List<Guid> exclusionList);
         public void HandleVisitorSteppingInRideLine(Guid visitorGuid, Guid rideGuid);

@@ -11,6 +11,8 @@ namespace DddEfteling.Shared.Boundary
         public string LastName { get; }
         public List<string> Skills { get; }
 
+        public EmployeeDto() { }
+
         public EmployeeDto(Guid guid, string firstName, string lastName, List<string> skills)
         {
             this.Guid = guid;

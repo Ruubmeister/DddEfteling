@@ -14,7 +14,7 @@ namespace DddEfteling.FairyTales.Boundaries
 
         private readonly IFairyTaleControl fairyTaleControl;
 
-        public EventConsumer(IFairyTaleControl fairyTaleControl) : base("events", "192.168.1.247:9092", "fairytales")
+        public EventConsumer(IFairyTaleControl fairyTaleControl) : base("domainEvents", "192.168.1.247:9092", "fairytales")
         {
             
             this.fairyTaleControl = fairyTaleControl;

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DddEfteling.Visitors.Boundaries
 {
-    [Route("api/visitors")]
+    [Route("api/v1/visitors")]
     public class VisitorBoundary : Controller
     {
         private readonly IVisitorControl visitorControl;

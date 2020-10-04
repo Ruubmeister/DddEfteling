@@ -19,6 +19,8 @@ namespace DddEfteling.Rides
 {
     public class Startup
     {
+        readonly string DefaultCorsPolicy = "_defaultCorsPolicy";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -35,6 +37,15 @@ namespace DddEfteling.Rides
             services.AddSingleton<IEmployeeClient, EmployeeClient>();
             services.AddSingleton<IVisitorClient, VisitorClient>();
             services.AddSingleton<IRideControl, RideControl>();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    name: DefaultCorsPolicy,
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:3999", "http://localhost:3998", "http://localhost:3997", "http://localhost:3996", "http://localhost:3995");
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,11 +56,8 @@ namespace DddEfteling.Rides
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
-
-            app.UseAuthorization();
+            app.UseCors(DefaultCorsPolicy);
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,5 +1,6 @@
 ﻿using DddEfteling.Shared.Boundary;
 using Geolocation;
+using System;
 using System.Collections.Generic;
 
 namespace DddEfteling.Stands.Entities
@@ -15,6 +16,8 @@ namespace DddEfteling.Stands.Entities
             Drinks = products.FindAll(product => product.Type.Equals(ProductType.Drink));
         }
 
+        public Guid Guid { get; } = Guid.NewGuid();
+
         public string Name { get; }
 
         public List<Product> Meals { get; }
@@ -25,7 +28,7 @@ namespace DddEfteling.Stands.Entities
 
         public StandDto ToDto()
         {
-            return new StandDto(this.Name, this.Meals.ConvertAll(meal => meal.Name), this.Drinks.ConvertAll(drink => drink.Name));
+            return new StandDto(this.Name, this.Coordinates, this.Meals.ConvertAll(meal => meal.Name), this.Drinks.ConvertAll(drink => drink.Name));
         }
     }
 }

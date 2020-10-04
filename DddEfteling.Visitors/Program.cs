@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DddEfteling.Shared.Boundary;
+using DddEfteling.Visitors.Boundaries;
 using DddEfteling.Visitors.Boundary;
 using DddEfteling.Visitors.Controls;
 using Microsoft.AspNetCore.Hosting;
@@ -27,15 +28,19 @@ namespace DddEfteling.Visitors
                 services.GetRequiredService<IFairyTaleClient>();
                 services.GetRequiredService<IEventProducer>();
                 services.GetRequiredService<IRideClient>();
+                
 
-        IVisitorControl visitorControl = services.GetRequiredService<IVisitorControl>();
+                IVisitorControl visitorControl = services.GetRequiredService<IVisitorControl>();
+                IEventConsumer eventConsumer = services.GetRequiredService<IEventConsumer>();
+
+                _ = Task.Run(() => eventConsumer.Listen());
 
                 _ = Task.Run(() =>
             {
                 while (true)
                 {
                     visitorControl.HandleIdleVisitors();
-                    Task.Delay(100).Wait();
+                    Task.Delay(300).Wait();
                 }
             });
 

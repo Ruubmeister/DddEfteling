@@ -6,7 +6,7 @@ namespace DddEfteling.Shared.Entities
 {
     public abstract class Workplace
     {
-        public Guid Guid { get; set; }
+        public Guid Guid { get; set; } = Guid.NewGuid();
         public LocationType LocationType { get; set; }
 
         protected Workplace()

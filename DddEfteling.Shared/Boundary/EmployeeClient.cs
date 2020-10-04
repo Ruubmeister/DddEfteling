@@ -15,15 +15,15 @@ namespace DddEfteling.Shared.Boundary
             this.setBaseUri(Configuration["ParkUrl"]);
         }
 
-        public async Task<List<EmployeeDto>> GetEmployeesAsync()
+        public List<EmployeeDto> GetEmployeesAsync()
         {
             string url = "/api/v1/employees";
-            return await JsonSerializer.DeserializeAsync<List<EmployeeDto>>(await GetResource(url));
+            return JsonSerializer.Deserialize<List<EmployeeDto>>(GetResource(url));
         }
     }
 
     public interface IEmployeeClient
     {
-        public Task<List<EmployeeDto>> GetEmployeesAsync();
+        public List<EmployeeDto> GetEmployeesAsync();
     }
 }

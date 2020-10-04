@@ -20,7 +20,7 @@ namespace DddEfteling.Shared.Boundary
             this.baseUri = new Uri(baseUri);
         }
 
-        public async Task<Stream> GetResource(string path)
+        public String GetResource(string path)
         {
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
@@ -29,12 +29,12 @@ namespace DddEfteling.Shared.Boundary
 
             Uri targetUri = new Uri(baseUri, path);
 
-            var streamTask = client.GetStreamAsync(targetUri.AbsoluteUri);
+            var streamTask = client.GetStringAsync(targetUri.AbsoluteUri);
 
-            return await streamTask;
+            return streamTask.Result;
         }
 
-        public async Task<Stream> GetResource(string path, Dictionary<string, string> urlParams)
+        public String GetResource(string path, Dictionary<string, string> urlParams)
         {
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
@@ -43,9 +43,9 @@ namespace DddEfteling.Shared.Boundary
 
             Uri targetUri = new Uri(baseUri, path);
 
-            var streamTask = client.GetStreamAsync(QueryHelpers.AddQueryString(targetUri.AbsoluteUri, urlParams));
+            var streamTask = client.GetStringAsync(QueryHelpers.AddQueryString(targetUri.AbsoluteUri, urlParams));
 
-            return await streamTask;
+            return streamTask.Result;
         }
 
     }

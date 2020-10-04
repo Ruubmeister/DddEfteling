@@ -16,11 +16,13 @@ namespace DddEfteling.Shared.Boundary
         public List<string> Meals { get; set; }
         public List<string> Drinks { get; set; }
 
-        public StandDto(string name, List<string> meals, List<string> drinks)
+        public StandDto() { }
+        public StandDto(string name, Coordinate coodinates, List<string> meals, List<string> drinks)
         {
             this.Name = name;
             this.Meals = meals;
             this.Drinks = drinks;
+            this.Coordinates = coodinates;
         }
     }
 }

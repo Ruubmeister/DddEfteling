@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace DddEfteling.Rides.Boundary
 {
-    [Route("api/rides")]
+    [Route("api/v1/rides")]
     public class RideBoundary : Controller
     {
         private readonly IRideControl rideControl;

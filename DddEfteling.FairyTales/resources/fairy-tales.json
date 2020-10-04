@@ -1,0 +1,234 @@
+[
+  {
+    "name": "Doornroosje",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65078,
+      "long": 5.04723
+    }
+  },
+  {
+    "name": "Kabouterdorp",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65032,
+      "long": 5.04772
+    }
+  },
+  {
+    "name": "De Zes Dienaren",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.64958,
+      "long": 5.04770
+    }
+  },
+  {
+    "name": "Roodkapje",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.64959,
+      "long": 5.04661
+    }
+  },
+  {
+    "name": "Pinokkio",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.64950,
+      "long": 5.04615
+    }
+  },
+  {
+    "name": "De Rode Schoentjes",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.64957,
+      "long": 5.04573
+    }
+  },
+  {
+    "name": "Trollenkoning",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.64994,
+      "long": 5.04576
+    }
+  },
+  {
+    "name": "Het stoute prinsesje",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.64991,
+      "long": 5.04635
+    }
+  },
+  {
+    "name": "Raponsje",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.64993,
+      "long": 5.04672
+    }
+  },
+  {
+    "name": "De Kleine Zeemeermin",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.64980,
+      "long": 5.04725
+    }
+  },
+  {
+    "name": "Draak Lichtgeraakt",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65012,
+      "long": 5.04725
+    }
+  },
+  {
+    "name": "De Wolf en de Zeven Geitjes",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65040,
+      "long": 5.04694
+    }
+  },
+  {
+    "name": "Hans en Grietje",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65025,
+      "long": 5.04647
+    }
+  },
+  {
+    "name": "Vrouw Holle",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65026,
+      "long": 5.04550
+    }
+  },
+  {
+    "name": "Tafeltje Dek Je, Ezeltje Strek Je, Knuppel uit de Zak",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65048,
+      "long": 5.04536
+    }
+  },
+  {
+    "name": "Sneeuwwitje",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65051,
+      "long": 5.04510
+    }
+  },
+  {
+    "name": "Het Bruidskleed van Genoveva",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65068,
+      "long": 5.04587
+    }
+  },
+  {
+    "name": "De Zes Zwanen",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65085,
+      "long": 5.04514
+    }
+  },
+  {
+    "name": "Assepoester",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65088,
+      "long": 5.04558
+    }
+  },
+  {
+    "name": "De Kikkerkoning",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65063,
+      "long": 5.04582
+    }
+  },
+  {
+    "name": "De Magische Klok",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65054,
+      "long": 5.04621
+    }
+  },
+  {
+    "name": "De Indische Waterlelies",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65131,
+      "long": 5.04624
+    }
+  },
+  {
+    "name": "Klein Duimpje",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65115,
+      "long": 5.04759
+    }
+  },
+  {
+    "name": "Repelsteeltje",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65129,
+      "long": 5.04719
+    }
+  },
+  {
+    "name": "Het Meisje met de Zwavelstokjes",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65143,
+      "long": 5.04610
+    }
+  },
+  {
+    "name": "De Nieuwe Kleren van de Keizer",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65122,
+      "long": 5.04519
+    }
+  },
+  {
+    "name": "Sprookjesboom (Sprookjesbos)",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65182,
+      "long": 5.04610
+    }
+  },
+  {
+    "name": "De Vliegende Fakir",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65175,
+      "long": 5.04669
+    }
+  },
+  {
+    "name": "De Chinese Nachtegaal",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65160,
+      "long": 5.04745
+    }
+  }
+]

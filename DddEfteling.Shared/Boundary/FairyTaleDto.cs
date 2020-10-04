@@ -16,6 +16,8 @@ namespace DddEfteling.Shared.Boundary
 
         public LocationType LocationType { get; set; }
 
+        public FairyTaleDto() { }
+
         public FairyTaleDto(Guid guid, string name, Coordinate coordinate, LocationType locationType) {
             this.Guid = guid;
             this.Name = name;

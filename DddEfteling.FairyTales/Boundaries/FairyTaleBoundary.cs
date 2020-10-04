@@ -23,6 +23,12 @@ namespace DddEfteling.FairyTales.Boundaries
             return fairyTaleControl.All().ConvertAll(fairyTale => fairyTale.ToDto());
         }
 
+        [HttpGet("random")]
+        public ActionResult<FairyTaleDto> GetRandomFairyTale()
+        {
+            return fairyTaleControl.GetRandom().ToDto();
+        }
+
         [HttpGet("/{guid}/nearest")]
         public ActionResult<FairyTaleDto> GetNearestFairyTale(Guid guid, [FromQuery(Name ="exclude")] string excludedGuids)
         {

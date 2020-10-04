@@ -13,7 +13,7 @@ namespace DddEfteling.Rides.Boundaries
 
         private readonly IRideControl rideControl;
 
-        public EventConsumer(IRideControl rideControl) : base("events", "192.168.1.247:9092", "fairytales")
+        public EventConsumer(IRideControl rideControl) : base("domainEvents", "192.168.1.247:9092", "fairytales")
         {
             
             this.rideControl = rideControl;
@@ -41,6 +41,19 @@ namespace DddEfteling.Rides.Boundaries
                     Enum.TryParse(workplaceSkill, out WorkplaceSkill skill);
                     rideControl.HandleEmployeeChangedWorkplace(JsonConvert.DeserializeObject<WorkplaceDto>(workplaceString),
                         Guid.Parse(employeeString), skill);
+                }
+            }
+            else if (incomingEvent.Type.Equals(EventType.StatusChanged) && incomingEvent.Source.Equals(EventSource.Park))
+            {
+                if (incomingEvent.Payload.TryGetValue("Status", out string statusString))
+                {
+                    if (statusString.ToLower().Equals("open"))
+                    {
+                        this.rideControl.OpenRides();
+                    }else if (statusString.ToLower().Equals("closed"))
+                    {
+                        this.rideControl.CloseRides();
+                    }
                 }
             }
         }

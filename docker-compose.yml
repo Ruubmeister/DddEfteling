@@ -1,0 +1,44 @@
+version: '3.4'
+
+services:
+
+  dddeftelingpark:
+    image: ${DOCKER_REGISTRY-}dddeftelingpark
+    build:
+      context: .
+      dockerfile: DddEfteling.Park/Dockerfile
+
+  dddeftelingrides:
+    image: ${DOCKER_REGISTRY-}dddeftelingrides
+    depends_on: 
+      - dddeftelingpark
+    build:
+      context: .
+      dockerfile: DddEfteling.Rides/Dockerfile
+  
+  dddeftelingfairytales:
+    image: ${DOCKER_REGISTRY-}dddeftelingfairytales
+    depends_on: 
+      - dddeftelingpark
+    build:
+      context: .
+      dockerfile: DddEfteling.FairyTales/Dockerfile
+
+  dddeftelingstands:
+    image: ${DOCKER_REGISTRY-}dddeftelingstands
+    depends_on: 
+      - dddeftelingpark
+    build:
+      context: .
+      dockerfile: DddEfteling.Stands/Dockerfile
+
+  dddeftelingvisitors:
+    image: ${DOCKER_REGISTRY-}dddeftelingvisitors
+    depends_on: 
+      - dddeftelingpark
+      - dddeftelingrides
+      - dddeftelingfairytales
+      - dddeftelingstands
+    build:
+      context: .
+      dockerfile: DddEfteling.Visitors/Dockerfile

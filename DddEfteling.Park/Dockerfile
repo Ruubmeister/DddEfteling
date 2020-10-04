@@ -2,15 +2,14 @@
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+EXPOSE 3998
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["DddEfteling/DddEfteling.Park.csproj", "DddEfteling/"]
-RUN dotnet restore "DddEfteling/DddEfteling.Park.csproj"
+COPY ["DddEfteling.Park/DddEfteling.Park.csproj", "DddEfteling.Park/"]
+RUN dotnet restore "DddEfteling.Park/DddEfteling.Park.csproj"
 COPY . .
-WORKDIR "/src/DddEfteling"
+WORKDIR "/src/DddEfteling.Park"
 RUN dotnet build "DddEfteling.Park.csproj" -c Release -o /app/build
 
 FROM build AS publish

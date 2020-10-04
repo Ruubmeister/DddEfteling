@@ -51,20 +51,20 @@ $(document).ready(function () {
     });
 
     iconSources = [{
-        "url": "/api/rides",
+        "url": "http://localhost:3997/api/v1/rides",
         "iconStyle": rideIconStyle
     },
         {
-            "url": "/api/fairy-tales",
+            "url": "http://localhost:3999/api/v1/fairy-tales",
             "iconStyle": fairyTaleIconStyle
         },
         {
-            "url": "/api/stands",
+            "url": "http://localhost:3996/api/v1/stands",
             "iconStyle": standIconStyle
         }]
 
     setInterval(function () {
-        $.get("/api/visitors", function (data) {
+        $.get("http://localhost:3995/api/v1/visitors", function (data) {
             var features = [];
 
             $.each(data, function (k, visitor) {

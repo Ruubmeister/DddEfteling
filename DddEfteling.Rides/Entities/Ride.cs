@@ -150,7 +150,7 @@ namespace DddEfteling.Rides.Entities
 
         public RideDto ToDto()
         {
-            return new RideDto(this.Name, this.Status.ToString(), this.MinimumAge, this.MinimumLength,
+            return new RideDto(this.Guid, this.Name, this.Status.ToString(), this.MinimumAge, this.MinimumLength,
                 this.Duration, this.MaxPersons, this.Coordinates, this.LocationType);
         }
 

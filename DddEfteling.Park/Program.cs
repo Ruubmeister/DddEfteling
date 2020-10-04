@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
 
-namespace DddEfteling
+namespace DddEfteling.Park
 {
     public class Program
     {
@@ -29,8 +29,10 @@ namespace DddEfteling
                 services.GetRequiredService<INameService>();
                 IEntranceControl entranceControl = services.GetRequiredService<IEntranceControl>();
                 services.GetRequiredService<IEmployeeControl>();
+                IEventConsumer eventConsumer = services.GetRequiredService<IEventConsumer>();
 
                 entranceControl.OpenPark();
+                _ = Task.Run(() => eventConsumer.Listen());
             }
 
             await host.RunAsync();

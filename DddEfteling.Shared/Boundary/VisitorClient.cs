@@ -15,24 +15,24 @@ namespace DddEfteling.Shared.Boundary
             this.setBaseUri(Configuration["VisitorUrl"]);
         }
 
-        public async Task<List<VisitorDto>> GetVisitors()
+        public List<VisitorDto> GetVisitors()
         {
             string url = "/api/v1/visitors";
-            return await JsonSerializer.DeserializeAsync<List<VisitorDto>>(await GetResource(url));
+            return JsonSerializer.Deserialize<List<VisitorDto>>(GetResource(url));
         }
 
-        public async Task<VisitorDto> GetVisitor(Guid guid)
+        public VisitorDto GetVisitor(Guid guid)
         {
             string url = $"/api/v1/visitors/{guid}";
-            return await JsonSerializer.DeserializeAsync<VisitorDto>(await GetResource(url));
+            return JsonSerializer.Deserialize<VisitorDto>(GetResource(url));
         }
     }
 
     public interface IVisitorClient
     {
-        public Task<List<VisitorDto>> GetVisitors();
+        public List<VisitorDto> GetVisitors();
 
-        public Task<VisitorDto> GetVisitor(Guid guid);
+        public VisitorDto GetVisitor(Guid guid);
 
     }
 }

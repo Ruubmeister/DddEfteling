@@ -11,7 +11,7 @@ namespace DddEfteling.Park.Boundaries
 
         private readonly IEmployeeControl employeeControl;
 
-        public EventConsumer(IEmployeeControl employeeControl) : base("events", "192.168.1.247:9092", "fairytales")
+        public EventConsumer(IEmployeeControl employeeControl) : base("domainEvents", "192.168.1.247:9092", "fairytales")
         {
             
             this.employeeControl = employeeControl;

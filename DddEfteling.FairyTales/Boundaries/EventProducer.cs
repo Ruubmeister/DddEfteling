@@ -24,7 +24,7 @@ namespace DddEfteling.FairyTales.Boundary
                 Value = JsonConvert.SerializeObject(eventOut)
             };
 
-            await Producer.ProduceAsync("events", message);
+            await Producer.ProduceAsync("domainEvents", message);
         }
     }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DddEfteling.Shared.Entities
 {
-    public class Event : INotification
+    public class Event
     {
         public EventSource Source { get; }
         public EventType Type { get; }
