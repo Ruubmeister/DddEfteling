@@ -34,6 +34,26 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DddEfteling.Visitors", "Ddd
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{3CCA1DD5-3F38-4472-9FDB-6E9361401BF5}"
 EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "frontend", "frontend\", "{8EA11826-DBBF-4FCB-A31F-74869FDEA911}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_50736"
+		Debug.AspNetCompiler.PhysicalPath = "frontend\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50736\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_50736"
+		Release.AspNetCompiler.PhysicalPath = "frontend\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50736\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "50736"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		DddEfteling.Shared\DddEfteling.Shared.projitems*{1e5291e2-bc6e-40cd-8280-1634cb0b2178}*SharedItemsImports = 5
@@ -76,6 +96,10 @@ Global
 		{3CCA1DD5-3F38-4472-9FDB-6E9361401BF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CCA1DD5-3F38-4472-9FDB-6E9361401BF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CCA1DD5-3F38-4472-9FDB-6E9361401BF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EA11826-DBBF-4FCB-A31F-74869FDEA911}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EA11826-DBBF-4FCB-A31F-74869FDEA911}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EA11826-DBBF-4FCB-A31F-74869FDEA911}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EA11826-DBBF-4FCB-A31F-74869FDEA911}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

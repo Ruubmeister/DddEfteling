@@ -15,7 +15,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Boundary\FairyTaleDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Boundary\ILocationDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Boundary\KafkaConsumer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Boundary\RestClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Boundary\RideClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Boundary\RideDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Boundary\VisitorClient.cs" />

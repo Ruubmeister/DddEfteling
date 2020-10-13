@@ -1,27 +1,37 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 
 namespace DddEfteling.Shared.Boundary
 {
-    public class FairyTaleClient : RestClient, IFairyTaleClient
+    public class FairyTaleClient : IFairyTaleClient
     {
-        public FairyTaleClient(IConfiguration Configuration)
+        private HttpClient client;
+
+        public FairyTaleClient(HttpClient client)
         {
-            this.setBaseUri(Configuration["FairyTaleUrl"]);
+            this.client = client;
         }
 
         public List<FairyTaleDto> GetFairyTalesAsync()
         {
             string url = "/api/v1/fairy-tales";
-            return JsonConvert.DeserializeObject<List<FairyTaleDto>>(GetResource(url));
+            Uri targetUri = new Uri(client.BaseAddress, url);
+
+            var streamTask = client.GetStringAsync(targetUri.AbsoluteUri);
+            return JsonConvert.DeserializeObject<List<FairyTaleDto>>(streamTask.Result);
         }
 
         public FairyTaleDto GetRandomFairyTaleAsync()
         {
             string url = "/api/v1/fairy-tales/random";
-            return JsonConvert.DeserializeObject<FairyTaleDto>(GetResource(url));
+            Uri targetUri = new Uri(client.BaseAddress, url);
+
+            var streamTask = client.GetStringAsync(targetUri.AbsoluteUri);
+            return JsonConvert.DeserializeObject<FairyTaleDto>(streamTask.Result);
         }
 
         public FairyTaleDto GetNearestFairyTale(Guid guid, List<Guid> excludedGuid)
@@ -33,9 +43,11 @@ namespace DddEfteling.Shared.Boundary
                 {"exclude", String.Join(",", excludedGuid.ToArray())}
             };
 
-            string dto = GetResource(url, urlParams);
+            Uri targetUri = new Uri(client.BaseAddress, url);
 
-            return JsonConvert.DeserializeObject<FairyTaleDto>(dto);
+            var streamTask = client.GetStringAsync(QueryHelpers.AddQueryString(targetUri.AbsoluteUri, urlParams));
+
+            return JsonConvert.DeserializeObject<FairyTaleDto>(streamTask.Result);
 
         }
     }

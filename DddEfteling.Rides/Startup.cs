@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using DddEfteling.Rides.Boundaries;
 using DddEfteling.Rides.Boundary;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Polly;
 
 namespace DddEfteling.Rides
 {
@@ -31,11 +33,31 @@ namespace DddEfteling.Rides
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddHttpClient<IEmployeeClient, EmployeeClient>(c =>
+            {
+                c.BaseAddress = new Uri(Configuration["ParkUrl"]);
+                c.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue("Application/Json"));
+                c.DefaultRequestHeaders.Add("User-Agent", "Efteling");
+
+            })
+            .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(6, _ => TimeSpan.FromSeconds(10)));
+
+            services.AddHttpClient<IVisitorClient, VisitorClient>(c =>
+            {
+                c.BaseAddress = new Uri(Configuration["VisitorUrl"]);
+                c.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue("Application/Json"));
+                c.DefaultRequestHeaders.Add("User-Agent", "Efteling");
+
+            })
+            .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(6, _ => TimeSpan.FromSeconds(10)));
+
+
             services.AddControllers();
             services.AddSingleton<IEventConsumer, EventConsumer>();
             services.AddSingleton<IEventProducer, EventProducer>();
-            services.AddSingleton<IEmployeeClient, EmployeeClient>();
-            services.AddSingleton<IVisitorClient, VisitorClient>();
             services.AddSingleton<IRideControl, RideControl>();
             services.AddCors(options =>
             {
@@ -49,7 +71,8 @@ namespace DddEfteling.Rides
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IEventConsumer eventConsumer,
+            IRideControl rideControl)
         {
             if (env.IsDevelopment())
             {
@@ -62,6 +85,17 @@ namespace DddEfteling.Rides
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            _ = Task.Run(() => eventConsumer.Listen());
+
+            _ = Task.Run(() =>
+            {
+                while (true)
+                {
+                    rideControl.HandleOpenRides();
+                    Task.Delay(1000).Wait();
+                }
             });
         }
     }

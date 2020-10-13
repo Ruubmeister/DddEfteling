@@ -29,7 +29,7 @@ namespace DddEfteling.Rides.Boundary
             return rideControl.GetRandom().ToDto();
         }
 
-        [HttpGet("/{guid}/nearest")]
+        [HttpGet("{guid}/nearest")]
         public ActionResult<RideDto> GetNearestRide(Guid guid, [FromQuery(Name = "exclude")] string excludedGuids)
         {
             List<Guid> excludedGuidList = new List<string>(excludedGuids.Split(",")).ConvertAll(guidStr => Guid.Parse(guidStr));

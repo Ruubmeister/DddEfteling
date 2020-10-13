@@ -92,7 +92,7 @@ $(document).ready(function () {
 
             map.addLayer(visitorVectorLayer);
         });
-    }, 400);
+    }, 1000);
             
     
    

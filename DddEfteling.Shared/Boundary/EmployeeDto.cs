@@ -6,10 +6,10 @@ namespace DddEfteling.Shared.Boundary
 {
     public class EmployeeDto
     {
-        public Guid Guid { get; }
-        public string FirstName { get; }
-        public string LastName { get; }
-        public List<string> Skills { get; }
+        public Guid Guid { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public List<string> Skills { get; set; }
 
         public EmployeeDto() { }
 

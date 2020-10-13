@@ -19,22 +19,6 @@ namespace DddEfteling.Park
         public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-
-            using (var serviceScope = host.Services.CreateScope())
-            {
-                var services = serviceScope.ServiceProvider;
-
-                services.GetRequiredService<IRealmControl>();
-                services.GetRequiredService<IEventProducer>();
-                services.GetRequiredService<INameService>();
-                IEntranceControl entranceControl = services.GetRequiredService<IEntranceControl>();
-                services.GetRequiredService<IEmployeeControl>();
-                IEventConsumer eventConsumer = services.GetRequiredService<IEventConsumer>();
-
-                entranceControl.OpenPark();
-                _ = Task.Run(() => eventConsumer.Listen());
-            }
-
             await host.RunAsync();
 
         }

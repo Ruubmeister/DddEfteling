@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using DddEfteling.Shared.Controls;
 using DddEfteling.Park.Boundaries;
 using DddEfteling.Park.Controls;
+using System.Threading.Tasks;
 
 namespace DddEfteling.Park
 {
@@ -46,7 +47,8 @@ namespace DddEfteling.Park
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IEntranceControl entranceControl,
+            IEventConsumer eventConsumer)
         {
             if (env.IsDevelopment())
             {
@@ -66,6 +68,9 @@ namespace DddEfteling.Park
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
             });
+
+            _ = Task.Run(() => eventConsumer.Listen());
+            entranceControl.OpenPark();
         }
     }
 }

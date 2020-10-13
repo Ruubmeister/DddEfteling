@@ -8,11 +8,11 @@ namespace DddEfteling.Shared.Boundary
     public class VisitorDto
     {
 
-        public Guid Guid { get; }
+        public Guid Guid { get; set; }
 
-        public DateTime DateOfBirth { get; }
+        public DateTime DateOfBirth { get; set; }
 
-        public double Length { get; }
+        public double Length { get; set; }
 
         public Coordinate CurrentLocation { get; set; }
 

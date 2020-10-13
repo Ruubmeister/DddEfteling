@@ -1,24 +1,29 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace DddEfteling.Shared.Boundary
 {
-    public class EmployeeClient : RestClient, IEmployeeClient
+    public class EmployeeClient : IEmployeeClient
     {
-
-        public EmployeeClient(IConfiguration Configuration)
+        private HttpClient client;
+        public EmployeeClient(HttpClient client)
         {
-            this.setBaseUri(Configuration["ParkUrl"]);
+            this.client = client;
         }
 
         public List<EmployeeDto> GetEmployeesAsync()
         {
             string url = "/api/v1/employees";
-            return JsonSerializer.Deserialize<List<EmployeeDto>>(GetResource(url));
+            Uri targetUri = new Uri(client.BaseAddress, url);
+
+            var streamTask = client.GetStringAsync(targetUri.AbsoluteUri);
+            return JsonConvert.DeserializeObject<List<EmployeeDto>>(streamTask.Result);
         }
     }
 

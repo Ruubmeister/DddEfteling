@@ -116,8 +116,10 @@ namespace DddEfteling.Visitors.Controls
                 {
                     if (visitorBusyTime.Value <= DateTime.Now)
                     {
-                        this.NotifyIdleVisitor(visitorBusyTime.Key);
-                        this.BusyVisitors.TryRemove(visitorBusyTime.Key, out _);
+                        Visitor visitor = this.GetVisitor(visitorBusyTime.Key);
+                        visitor.TargetLocation = null;
+                        this.NotifyIdleVisitor(visitor.Guid);
+                        this.BusyVisitors.TryRemove(visitor.Guid, out _);
                     }
                 }
             }
@@ -250,6 +252,11 @@ namespace DddEfteling.Visitors.Controls
                 this.BusyVisitors.TryAdd(visitorGuid, dateTime);
             }
         }
+
+        public Visitor GetVisitor(Guid guid)
+        {
+            return this.Visitors.Where(visitor => visitor.Guid.Equals(guid)).First();
+        }
     }
 
     public interface IVisitorControl
@@ -259,10 +266,14 @@ namespace DddEfteling.Visitors.Controls
 
         public void AddIdleVisitor(Guid visitorGuid, DateTime dateTime);
 
+        public void HandleBusyVisitors();
+
         public void HandleIdleVisitors();
 
         public void SetNewLocation(Visitor visitor);
 
         public void AddBusyVisitor(Guid visitorGuid, DateTime dateTime);
+
+        public Visitor GetVisitor(Guid guid);
     }
 }

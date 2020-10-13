@@ -17,9 +17,9 @@ namespace DddEfteling.Shared.Boundary
             this.topic = topic;
             this.config = new ConsumerConfig
             {
-                GroupId = groupId,
+                GroupId = $"groupId-{Guid.NewGuid()}",
                 BootstrapServers = bootstrapServer,
-                AutoOffsetReset = AutoOffsetReset.Latest
+                AutoOffsetReset = AutoOffsetReset.Earliest
             };
         }
 

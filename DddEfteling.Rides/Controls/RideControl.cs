@@ -175,7 +175,7 @@ namespace DddEfteling.Rides.Controls
             {
                 var payload = new Dictionary<string, string>
                             {
-                                { "visitors", visitorGuid.ToString() }
+                                { "Visitors", visitorGuid.ToString() }
                             };
 
                 Event unboardedEvent = new Event(EventType.VisitorsUnboarded, EventSource.Ride, payload);

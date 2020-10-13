@@ -20,17 +20,6 @@ namespace DddEfteling.FairyTales
         {
             var host = CreateHostBuilder(args).Build();
 
-            using (var serviceScope = host.Services.CreateScope())
-            {
-                var services = serviceScope.ServiceProvider;
-
-                services.GetRequiredService<IEventProducer>();
-                services.GetRequiredService<IFairyTaleControl>();
-                
-                IEventConsumer eventConsumer = services.GetRequiredService<IEventConsumer>();
-                _ = Task.Run(() => eventConsumer.Listen());
-            }
-
             await host.RunAsync();
         }
 

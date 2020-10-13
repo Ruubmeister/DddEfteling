@@ -34,6 +34,8 @@ namespace DddEfteling.Visitors.Boundaries
                 DateTime dateTime = JsonConvert.DeserializeObject<DateTime>(incomingEvent.Payload.Where(item => item.Key.Equals("DateTime")).First().Value);
                 foreach (Guid visitorGuid in visitors)
                 {
+                    Visitor visitor = visitorControl.GetVisitor(visitorGuid);
+                    visitor.TargetLocation = null;
                     visitorControl.AddIdleVisitor(visitorGuid, dateTime);
                 }
             }
