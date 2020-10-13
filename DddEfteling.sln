@@ -3,11 +3,66 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DddEfteling.Park", "DddEfteling\DddEfteling.Park.csproj", "{F9E26329-EDE9-45F7-BB79-F4B1FA57190B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DddEfteling.Park", "DddEfteling.Park\DddEfteling.Park.csproj", "{F9E26329-EDE9-45F7-BB79-F4B1FA57190B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DddEfteling.Tests", "DddEfteling.Tests\DddEfteling.Tests.csproj", "{6208A815-E99D-48C6-AB17-9A02E5A55567}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DddEfteling.Rides", "DddEfteling.Rides\DddEfteling.Rides.csproj", "{6C2B2A3D-9090-49E2-A470-A333D2203940}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F9E26329-EDE9-45F7-BB79-F4B1FA57190B} = {F9E26329-EDE9-45F7-BB79-F4B1FA57190B}
+	EndProjectSection
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DddEfteling.Shared", "DddEfteling.Shared\DddEfteling.Shared.shproj", "{7FFAAE16-8891-446B-A1EE-F3D726253827}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DddEfteling.FairyTales", "DddEfteling.FairyTales\DddEfteling.FairyTales.csproj", "{F5D18551-B331-4BD2-BE90-1F12FA5918AF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F9E26329-EDE9-45F7-BB79-F4B1FA57190B} = {F9E26329-EDE9-45F7-BB79-F4B1FA57190B}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DddEfteling.Stands", "DddEfteling.Stands\DddEfteling.Stands.csproj", "{1E5291E2-BC6E-40CD-8280-1634CB0B2178}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F9E26329-EDE9-45F7-BB79-F4B1FA57190B} = {F9E26329-EDE9-45F7-BB79-F4B1FA57190B}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DddEfteling.Visitors", "DddEfteling.Visitors\DddEfteling.Visitors.csproj", "{718E27BA-E401-4BC6-AA9F-CE43CA35BEC6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F9E26329-EDE9-45F7-BB79-F4B1FA57190B} = {F9E26329-EDE9-45F7-BB79-F4B1FA57190B}
+		{6C2B2A3D-9090-49E2-A470-A333D2203940} = {6C2B2A3D-9090-49E2-A470-A333D2203940}
+		{F5D18551-B331-4BD2-BE90-1F12FA5918AF} = {F5D18551-B331-4BD2-BE90-1F12FA5918AF}
+		{1E5291E2-BC6E-40CD-8280-1634CB0B2178} = {1E5291E2-BC6E-40CD-8280-1634CB0B2178}
+	EndProjectSection
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{3CCA1DD5-3F38-4472-9FDB-6E9361401BF5}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "frontend", "frontend\", "{8EA11826-DBBF-4FCB-A31F-74869FDEA911}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_50736"
+		Debug.AspNetCompiler.PhysicalPath = "frontend\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50736\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_50736"
+		Release.AspNetCompiler.PhysicalPath = "frontend\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50736\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "50736"
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		DddEfteling.Shared\DddEfteling.Shared.projitems*{1e5291e2-bc6e-40cd-8280-1634cb0b2178}*SharedItemsImports = 5
+		DddEfteling.Shared\DddEfteling.Shared.projitems*{6c2b2a3d-9090-49e2-a470-a333d2203940}*SharedItemsImports = 5
+		DddEfteling.Shared\DddEfteling.Shared.projitems*{718e27ba-e401-4bc6-aa9f-ce43ca35bec6}*SharedItemsImports = 5
+		DddEfteling.Shared\DddEfteling.Shared.projitems*{7ffaae16-8891-446b-a1ee-f3d726253827}*SharedItemsImports = 13
+		DddEfteling.Shared\DddEfteling.Shared.projitems*{f5d18551-b331-4bd2-be90-1f12fa5918af}*SharedItemsImports = 5
+		DddEfteling.Shared\DddEfteling.Shared.projitems*{f9e26329-ede9-45f7-bb79-f4b1fa57190b}*SharedItemsImports = 5
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -21,6 +76,30 @@ Global
 		{6208A815-E99D-48C6-AB17-9A02E5A55567}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6208A815-E99D-48C6-AB17-9A02E5A55567}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6208A815-E99D-48C6-AB17-9A02E5A55567}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C2B2A3D-9090-49E2-A470-A333D2203940}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C2B2A3D-9090-49E2-A470-A333D2203940}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C2B2A3D-9090-49E2-A470-A333D2203940}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C2B2A3D-9090-49E2-A470-A333D2203940}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5D18551-B331-4BD2-BE90-1F12FA5918AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5D18551-B331-4BD2-BE90-1F12FA5918AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5D18551-B331-4BD2-BE90-1F12FA5918AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5D18551-B331-4BD2-BE90-1F12FA5918AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E5291E2-BC6E-40CD-8280-1634CB0B2178}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E5291E2-BC6E-40CD-8280-1634CB0B2178}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E5291E2-BC6E-40CD-8280-1634CB0B2178}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E5291E2-BC6E-40CD-8280-1634CB0B2178}.Release|Any CPU.Build.0 = Release|Any CPU
+		{718E27BA-E401-4BC6-AA9F-CE43CA35BEC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{718E27BA-E401-4BC6-AA9F-CE43CA35BEC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{718E27BA-E401-4BC6-AA9F-CE43CA35BEC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{718E27BA-E401-4BC6-AA9F-CE43CA35BEC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CCA1DD5-3F38-4472-9FDB-6E9361401BF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CCA1DD5-3F38-4472-9FDB-6E9361401BF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CCA1DD5-3F38-4472-9FDB-6E9361401BF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CCA1DD5-3F38-4472-9FDB-6E9361401BF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EA11826-DBBF-4FCB-A31F-74869FDEA911}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EA11826-DBBF-4FCB-A31F-74869FDEA911}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EA11826-DBBF-4FCB-A31F-74869FDEA911}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EA11826-DBBF-4FCB-A31F-74869FDEA911}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
