@@ -1,7 +1,8 @@
-﻿using DddEfteling.Park.Common.Control;
-using DddEfteling.Park.Employees.Controls;
-using DddEfteling.Park.Employees.Entities;
-using DddEfteling.Park.Rides.Entities;
+﻿using DddEfteling.Park.Controls;
+using DddEfteling.Park.Entities;
+using DddEfteling.Rides.Entities;
+using DddEfteling.Shared.Controls;
+using DddEfteling.Shared.Entities;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
@@ -20,7 +21,7 @@ namespace DddEfteling.Tests.Park.Employees.Controls
             INameService nameService = new NameService();
             EmployeeControl employeeControl = new EmployeeControl(nameService, logger);
 
-            Employee employee = employeeControl.HireEmployee("First", "Last", Skill.Control);
+            Employee employee = employeeControl.HireEmployee("First", "Last", WorkplaceSkill.Control);
 
             Assert.NotNull(employee);
             Assert.Equal(employeeControl.FindEmployeeByName("First", "Last"), employee);
@@ -68,7 +69,7 @@ namespace DddEfteling.Tests.Park.Employees.Controls
             List<Employee> result = employeeControl.GetEmployees(ride);
 
             Assert.NotEmpty(result);
-            Assert.Equal(ride, result[0].ActiveWorkspace);
+            Assert.Equal(ride, result[0].ActiveWorkplace);
             Assert.Equal(Skill.Control, result[0].ActiveSkill);
         }
     }

@@ -31,7 +31,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Park\Common\Entities\" />
+    <Folder Include="Park\Boundaries\" />
   </ItemGroup>
+
+  <Import Project="..\DddEfteling.Shared\DddEfteling.Shared.projitems" Label="Shared" />
 
 </Project>

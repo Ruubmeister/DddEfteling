@@ -57,6 +57,7 @@ EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		DddEfteling.Shared\DddEfteling.Shared.projitems*{1e5291e2-bc6e-40cd-8280-1634cb0b2178}*SharedItemsImports = 5
+		DddEfteling.Shared\DddEfteling.Shared.projitems*{6208a815-e99d-48c6-ab17-9a02e5a55567}*SharedItemsImports = 5
 		DddEfteling.Shared\DddEfteling.Shared.projitems*{6c2b2a3d-9090-49e2-a470-a333d2203940}*SharedItemsImports = 5
 		DddEfteling.Shared\DddEfteling.Shared.projitems*{718e27ba-e401-4bc6-aa9f-ce43ca35bec6}*SharedItemsImports = 5
 		DddEfteling.Shared\DddEfteling.Shared.projitems*{7ffaae16-8891-446b-a1ee-f3d726253827}*SharedItemsImports = 13
