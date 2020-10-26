@@ -27,16 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DddEfteling.FairyTales\DddEfteling.FairyTales.csproj" />
-    <ProjectReference Include="..\DddEfteling.Park\DddEfteling.Park.csproj" />
-    <ProjectReference Include="..\DddEfteling.Rides\DddEfteling.Rides.csproj" />
-    <ProjectReference Include="..\DddEfteling.Stands\DddEfteling.Stands.csproj" />
-    <ProjectReference Include="..\DddEfteling.Visitors\DddEfteling.Visitors.csproj" />
-    <ProjectReference Include="..\DddEfteling\DddEfteling.Park.csproj" />
+    <ProjectReference Include="..\..\DddEfteling.Visitors\DddEfteling.Visitors.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Park\Boundaries\" />
-  </ItemGroup>
-
 </Project>
