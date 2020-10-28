@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace DddEfteling.Tests.Park.Realms.Controls
+namespace DddEfteling.ParkTests.Controls
 {
     public class RealmConverterTest
     {

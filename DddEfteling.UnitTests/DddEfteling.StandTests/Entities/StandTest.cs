@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace DddEfteling.Tests.Park.Stands.Entities
+namespace DddEfteling.StandTests.Entities
 {
     public class StandTest
     {

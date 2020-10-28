@@ -2,7 +2,7 @@
 using DddEfteling.Park.Entities;
 using Xunit;
 
-namespace DddEfteling.Tests.Park.Realms.Controls
+namespace DddEfteling.ParkTests.Controls
 {
     public class RealmControlTest
     {

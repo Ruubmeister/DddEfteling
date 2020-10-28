@@ -1,12 +1,11 @@
 ﻿using DddEfteling.Park.Entities;
-using DddEfteling.Shared.Boundary;
+using DddEfteling.Shared.Boundaries;
 using DddEfteling.Shared.Entities;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
-namespace DddEfteling.Tests.Park.Employees.Entities
+namespace DddEfteling.ParkTests.Entities
 {
     public class EmployeeTest
     {
@@ -14,7 +13,7 @@ namespace DddEfteling.Tests.Park.Employees.Entities
         public void Construct_employeeIsConstructed_expectsEmployee()
         {
             DateTime dateOfBirth = DateTime.Parse("24-11-1988");
-            Employee employee = new Employee("Jan", "Jansen", new List<WorkplaceSkill>(){ WorkplaceSkill.Engineer });
+            Employee employee = new Employee("Jan", "Jansen", new List<WorkplaceSkill>() { WorkplaceSkill.Engineer });
 
             Assert.Equal("Jan", employee.FirstName);
             Assert.Equal("Jansen", employee.LastName);
@@ -32,7 +31,7 @@ namespace DddEfteling.Tests.Park.Employees.Entities
             Employee employee = new Employee("Jan", "Jansen", new List<WorkplaceSkill>() { WorkplaceSkill.Engineer });
 
             employee.GoToWork(ride, WorkplaceSkill.Engineer);
-            Assert.Equal(WorkplaceSkill.Engineer, employee.ActiveSkill );
+            Assert.Equal(WorkplaceSkill.Engineer, employee.ActiveSkill);
             Assert.Equal(ride, employee.ActiveWorkplace);
 
             employee.StopWork();

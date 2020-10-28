@@ -1,5 +1,6 @@
-﻿using DddEfteling.Shared.Entities;
+﻿using DddEfteling.FairyTales.Boundaries;
 using DddEfteling.FairyTales.Entities;
+using DddEfteling.Shared.Entities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -7,7 +8,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DddEfteling.FairyTales.Boundary;
 
 namespace DddEfteling.FairyTales.Controls
 {
@@ -42,11 +42,10 @@ namespace DddEfteling.FairyTales.Controls
 
         public FairyTale NearestFairyTale(Guid fairyTaleGuid, List<Guid> exclusionList)
         {
-            FairyTale tale = this.fairyTales.Where(tale => tale.Guid.Equals(fairyTaleGuid)).First();
-            Guid nextTale = tale.DistanceToOthers.Where(keyVal => !exclusionList.Contains(keyVal.Value))
-                .First().Value;
+            FairyTale tale = this.fairyTales.First(tale => tale.Guid.Equals(fairyTaleGuid));
+            Guid nextTale = tale.DistanceToOthers.First(keyVal => !exclusionList.Contains(keyVal.Value)).Value;
 
-            return this.fairyTales.Where(tale => tale.Guid.Equals(nextTale)).First();
+            return this.fairyTales.First(tale => tale.Guid.Equals(nextTale));
         }
 
         public FairyTale FindFairyTaleByName(string name)

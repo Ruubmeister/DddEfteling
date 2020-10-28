@@ -1,17 +1,16 @@
 ﻿using DddEfteling.Park.Boundaries;
 using DddEfteling.Park.Controls;
 using DddEfteling.Park.Entities;
-using DddEfteling.Shared.Boundary;
+using DddEfteling.Shared.Boundaries;
 using DddEfteling.Shared.Controls;
 using DddEfteling.Shared.Entities;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
-namespace DddEfteling.Tests.Park.Employees.Controls
+namespace DddEfteling.ParkTests.Controls
 {
     public class EmployeeControlTest
     {
@@ -76,6 +75,39 @@ namespace DddEfteling.Tests.Park.Employees.Controls
             Assert.NotEmpty(result);
             Assert.Equal(ride, result[0].ActiveWorkplace);
             Assert.Equal(WorkplaceSkill.Control, result[0].ActiveSkill);
+        }
+
+        [Fact]
+        public void GetPossibleSkillsFromSkill_GetGivenSkills_ExpectCorrectSkills()
+        {
+            List<WorkplaceSkill> skills = EmployeeControl.GetPossibleSkillsFromSkill(WorkplaceSkill.Control);
+
+            Assert.Equal(2, skills.Count);
+            Assert.Contains(WorkplaceSkill.Control, skills);
+            Assert.Contains(WorkplaceSkill.Host, skills);
+
+            skills = EmployeeControl.GetPossibleSkillsFromSkill(WorkplaceSkill.Cook);
+
+            Assert.Single(skills);
+            Assert.Contains(WorkplaceSkill.Cook, skills);
+
+            skills = EmployeeControl.GetPossibleSkillsFromSkill(WorkplaceSkill.Engineer);
+
+            Assert.Single(skills);
+            Assert.Contains(WorkplaceSkill.Engineer, skills);
+
+            skills = EmployeeControl.GetPossibleSkillsFromSkill(WorkplaceSkill.Host);
+
+            Assert.Equal(2, skills.Count);
+            Assert.Contains(WorkplaceSkill.Sell, skills);
+            Assert.Contains(WorkplaceSkill.Host, skills);
+
+            skills = EmployeeControl.GetPossibleSkillsFromSkill(WorkplaceSkill.Sell);
+
+            Assert.Equal(2, skills.Count);
+            Assert.Contains(WorkplaceSkill.Sell, skills);
+            Assert.Contains(WorkplaceSkill.Host, skills);
+
         }
     }
 }

@@ -2,10 +2,9 @@
 using DddEfteling.FairyTales.Entities;
 using DddEfteling.Shared.Entities;
 using Geolocation;
-using System;
 using Xunit;
 
-namespace DddEfteling.Tests.Park.FairyTales.Entities
+namespace DddEfteling.FairyTaleTests.Entities
 {
     public class FairyTaleTest
     {
@@ -14,7 +13,7 @@ namespace DddEfteling.Tests.Park.FairyTales.Entities
         {
             FairyTale tale = new FairyTale("Sneeuwwitje", new Coordinate(1.88, 2.77));
 
-            Assert.Equal( "Sneeuwwitje", tale.Name);
+            Assert.Equal("Sneeuwwitje", tale.Name);
             Assert.Equal(1.88, tale.Coordinates.Latitude);
             Assert.Equal(2.77, tale.Coordinates.Longitude);
             Assert.Equal(LocationType.FAIRYTALE, tale.LocationType);

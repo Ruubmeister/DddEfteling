@@ -1,14 +1,13 @@
 ﻿using DddEfteling.FairyTales.Controls;
 using DddEfteling.FairyTales.Entities;
 using Geolocation;
-using Moq;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace DddEfteling.Tests.Park.FairyTales.Controls
+namespace DddEfteling.FairyTaleTests.Controls
 {
     public class FairyTaleConverterTest
     {

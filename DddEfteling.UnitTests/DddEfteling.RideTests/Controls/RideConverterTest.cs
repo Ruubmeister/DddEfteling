@@ -1,15 +1,13 @@
 ﻿using DddEfteling.Rides.Controls;
 using DddEfteling.Rides.Entities;
 using Geolocation;
-using MediatR;
-using Moq;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace DddEfteling.Tests.Park.Rides.Controls
+namespace DddEfteling.RideTests.Controls
 {
     public class RideConverterTest
     {
@@ -53,7 +51,7 @@ namespace DddEfteling.Tests.Park.Rides.Controls
         [Fact]
         public void CanConvert_checkForRealm_expectTrue()
         {
-           
+
             Coordinate coordinates = new Coordinate(1.22D, 45.44D);
             RideConverter rideConverter = new RideConverter();
             Ride ride = new Ride(RideStatus.Open, coordinates, "Rider", 8, 1.33, TimeSpan.FromSeconds(31), 22);

@@ -1,5 +1,4 @@
-﻿using MediatR;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace DddEfteling.Shared.Entities
 {

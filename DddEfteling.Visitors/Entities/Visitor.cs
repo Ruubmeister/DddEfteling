@@ -1,4 +1,4 @@
-﻿using DddEfteling.Shared.Boundary;
+﻿using DddEfteling.Shared.Boundaries;
 using DddEfteling.Shared.Controls;
 using DddEfteling.Shared.Entities;
 using Geolocation;
@@ -19,8 +19,11 @@ namespace DddEfteling.Visitors.Entities
         [JsonIgnore]
         public Dictionary<DateTime, ILocationDto> VisitedLocations { get; } = new Dictionary<DateTime, ILocationDto>();
 
-        public Visitor() {
+        public Visitor()
+        {
             this.Guid = Guid.NewGuid();
+            this.random = new Random();
+            this.locationSelector = new VisitorLocationSelector(random);
         }
 
         public Visitor(DateTime dateOfBirth, double length, Coordinate startLocation, Random random,
@@ -39,7 +42,7 @@ namespace DddEfteling.Visitors.Entities
         {
             if (this.VisitedLocations.Count < 1)
             {
-                throw new NullReferenceException("No locations found");
+                return null;
             }
 
             return VisitedLocations[VisitedLocations.Keys.Max()];
@@ -47,10 +50,10 @@ namespace DddEfteling.Visitors.Entities
 
         public void AddVisitedLocation(ILocationDto location)
         {
-            if (!VisitedLocations.ContainsValue(location)) 
+            if (!VisitedLocations.ContainsValue(location))
             {
 
-                if(VisitedLocations.Count >= 10)
+                if (VisitedLocations.Count >= 10)
                 {
                     VisitedLocations.Remove(VisitedLocations.Keys.Min());
                 }
@@ -89,10 +92,10 @@ namespace DddEfteling.Visitors.Entities
             this.AddVisitedLocation(ride);
             this.TargetLocation = null;
         }
-        
+
         public void WalkToDestination(double step)
         {
-                this.CurrentLocation = CoordinateExtensions.GetStepCoordinates(CurrentLocation, TargetLocation.Coordinates, step);
+            this.CurrentLocation = CoordinateExtensions.GetStepCoordinates(CurrentLocation, TargetLocation.Coordinates, step);
         }
 
         public VisitorDto ToDto()

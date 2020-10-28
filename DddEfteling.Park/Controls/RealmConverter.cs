@@ -5,7 +5,7 @@ using System;
 
 namespace DddEfteling.Park.Controls
 {
-    public class RealmConverter: JsonConverter
+    public class RealmConverter : JsonConverter
     {
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

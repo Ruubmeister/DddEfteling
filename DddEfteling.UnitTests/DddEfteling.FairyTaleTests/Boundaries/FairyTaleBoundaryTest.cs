@@ -1,34 +1,50 @@
 ﻿using DddEfteling.FairyTales.Boundaries;
-using DddEfteling.FairyTales.Boundary;
 using DddEfteling.FairyTales.Controls;
-using DddEfteling.Shared.Boundary;
-using MediatR;
+using DddEfteling.FairyTales.Entities;
+using DddEfteling.Shared.Boundaries;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Moq;
+using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace DddEfteling.Tests.Park.FairyTales.Boundaries
+namespace DddEfteling.FairyTaleTests.Boundaries
 {
     public class FairyTaleBoundaryTest
     {
-        IFairyTaleControl fairyTaleControl;
-        FairyTaleBoundary fairyTaleBoundary;
+        private readonly Mock<IFairyTaleControl> fairyTaleControl;
+        private readonly FairyTaleBoundary fairyTaleBoundary;
         public FairyTaleBoundaryTest()
         {
-            ILogger<FairyTaleControl> logger = Mock.Of<ILogger<FairyTaleControl>>();
-            IEventProducer producer = Mock.Of<IEventProducer>();
-            this.fairyTaleControl = new FairyTaleControl(logger, producer);
-            this.fairyTaleBoundary = new FairyTaleBoundary(fairyTaleControl);
+            this.fairyTaleControl = new Mock<IFairyTaleControl>();
+            this.fairyTaleBoundary = new FairyTaleBoundary(fairyTaleControl.Object);
         }
 
         [Fact]
         public void GetFairyTales_RetrieveJson_ExpectsFairyTales()
         {
+            this.fairyTaleControl.Setup(control => control.All()).Returns(new List<FairyTale>() { { new FairyTale() }, { new FairyTale() } });
             ActionResult<List<FairyTaleDto>> tales = fairyTaleBoundary.GetFairyTales();
 
             Assert.NotEmpty(tales.Value);
+        }
+
+        [Fact]
+        public void GetRandomFairyTale_HasFairyTales_ExpectFairyTale()
+        {
+            this.fairyTaleControl.Setup(control => control.GetRandom()).Returns(new FairyTale());
+            ActionResult<FairyTaleDto> tale = fairyTaleBoundary.GetRandomFairyTale();
+
+            Assert.NotNull(tale);
+        }
+
+        [Fact]
+        public void GetNearestFairyTale_HasFairyTales_ExpectFairyTale()
+        {
+            this.fairyTaleControl.Setup(control => control.NearestFairyTale(It.IsAny<Guid>(), It.IsAny<List<Guid>>())).Returns(new FairyTale());
+            ActionResult<FairyTaleDto> tale = fairyTaleBoundary.GetNearestFairyTale(Guid.NewGuid(), "");
+
+            Assert.NotNull(tale);
         }
     }
 }

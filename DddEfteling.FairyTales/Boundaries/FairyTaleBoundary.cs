@@ -1,6 +1,5 @@
 ﻿using DddEfteling.FairyTales.Controls;
-using DddEfteling.FairyTales.Entities;
-using DddEfteling.Shared.Boundary;
+using DddEfteling.Shared.Boundaries;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -30,9 +29,10 @@ namespace DddEfteling.FairyTales.Boundaries
         }
 
         [HttpGet("/{guid}/nearest")]
-        public ActionResult<FairyTaleDto> GetNearestFairyTale(Guid guid, [FromQuery(Name ="exclude")] string excludedGuids)
+        public ActionResult<FairyTaleDto> GetNearestFairyTale(Guid guid, [FromQuery(Name = "exclude")] string excludedGuids)
         {
-            List<Guid> excludedGuidList = new List<string>(excludedGuids.Split(",")).ConvertAll(guidStr => Guid.Parse(guidStr));
+
+            var excludedGuidList = excludedGuids.Length > 0 ? new List<string>(excludedGuids.Split(",")).ConvertAll(guidStr => Guid.Parse(guidStr)) : new List<Guid>();
             return fairyTaleControl.NearestFairyTale(guid, excludedGuidList).ToDto();
         }
     }

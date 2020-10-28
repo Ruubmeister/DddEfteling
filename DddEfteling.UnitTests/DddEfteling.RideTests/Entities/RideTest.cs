@@ -1,11 +1,11 @@
 ﻿using DddEfteling.Rides.Entities;
-using DddEfteling.Shared.Boundary;
+using DddEfteling.Shared.Boundaries;
 using Geolocation;
 using Moq;
 using System;
 using Xunit;
 
-namespace DddEfteling.Tests.Park.Rides.Entities
+namespace DddEfteling.RideTests.Entities
 {
     public class RideTest
     {
@@ -40,7 +40,7 @@ namespace DddEfteling.Tests.Park.Rides.Entities
         public void HasVisitor_HasNoVisitors_ExpectFalse()
         {
             Coordinate coordinates = new Coordinate(1.22D, 45.44D);
-            Ride ride = new Ride(RideStatus.Open,  coordinates, "Rider", 8, 1.33, TimeSpan.FromSeconds(31), 22);
+            Ride ride = new Ride(RideStatus.Open, coordinates, "Rider", 8, 1.33, TimeSpan.FromSeconds(31), 22);
 
             VisitorDto visitor = new Mock<VisitorDto>().Object;
 

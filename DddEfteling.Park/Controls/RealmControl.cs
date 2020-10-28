@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace DddEfteling.Park.Controls
 {
-    public class RealmControl: IRealmControl
+    public class RealmControl : IRealmControl
     {
 
         private readonly List<Realm> realms;

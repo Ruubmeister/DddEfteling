@@ -1,21 +1,18 @@
-﻿using DddEfteling.Shared.Boundary;
+﻿using DddEfteling.Shared.Boundaries;
 using DddEfteling.Stands.Boundaries;
 using DddEfteling.Stands.Controls;
-using DddEfteling.Stands.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
-namespace DddEfteling.Tests.Park.Stands.Boundaries
+namespace DddEfteling.StandTests.Boundaries
 {
     public class RideBoundaryTest
     {
-        IStandControl standControl;
-        StandBoundary standBoundary;
+        private readonly IStandControl standControl;
+        private readonly StandBoundary standBoundary;
         public RideBoundaryTest()
         {
             ILogger<IStandControl> logger = Mock.Of<ILogger<IStandControl>>();

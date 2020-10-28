@@ -1,5 +1,7 @@
-﻿using DddEfteling.Shared.Entities;
+﻿using DddEfteling.Rides.Boundaries;
 using DddEfteling.Rides.Entities;
+using DddEfteling.Shared.Boundaries;
+using DddEfteling.Shared.Entities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -8,8 +10,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using DddEfteling.Shared.Boundary;
-using DddEfteling.Rides.Boundary;
 
 namespace DddEfteling.Rides.Controls
 {
@@ -118,11 +118,10 @@ namespace DddEfteling.Rides.Controls
 
         public Ride NearestRide(Guid rideGuid, List<Guid> exclusionList)
         {
-            Ride ride = this.rides.Where(ride => ride.Guid.Equals(rideGuid)).First();
-            Guid nextRide = ride.DistanceToOthers.Where(keyVal => !exclusionList.Contains(keyVal.Value))
-                .First().Value;
+            Ride ride = this.rides.First(ride => ride.Guid.Equals(rideGuid));
+            Guid nextRide = ride.DistanceToOthers.First(keyVal => !exclusionList.Contains(keyVal.Value)).Value;
 
-            return this.rides.Where(tale => tale.Guid.Equals(nextRide)).First();
+            return this.rides.First(tale => tale.Guid.Equals(nextRide));
         }
 
         private void CheckRequiredEmployees(Ride ride)
@@ -155,9 +154,9 @@ namespace DddEfteling.Rides.Controls
 
         public void HandleEmployeeChangedWorkplace(WorkplaceDto workplace, Guid employee, WorkplaceSkill skill)
         {
-            if(this.rides.Where(ride => ride.Guid.Equals(workplace.Guid)).Any())
+            if (this.rides.Any(ride => ride.Guid.Equals(workplace.Guid)))
             {
-                Ride ride = rides.Where(ride => ride.Guid.Equals(workplace.Guid)).First();
+                Ride ride = rides.First(ride => ride.Guid.Equals(workplace.Guid));
 
                 ride.AddEmployee(employee, skill);
             }
@@ -165,7 +164,7 @@ namespace DddEfteling.Rides.Controls
 
         public void HandleVisitorSteppingInRideLine(Guid visitorGuid, Guid rideGuid)
         {
-            Ride ride = rides.Where(ride => ride.Guid.Equals(rideGuid)).First();
+            Ride ride = rides.First(ride => ride.Guid.Equals(rideGuid));
             if (ride.Status.Equals(RideStatus.Open))
             {
                 VisitorDto visitor = visitorClient.GetVisitor(visitorGuid);

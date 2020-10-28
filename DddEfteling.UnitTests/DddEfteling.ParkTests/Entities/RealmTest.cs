@@ -1,10 +1,7 @@
 ﻿using DddEfteling.Park.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
-namespace DddEfteling.Tests.Park.Realms.Entities
+namespace DddEfteling.ParkTests.Entities
 {
     public class RealmTest
     {

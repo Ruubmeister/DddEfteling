@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace DddEfteling.Stands.Controls
 {
-    public class StandConverter: JsonConverter
+    public class StandConverter : JsonConverter
     {
 
         public StandConverter()

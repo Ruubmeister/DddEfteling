@@ -1,7 +1,7 @@
 ﻿using DddEfteling.Stands.Entities;
 using Xunit;
 
-namespace DddEfteling.Tests.Park.Stands.Entities
+namespace DddEfteling.StandTests.Entities
 {
     public class ProductTest
     {

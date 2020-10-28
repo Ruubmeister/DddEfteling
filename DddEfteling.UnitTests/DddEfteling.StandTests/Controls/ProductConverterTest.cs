@@ -1,13 +1,12 @@
 ﻿using DddEfteling.Stands.Controls;
 using DddEfteling.Stands.Entities;
-using Moq;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace DddEfteling.Tests.Park.Stands.Controls
+namespace DddEfteling.StandTests.Controls
 {
     public class ProductConverterTest
     {
@@ -54,7 +53,7 @@ namespace DddEfteling.Tests.Park.Stands.Controls
         public void CanConvert_checkForRealm_expectTrue()
         {
             ProductConverter productConverter = new ProductConverter();
-            Product product= new Product("Name", 1.24F, ProductType.Drink);
+            Product product = new Product("Name", 1.24F, ProductType.Drink);
             Assert.True(productConverter.CanConvert(product.GetType()));
         }
     }

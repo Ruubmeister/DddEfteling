@@ -13,6 +13,6 @@ namespace DddEfteling.Shared.Entities
         public SortedDictionary<double, Guid> DistanceToOthers { get; }
 
         public Coordinate Coordinates { get; }
-        public LocationType LocationType { get;  }
+        public LocationType LocationType { get; }
     }
 }

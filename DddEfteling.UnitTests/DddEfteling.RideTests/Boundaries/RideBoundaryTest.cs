@@ -1,37 +1,51 @@
-﻿using DddEfteling.Rides.Boundary;
+﻿using DddEfteling.Rides.Boundaries;
 using DddEfteling.Rides.Controls;
 using DddEfteling.Rides.Entities;
-using DddEfteling.Shared.Boundary;
-using MediatR;
+using DddEfteling.Shared.Boundaries;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Moq;
+using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace DddEfteling.Tests.Park.Rides.Boundaries
+namespace DddEfteling.RideTests.Boundaries
 {
-    public class FairyTaleBoundaryTest
+    public class RideBoundaryTest
     {
-        IRideControl rideControl;
-        RideBoundary rideBoundary;
+        private readonly Mock<IRideControl> rideControl;
+        private readonly RideBoundary rideBoundary;
 
-        public FairyTaleBoundaryTest()
+        public RideBoundaryTest()
         {
-            ILogger<RideControl> logger = Mock.Of<ILogger<RideControl>>();
-            IEventProducer eventProducer = Mock.Of<IEventProducer>();
-            IVisitorClient visitorClient = Mock.Of<IVisitorClient>();
-            IEmployeeClient employeeClient = Mock.Of<IEmployeeClient>();
-            this.rideControl = new RideControl(logger, eventProducer, employeeClient, visitorClient);
-            this.rideBoundary = new RideBoundary(rideControl);
+            this.rideControl = new Mock<IRideControl>();
+            this.rideBoundary = new RideBoundary(rideControl.Object);
         }
 
         [Fact]
         public void GetRides_RetrieveJson_ExpectsRides()
         {
+            this.rideControl.Setup(control => control.All()).Returns(new List<Ride>() { { new Ride() }, { new Ride() } });
             ActionResult<List<RideDto>> rides = rideBoundary.GetRides();
 
             Assert.NotEmpty(rides.Value);
+        }
+
+        [Fact]
+        public void GetRandomRide_HasRide_ExpectRide()
+        {
+            this.rideControl.Setup(control => control.GetRandom()).Returns(new Ride());
+            ActionResult<RideDto> tale = rideBoundary.GetRandomRide();
+
+            Assert.NotNull(tale);
+        }
+
+        [Fact]
+        public void GetNearestFairyTale_HasFairyTales_ExpectFairyTale()
+        {
+            this.rideControl.Setup(control => control.NearestRide(It.IsAny<Guid>(), It.IsAny<List<Guid>>())).Returns(new Ride());
+            ActionResult<RideDto> tale = rideBoundary.GetNearestRide(Guid.NewGuid(), "");
+
+            Assert.NotNull(tale);
         }
     }
 }

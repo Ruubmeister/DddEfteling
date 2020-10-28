@@ -27,7 +27,7 @@ namespace DddEfteling.Rides.Controls
         {
             JObject obj = JObject.Load(reader);
 
-            TimeSpan duration = new TimeSpan(0, int.Parse(obj["duration"]["minutes"].ToString()), 
+            TimeSpan duration = new TimeSpan(0, int.Parse(obj["duration"]["minutes"].ToString()),
                 int.Parse(obj["duration"]["seconds"].ToString()));
 
             Coordinate coordinates = new Coordinate(obj["coordinates"]["lat"].ToObject<double>(),

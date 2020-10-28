@@ -9,19 +9,20 @@
     <Import_RootNamespace>DddEfteling.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Boundary\EmployeeClient.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Boundary\EmployeeDto.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Boundary\FairyTaleClient.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Boundary\FairyTaleDto.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Boundary\ILocationDto.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Boundary\KafkaConsumer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Boundary\RideClient.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Boundary\RideDto.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Boundary\VisitorClient.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Boundary\StandClient.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Boundary\StandDto.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Boundary\VisitorDto.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Boundary\WorkplaceDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundaries\EmployeeClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundaries\EmployeeDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundaries\FairyTaleClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundaries\FairyTaleDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundaries\ILocationDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundaries\KafkaConsumer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundaries\KafkaProducer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundaries\RideClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundaries\RideDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundaries\VisitorClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundaries\StandClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundaries\StandDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundaries\VisitorDto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Boundaries\WorkplaceDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\CoordinateExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\EnumExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\NameService.cs" />

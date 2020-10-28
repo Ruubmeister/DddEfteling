@@ -1,11 +1,11 @@
-﻿using DddEfteling.Shared.Entities;
+﻿using DddEfteling.Shared.Boundaries;
+using DddEfteling.Shared.Entities;
 using Geolocation;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text.Json.Serialization;
-using DddEfteling.Shared.Boundary;
-using System.Security.Policy;
 
 namespace DddEfteling.Rides.Entities
 {
@@ -33,12 +33,10 @@ namespace DddEfteling.Rides.Entities
             VisitorsInLine = new Queue<VisitorDto>();
             VisitorsInRide = new Queue<VisitorDto>();
 
-            //Lets change this later to a flexible setup
+            // todo: Let's change this later to a flexible setup
             //setEmployeeSkillRequirement(WorkplaceSkill.Control, 2);
             //setEmployeeSkillRequirement(WorkplaceSkill.Host, 3);
         }
-
-        public LocationType LocationType { get; }
 
         [JsonIgnore]
         public SortedDictionary<double, Guid> DistanceToOthers { get; } = new SortedDictionary<double, Guid>();
@@ -83,7 +81,7 @@ namespace DddEfteling.Rides.Entities
 
         public Coordinate Coordinates { get; }
 
-        public DateTime EndTime { get; private set; }
+        public DateTime EndTime { get; set; }
 
         public Dictionary<Guid, WorkplaceSkill> employeesToSkill { get; }
 
@@ -94,7 +92,8 @@ namespace DddEfteling.Rides.Entities
 
         public bool HasVisitor(VisitorDto visitor)
         {
-            return this.VisitorsInLine.Contains(visitor) || this.VisitorsInRide.Contains(visitor);
+            return this.VisitorsInLine.ToList().ConvertAll(visitor => visitor.Guid).Contains(visitor.Guid) ||
+                this.VisitorsInRide.ToList().ConvertAll(visitor => visitor.Guid).Contains(visitor.Guid);
         }
 
         public bool AddVisitorToLine(VisitorDto visitor)

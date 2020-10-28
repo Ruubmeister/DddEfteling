@@ -1,25 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using DddEfteling.FairyTales.Boundaries;
-using DddEfteling.FairyTales.Boundary;
 using DddEfteling.FairyTales.Controls;
-using DddEfteling.Shared.Boundary;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace DddEfteling.FairyTales
 {
     public class Startup
     {
-        readonly string DefaultCorsPolicy = "_defaultCorsPolicy";
+        private readonly string DefaultCorsPolicy = "_defaultCorsPolicy";
 
         public Startup(IConfiguration configuration)
         {

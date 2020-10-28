@@ -1,4 +1,4 @@
-﻿using DddEfteling.Shared.Boundary;
+﻿using DddEfteling.Shared.Boundaries;
 using System;
 using System.Collections.Generic;
 
@@ -6,7 +6,7 @@ namespace DddEfteling.Shared.Entities
 {
     public abstract class Workplace
     {
-        public Guid Guid { get; set; } = Guid.NewGuid();
+        public Guid Guid { get; set; }
         public LocationType LocationType { get; set; }
 
         protected Workplace()

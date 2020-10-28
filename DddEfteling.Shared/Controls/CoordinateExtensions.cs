@@ -5,7 +5,7 @@ namespace DddEfteling.Shared.Controls
 {
     public static class CoordinateExtensions
     {
-        private static double radialNumber = Math.PI / 180;
+        private static readonly double radialNumber = Math.PI / 180;
         public static bool IsInRange(Coordinate from, Coordinate to, Double distance)
         {
             return distance > GeoCalculator.GetDistance(from, to, 1, DistanceUnit.Meters);
@@ -36,7 +36,7 @@ namespace DddEfteling.Shared.Controls
             double factor1 = Math.Sin(angle * radialNumber);
             double factor2 = Math.Cos(angle * radialNumber);
 
-            if (Math.Floor(bearing / 90) % 2 ==0)
+            if (Math.Floor(bearing / 90) % 2 == 0)
             {
                 return (latitudeFactor: factor2, longitudeFactor: factor1);
             }

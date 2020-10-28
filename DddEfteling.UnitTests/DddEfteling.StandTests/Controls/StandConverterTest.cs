@@ -1,14 +1,13 @@
 ﻿using DddEfteling.Stands.Controls;
 using DddEfteling.Stands.Entities;
 using Geolocation;
-using Moq;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace DddEfteling.Tests.Park.Stands.Controls
+namespace DddEfteling.StandTests.Controls
 {
     public class StandConverterTest
     {

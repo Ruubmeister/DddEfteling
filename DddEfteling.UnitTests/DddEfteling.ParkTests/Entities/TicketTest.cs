@@ -2,7 +2,7 @@
 using System;
 using Xunit;
 
-namespace DddEfteling.Tests.Park.Entrances.Entities
+namespace DddEfteling.ParkTests.Entities
 {
     public class TicketTest
     {
@@ -14,6 +14,6 @@ namespace DddEfteling.Tests.Park.Entrances.Entities
             Assert.True(DateTime.Now > ticket.Day);
             Assert.Equal(DateTime.Today, ticket.Day.Date);
         }
-        
+
     }
 }

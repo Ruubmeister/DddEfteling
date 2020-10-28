@@ -1,16 +1,14 @@
 ﻿using DddEfteling.Stands.Controls;
 using DddEfteling.Stands.Entities;
-using Microsoft.Extensions.Logging;
-using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace DddEfteling.Tests.Park.Stands.Controls
+namespace DddEfteling.StandTests.Controls
 {
     public class StandControlTest
     {
-        IStandControl standControl;
+        private readonly IStandControl standControl;
         public StandControlTest()
         {
             this.standControl = new StandControl();

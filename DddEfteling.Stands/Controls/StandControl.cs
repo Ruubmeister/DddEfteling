@@ -15,7 +15,7 @@ namespace DddEfteling.Stands.Controls
         {
             this.stands = this.LoadStands();
         }
-        
+
         private List<Stand> LoadStands()
         {
             using StreamReader r = new StreamReader("resources/stands.json");

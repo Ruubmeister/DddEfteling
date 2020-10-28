@@ -1,25 +1,26 @@
+using DddEfteling.Park.Boundaries;
+using DddEfteling.Park.Controls;
+using DddEfteling.Shared.Controls;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Configuration;
-using DddEfteling.Shared.Controls;
-using DddEfteling.Park.Boundaries;
-using DddEfteling.Park.Controls;
 using System.Threading.Tasks;
 
 namespace DddEfteling.Park
 {
     public class Startup
     {
-        readonly string DefaultCorsPolicy = "_defaultCorsPolicy";
+        private readonly string DefaultCorsPolicy = "_defaultCorsPolicy";
 
         public Startup(IConfiguration configuration)
         {
             this.Configuration = configuration;
         }
-        IConfiguration Configuration { get; }
+
+        private IConfiguration Configuration { get; }
 
         /* This method gets called by the runtime. Use this method to add services to the container.
          For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940

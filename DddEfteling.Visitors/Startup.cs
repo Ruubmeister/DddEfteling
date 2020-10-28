@@ -1,28 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using DddEfteling.Shared.Boundary;
+using DddEfteling.Shared.Boundaries;
 using DddEfteling.Visitors.Boundaries;
-using DddEfteling.Visitors.Boundary;
 using DddEfteling.Visitors.Controls;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Polly;
+using System;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace DddEfteling.Visitors
 {
     public class Startup
     {
-        readonly string DefaultCorsPolicy = "_defaultCorsPolicy";
+        private readonly string DefaultCorsPolicy = "_defaultCorsPolicy";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;

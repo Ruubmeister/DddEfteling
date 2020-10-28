@@ -5,10 +5,9 @@ using System.IO;
 
 namespace DddEfteling.Shared.Controls
 {
-    public class NameService :INameService
+    public class NameService : INameService
     {
-
-        readonly Random rnd = new Random();
+        private readonly Random rnd = new Random();
         private List<String> FirstNames { get; }
         private List<String> LastNames { get; }
 
@@ -18,7 +17,8 @@ namespace DddEfteling.Shared.Controls
             LastNames = ReadJsonFile("resources/last-names.json");
         }
 
-        private List<string> ReadJsonFile(string file) {
+        private List<string> ReadJsonFile(string file)
+        {
             using StreamReader r = new StreamReader(file);
             string json = r.ReadToEnd();
             return JsonConvert.DeserializeObject<List<string>>(json);

@@ -1,23 +1,19 @@
-﻿using Castle.Core.Logging;
-using DddEfteling.Park.Boundaries;
+﻿using DddEfteling.Park.Boundaries;
 using DddEfteling.Park.Controls;
 using DddEfteling.Park.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NuGet.Frameworks;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
-namespace DddEfteling.Tests.Park.Entrances.Controls
+namespace DddEfteling.ParkTests.Controls
 {
     public class EntranceControlTest
     {
-
-        IMediator mediator;
-        ILogger<IEntranceControl> logger = new Mock<ILogger<IEntranceControl>>().Object;
+        private readonly IMediator mediator;
+        private readonly ILogger<IEntranceControl> logger = new Mock<ILogger<IEntranceControl>>().Object;
 
         public EntranceControlTest()
         {
@@ -53,7 +49,7 @@ namespace DddEfteling.Tests.Park.Entrances.Controls
         public void sellTickets_differentTicketTypes_expectsTickets()
         {
             IEventProducer eventProducer = Mock.Of<IEventProducer>();
-            EntranceControl entranceControl = new EntranceControl( logger, eventProducer);
+            EntranceControl entranceControl = new EntranceControl(logger, eventProducer);
 
             List<TicketType> ticketTypes = new List<TicketType>();
             ticketTypes.Add(TicketType.Adult);
