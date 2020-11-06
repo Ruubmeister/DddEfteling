@@ -1,4 +1,4 @@
-﻿using DddEfteling.Shared.Boundary;
+﻿using DddEfteling.Shared.Boundaries;
 using DddEfteling.Shared.Entities;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,8 @@ namespace DddEfteling.Park.Entities
     public class Employee
     {
 
-        public Employee(String firstName, String lastName,  List<WorkplaceSkill> skills) {
+        public Employee(String firstName, String lastName, List<WorkplaceSkill> skills)
+        {
             this.FirstName = firstName;
             this.LastName = lastName;
             this.Guid = Guid.NewGuid();
@@ -23,7 +24,7 @@ namespace DddEfteling.Park.Entities
 
         public List<WorkplaceSkill> Skills { get; }
 
-        public WorkplaceSkill? ActiveSkill {  get; private set; }
+        public WorkplaceSkill? ActiveSkill { get; private set; }
 
         public void GoToWork(WorkplaceDto workspace, WorkplaceSkill skill)
         {
@@ -33,7 +34,8 @@ namespace DddEfteling.Park.Entities
 
         public void StopWork()
         {
-            if (this.ActiveWorkplace != null){
+            if (this.ActiveWorkplace != null)
+            {
                 this.ActiveWorkplace = null;
                 this.ActiveSkill = null;
 

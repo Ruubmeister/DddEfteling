@@ -1,6 +1,6 @@
 ﻿using DddEfteling.Park.Boundaries;
 using DddEfteling.Park.Entities;
-using DddEfteling.Shared.Boundary;
+using DddEfteling.Shared.Boundaries;
 using DddEfteling.Shared.Controls;
 using DddEfteling.Shared.Entities;
 using Microsoft.Extensions.Logging;
@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace DddEfteling.Park.Controls
 {
-    public class EmployeeControl: IEmployeeControl
+    public class EmployeeControl : IEmployeeControl
     {
 
         private ConcurrentBag<Employee> Employees { get; }

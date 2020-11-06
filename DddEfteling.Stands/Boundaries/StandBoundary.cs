@@ -1,6 +1,5 @@
-﻿using DddEfteling.Shared.Boundary;
+﻿using DddEfteling.Shared.Boundaries;
 using DddEfteling.Stands.Controls;
-using DddEfteling.Stands.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 

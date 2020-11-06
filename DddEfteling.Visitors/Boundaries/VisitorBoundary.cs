@@ -1,4 +1,4 @@
-﻿using DddEfteling.Shared.Boundary;
+﻿using DddEfteling.Shared.Boundaries;
 using DddEfteling.Visitors.Controls;
 using Microsoft.AspNetCore.Mvc;
 using System;

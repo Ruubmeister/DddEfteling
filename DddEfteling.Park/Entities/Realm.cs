@@ -1,5 +1,5 @@
 ﻿using DddEfteling.Park.Controls;
-using DddEfteling.Shared.Boundary;
+using DddEfteling.Shared.Boundaries;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

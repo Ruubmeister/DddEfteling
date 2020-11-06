@@ -1,7 +1,7 @@
-﻿using DddEfteling.Shared.Boundary;
+﻿using DddEfteling.Shared.Boundaries;
 using DddEfteling.Shared.Controls;
 using DddEfteling.Shared.Entities;
-using DddEfteling.Visitors.Boundary;
+using DddEfteling.Visitors.Boundaries;
 using DddEfteling.Visitors.Entities;
 using Geolocation;
 using MediatR;
@@ -25,8 +25,8 @@ namespace DddEfteling.Visitors.Controls
         private readonly ILogger<VisitorControl> logger;
         private readonly IEventProducer eventProducer;
 
-        private readonly Dictionary<Guid, DateTime> IdleVisitors = new Dictionary<Guid, DateTime>();
-        private readonly ConcurrentDictionary<Guid, DateTime> BusyVisitors = new ConcurrentDictionary<Guid, DateTime>();
+        public readonly Dictionary<Guid, DateTime> IdleVisitors = new Dictionary<Guid, DateTime>();
+        public readonly ConcurrentDictionary<Guid, DateTime> BusyVisitors = new ConcurrentDictionary<Guid, DateTime>();
 
         private ConcurrentBag<Visitor> Visitors { get; } = new ConcurrentBag<Visitor>();
 
@@ -56,7 +56,7 @@ namespace DddEfteling.Visitors.Controls
 
             foreach (KeyValuePair<Guid, DateTime> visitorAtTime in copiedList.AsEnumerable())
             {
-                Visitor visitor = Visitors.ToList().First(visitor => visitor.Guid.Equals(visitorAtTime.Key));
+                Visitor visitor = Visitors.First(visitor => visitor.Guid.Equals(visitorAtTime.Key));
                 if (visitor.TargetLocation == null)
                 {
                     this.SetNewLocation(visitor);
@@ -144,14 +144,7 @@ namespace DddEfteling.Visitors.Controls
 
         public void SetNewLocation(Visitor visitor)
         {
-            ILocationDto previousLocation = null;
-            try {
-                previousLocation = visitor.GetLastLocation();
-            } catch(NullReferenceException)
-            {
-                logger.LogDebug("No location found");
-            }
-                
+            ILocationDto previousLocation = visitor.GetLastLocation();
 
             LocationType type = visitor.GetLocationType(previousLocation?.LocationType);
             logger.LogDebug($"New location type for visitor is {type}");
@@ -161,7 +154,7 @@ namespace DddEfteling.Visitors.Controls
                 case LocationType.FAIRYTALE:
                     FairyTaleDto fairyTale = null;
 
-                    if (type.Equals(previousLocation?.LocationType))
+                    if (previousLocation != null && type.Equals(previousLocation?.LocationType))
                     {
                         fairyTale = fairyTaleClient.GetNearestFairyTale(previousLocation.Guid,
                         visitor.VisitedLocations.Values.Select(location => location.Guid).ToList());
@@ -169,7 +162,7 @@ namespace DddEfteling.Visitors.Controls
 
                     if (fairyTale == null)
                     {
-                        fairyTale = fairyTaleClient.GetRandomFairyTaleAsync();
+                        fairyTale = fairyTaleClient.GetRandomFairyTale();
                     }
 
                     logger.LogInformation($"Walking to fairy tale {fairyTale.Name}");
@@ -179,7 +172,7 @@ namespace DddEfteling.Visitors.Controls
 
                     RideDto ride = null;
 
-                    if (type.Equals(previousLocation?.LocationType))
+                    if (previousLocation != null && type.Equals(previousLocation?.LocationType))
                     {
                         ride = rideClient.GetNearestRide(previousLocation.Guid,
                         visitor.VisitedLocations.Values.Select(location => location.Guid).ToList());
@@ -187,7 +180,7 @@ namespace DddEfteling.Visitors.Controls
 
                     if (ride == null)
                     {
-                        ride = rideClient.GetRandomRideAsync();
+                        ride = rideClient.GetRandomRide();
                     }
 
                     logger.LogInformation($"Walking to ride {ride.Name}");
@@ -197,7 +190,7 @@ namespace DddEfteling.Visitors.Controls
 
                     RideDto stand = null;
 
-                    if (type.Equals(previousLocation?.LocationType))
+                    if (previousLocation != null && type.Equals(previousLocation?.LocationType))
                     {
                         stand = rideClient.GetNearestRide(previousLocation.Guid,
                         visitor.VisitedLocations.Values.Select(location => location.Guid).ToList());
@@ -205,7 +198,7 @@ namespace DddEfteling.Visitors.Controls
 
                     if (stand == null)
                     {
-                        stand = rideClient.GetRandomRideAsync();
+                        stand = rideClient.GetRandomRide();
                     }
 
                     logger.LogInformation($"Temp: Walking to ride {stand.Name}");
@@ -222,11 +215,11 @@ namespace DddEfteling.Visitors.Controls
             switch (type)
             {
                 case LocationType.FAIRYTALE:
-                    FairyTaleDto tale = fairyTaleClient.GetRandomFairyTaleAsync();
+                    FairyTaleDto tale = fairyTaleClient.GetRandomFairyTale();
                     visitor.TargetLocation = tale;
                     break;
                 case LocationType.RIDE:
-                    RideDto ride = rideClient.GetRandomRideAsync();
+                    RideDto ride = rideClient.GetRandomRide();
                     visitor.TargetLocation = ride;
                     break;
             }
@@ -255,7 +248,7 @@ namespace DddEfteling.Visitors.Controls
 
         public Visitor GetVisitor(Guid guid)
         {
-            return this.Visitors.Where(visitor => visitor.Guid.Equals(guid)).First();
+            return this.Visitors.First(visitor => visitor.Guid.Equals(guid));
         }
     }
 

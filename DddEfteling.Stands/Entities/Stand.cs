@@ -1,4 +1,4 @@
-﻿using DddEfteling.Shared.Boundary;
+﻿using DddEfteling.Shared.Boundaries;
 using Geolocation;
 using System;
 using System.Collections.Generic;

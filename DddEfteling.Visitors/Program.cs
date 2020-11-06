@@ -1,20 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DddEfteling.Shared.Boundary;
-using DddEfteling.Visitors.Boundaries;
-using DddEfteling.Visitors.Boundary;
-using DddEfteling.Visitors.Controls;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace DddEfteling.Visitors
 {
-    public class Program
+    public static class Program
     {
         public static async Task Main(string[] args)
         {

@@ -6,7 +6,7 @@ using System;
 
 namespace DddEfteling.Stands.Controls
 {
-    public class ProductConverter: JsonConverter
+    public class ProductConverter : JsonConverter
     {
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -20,7 +20,7 @@ namespace DddEfteling.Stands.Controls
             return new Product(
                 obj["name"].ToString(),
                 float.Parse(obj["price"].ToString()),
-                (ProductType) Enum.Parse(typeof(ProductType), StringExtensions.FirstCharToUpper(obj["type"].ToString()))
+                (ProductType)Enum.Parse(typeof(ProductType), StringExtensions.FirstCharToUpper(obj["type"].ToString()))
                 );
         }
 

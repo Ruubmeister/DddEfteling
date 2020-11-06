@@ -1,21 +1,16 @@
 ﻿using Confluent.Kafka;
+using DddEfteling.Shared.Boundaries;
 using DddEfteling.Shared.Entities;
 using Newtonsoft.Json;
 
 namespace DddEfteling.Park.Boundaries
 {
-    public class EventProducer : IEventProducer
+    public class EventProducer : KafkaProducer, IEventProducer
     {
-        private readonly ProducerConfig config = new ProducerConfig
-        {
-            BootstrapServers = "192.168.1.247:9092"
-        };
+        public EventProducer() : base() { }
 
-        private readonly IProducer<Null, string> Producer;
-
-        public EventProducer()
+        public EventProducer(IProducer<Null, string> producer) : base(producer)
         {
-            this.Producer = new ProducerBuilder<Null, string>(config).Build();
         }
 
         public async void Produce(Event eventOut)

@@ -7,12 +7,12 @@ using System.Linq;
 
 namespace DddEfteling.Park.Controls
 {
-    public class EntranceControl: IEntranceControl
+    public class EntranceControl : IEntranceControl
     {
         private EntranceStatus status;
         private readonly ILogger<IEntranceControl> logger;
         private readonly IEventProducer eventProducer;
-        
+
         public EntranceControl(ILogger<IEntranceControl> logger, IEventProducer eventProducer)
         {
             this.logger = logger;
@@ -52,7 +52,8 @@ namespace DddEfteling.Park.Controls
         }
     }
 
-    public interface IEntranceControl {
+    public interface IEntranceControl
+    {
 
         void OpenPark();
         void ClosePark();

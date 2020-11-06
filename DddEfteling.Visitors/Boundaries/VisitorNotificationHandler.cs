@@ -2,7 +2,6 @@
 using DddEfteling.Visitors.Entities;
 using MediatR;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,7 +19,7 @@ namespace DddEfteling.Visitors.Boundaries
         public Task Handle(VisitorEvent notification, CancellationToken cancellationToken)
         {
             this.visitorControl.AddIdleVisitor(notification.VisitorGuid,
-                (DateTime)notification.Payload.Where(kv => kv.Key.Equals("DateTime")).First().Value);
+                (DateTime)notification.Payload.First(kv => kv.Key.Equals("DateTime")).Value);
             return Task.CompletedTask;
         }
     }
