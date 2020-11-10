@@ -21,12 +21,13 @@ namespace DddEfteling.Shared.Boundaries
         {
             string url = "/api/v1/rides";
             Uri targetUri = new Uri(client.BaseAddress, url);
+            var request = new HttpRequestMessage(HttpMethod.Get, targetUri.AbsoluteUri);
 
-            var streamTask = client.GetStringAsync(targetUri.AbsoluteUri);
+            var streamTask = client.SendAsync(request).Result;
 
-            if (streamTask.IsCompletedSuccessfully)
+            if (streamTask.IsSuccessStatusCode)
             {
-                return JsonConvert.DeserializeObject<List<RideDto>>(streamTask.Result);
+                return JsonConvert.DeserializeObject<List<RideDto>>(streamTask.Content.ReadAsStringAsync().Result);
             }
 
             return new List<RideDto>();
@@ -37,11 +38,13 @@ namespace DddEfteling.Shared.Boundaries
             string url = "/api/v1/rides/random";
             Uri targetUri = new Uri(client.BaseAddress, url);
 
-            var streamTask = client.GetStringAsync(targetUri.AbsoluteUri);
+            var request = new HttpRequestMessage(HttpMethod.Get, targetUri.AbsoluteUri);
 
-            if (streamTask.IsCompletedSuccessfully)
+            var streamTask = client.SendAsync(request).Result;
+
+            if (streamTask.IsSuccessStatusCode)
             {
-                return JsonConvert.DeserializeObject<RideDto>(streamTask.Result);
+                return JsonConvert.DeserializeObject<RideDto>(streamTask.Content.ReadAsStringAsync().Result);
             }
 
             return null;
@@ -58,12 +61,13 @@ namespace DddEfteling.Shared.Boundaries
 
             Uri targetUri = new Uri(client.BaseAddress, url);
 
-            var streamTask = client.GetStringAsync(QueryHelpers.AddQueryString(targetUri.AbsoluteUri, urlParams));
+            var request = new HttpRequestMessage(HttpMethod.Get, targetUri.AbsoluteUri);
 
+            var streamTask = client.SendAsync(request).Result;
 
-            if (streamTask.IsCompletedSuccessfully)
+            if (streamTask.IsSuccessStatusCode)
             {
-                return JsonConvert.DeserializeObject<RideDto>(streamTask.Result);
+                return JsonConvert.DeserializeObject<RideDto>(streamTask.Content.ReadAsStringAsync().Result);
             }
 
             return null;

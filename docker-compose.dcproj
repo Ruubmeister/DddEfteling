@@ -6,7 +6,7 @@
     <ProjectGuid>3cca1dd5-3f38-4472-9fdb-6e9361401bf5</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
-    <DockerServiceName>dddefteling.park</DockerServiceName>
+    <DockerServiceName>dddeftelingpark</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">
