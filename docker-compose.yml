@@ -39,6 +39,7 @@ services:
       - dddeftelingrides
       - dddeftelingfairytales
       - dddeftelingstands
+    restart: on-failure
     build:
       context: .
       dockerfile: DddEfteling.Visitors/Dockerfile

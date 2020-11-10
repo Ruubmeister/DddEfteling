@@ -238,3 +238,4 @@ _Pvt_Extensions
 *.ps1
 **/coverage.opencover.xml
 **/reports/*
+**/wwwroot/private/*

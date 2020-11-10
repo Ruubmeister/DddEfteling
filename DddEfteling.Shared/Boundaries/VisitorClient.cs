@@ -18,13 +18,13 @@ namespace DddEfteling.Shared.Boundaries
         {
             string url = "/api/v1/visitors";
             Uri targetUri = new Uri(client.BaseAddress, url);
+            var request = new HttpRequestMessage(HttpMethod.Get, targetUri.AbsoluteUri);
 
-            var streamTask = client.GetStringAsync(targetUri.AbsoluteUri);
+            var streamTask = client.SendAsync(request).Result;
 
-            if (streamTask.IsCompletedSuccessfully)
+            if (streamTask.IsSuccessStatusCode)
             {
-
-                return JsonConvert.DeserializeObject<List<VisitorDto>>(streamTask.Result);
+                return JsonConvert.DeserializeObject<List<VisitorDto>>(streamTask.Content.ReadAsStringAsync().Result);
             }
 
             return new List<VisitorDto>();
@@ -36,12 +36,13 @@ namespace DddEfteling.Shared.Boundaries
             string url = $"/api/v1/visitors/{guid}";
             Uri targetUri = new Uri(client.BaseAddress, url);
 
-            var streamTask = client.GetStringAsync(targetUri.AbsoluteUri);
+            var request = new HttpRequestMessage(HttpMethod.Get, targetUri.AbsoluteUri);
 
-            if (streamTask.IsCompletedSuccessfully)
+            var streamTask = client.SendAsync(request).Result;
+
+            if (streamTask.IsSuccessStatusCode)
             {
-
-                return JsonConvert.DeserializeObject<VisitorDto>(streamTask.Result);
+                return JsonConvert.DeserializeObject<VisitorDto>(streamTask.Content.ReadAsStringAsync().Result);
             }
 
             return null;

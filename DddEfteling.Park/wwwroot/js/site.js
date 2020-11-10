@@ -12,13 +12,29 @@ var map = new ol.Map({
     })
 });
 
+var visitors = {};
+
 
 visitorVectorLayer = null;
 
 var rideStatsBar = $(".ride-statistics")
 var parkStatsBar = $(".park-statistics")
 
+function setup_audio() {
+    var audio = new Audio('private/achtergrondmuziek.mp3');
+    audio.loop = true;
+
+    $(".btn-background-music-play").click(function () {
+        audio.play();
+    });
+    $(".btn-background-music-stop").click(function () {
+        audio.pause();
+    });
+}
+
 $(document).ready(function () {
+
+    setup_audio();
 
     $(".map-col").height($("body").height() - $("footer").height());
     map.updateSize();
@@ -67,7 +83,12 @@ $(document).ready(function () {
         $.get("http://localhost:3995/api/v1/visitors", function (data) {
             var features = [];
 
+            $(".visitor-counter").html(data.length)
+
             $.each(data, function (k, visitor) {
+
+                visitors[visitor.guid] = visitor;
+
                 var iconFeature = new ol.Feature({
                     geometry: new ol.geom.Point(
                         ol.proj.fromLonLat([visitor.currentLocation.longitude, visitor.currentLocation.latitude])
@@ -81,7 +102,6 @@ $(document).ready(function () {
             var vectorSource = new ol.source.Vector({
                 features: features
             });
-            console.log(visitorVectorLayer);
             if (visitorVectorLayer != null) {
                 map.removeLayer(visitorVectorLayer);
             }

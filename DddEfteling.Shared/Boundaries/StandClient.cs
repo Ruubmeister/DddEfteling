@@ -18,9 +18,15 @@ namespace DddEfteling.Shared.Boundaries
         {
             string url = "/api/v1/stands";
             Uri targetUri = new Uri(client.BaseAddress, url);
+            var request = new HttpRequestMessage(HttpMethod.Get, targetUri.AbsoluteUri);
 
-            var streamTask = client.GetStringAsync(targetUri.AbsoluteUri);
-            return JsonConvert.DeserializeObject<List<StandDto>>(streamTask.Result);
+            var streamTask = client.SendAsync(request).Result;
+            if (streamTask.IsSuccessStatusCode)
+            {
+                return JsonConvert.DeserializeObject<List<StandDto>>(streamTask.Content.ReadAsStringAsync().Result);
+            }
+
+            return new List<StandDto>();
         }
     }
 

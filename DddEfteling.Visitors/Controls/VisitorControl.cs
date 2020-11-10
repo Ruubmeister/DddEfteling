@@ -62,6 +62,12 @@ namespace DddEfteling.Visitors.Controls
                     this.SetNewLocation(visitor);
                 }
 
+                if (visitor.TargetLocation == null)
+                {
+                    this.NotifyIdleVisitor(visitor.Guid);
+                    continue;
+                }
+
                 double step = (double)random.Next(50, 150) / 100;
                 TimeSpan timeIdle = DateTime.Now - visitorAtTime.Value;
 
@@ -165,7 +171,7 @@ namespace DddEfteling.Visitors.Controls
                         fairyTale = fairyTaleClient.GetRandomFairyTale();
                     }
 
-                    logger.LogInformation($"Walking to fairy tale {fairyTale.Name}");
+                    logger.LogInformation($"Walking to fairy tale {fairyTale?.Name}");
                     visitor.TargetLocation = fairyTale;
                     break;
                 case LocationType.RIDE:
@@ -183,7 +189,7 @@ namespace DddEfteling.Visitors.Controls
                         ride = rideClient.GetRandomRide();
                     }
 
-                    logger.LogInformation($"Walking to ride {ride.Name}");
+                    logger.LogInformation($"Walking to ride {ride?.Name}");
                     visitor.TargetLocation = ride;
                     break;
                 case LocationType.STAND:
@@ -201,7 +207,7 @@ namespace DddEfteling.Visitors.Controls
                         stand = rideClient.GetRandomRide();
                     }
 
-                    logger.LogInformation($"Temp: Walking to ride {stand.Name}");
+                    logger.LogInformation($"Temp: Walking to ride {stand?.Name}");
                     visitor.TargetLocation = stand;
                     break;
             }
