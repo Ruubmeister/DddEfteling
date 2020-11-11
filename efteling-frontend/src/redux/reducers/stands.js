@@ -1,5 +1,5 @@
 
-import { SET_RIDES } from "../actionTypes";
+import { SET_STANDS } from "../actionTypes";
 
 const initialState = {
   allIds: [],
@@ -8,12 +8,12 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
-      case SET_RIDES:
+      case SET_STANDS:
         const { content } = action.payload;
         return {
           ...state,
-          allIds: content.map(ride => ride.guid),
-          byIds: content.reduce((a, ride) => ({...a, [ride.guid]: ride}), {})
+          allIds: content.map(stand => stand.guid),
+          byIds: content.reduce((a, stand) => ({...a, [stand.guid]: stand}), {})
         };
     default:
       return state;
