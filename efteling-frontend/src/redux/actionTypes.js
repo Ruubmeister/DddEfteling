@@ -1,4 +1,4 @@
-export const GET_RIDES = "GET_RIDES";
-export const GET_VISITORS = "GET_VISITORS";
-export const GET_TALES = "GET_TALES";
-export const GET_STANDS = "GET_STANDS";
+export const SET_RIDES = "SET_RIDES";
+export const SET_VISITORS = "SET_VISITORS";
+export const SET_TALES = "SET_TALES";
+export const SET_STANDS = "SET_STANDS";
