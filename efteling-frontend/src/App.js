@@ -15,7 +15,7 @@ class App extends React.Component{
     this.getFairyTales();
     this.getRides();
     this.getStands();
-    this.getVisitors();
+    setInterval(() => this.getVisitors(), 1000);
   }
 
   getFairyTales = async () => {
