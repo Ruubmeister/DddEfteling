@@ -11,8 +11,9 @@ namespace DddEfteling.ParkTests.Shared.Boundaries
         [Fact]
         public void Constructors_ConstructDto_ExpectDto()
         {
-            StandDto standDto = new StandDto("name", new Coordinate(5.23, 51.22), new List<string>() { { "meal 1" }, { "meal 2" } }, new List<string>() { { "drink 1" }, { "drink 2" } });
-
+            Guid guid = Guid.NewGuid();
+            StandDto standDto = new StandDto(guid, "name", new Coordinate(5.23, 51.22), new List<string>() { { "meal 1" }, { "meal 2" } }, new List<string>() { { "drink 1" }, { "drink 2" } });
+            Assert.Equal(guid, standDto.Guid);
             Assert.Equal("name", standDto.Name);
             Assert.Equal(5.23, standDto.Coordinates.Latitude);
             Assert.Equal(51.22, standDto.Coordinates.Longitude);

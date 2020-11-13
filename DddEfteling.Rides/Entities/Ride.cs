@@ -30,9 +30,6 @@ namespace DddEfteling.Rides.Entities
             Coordinates = coordinates;
             LocationType = LocationType.RIDE;
 
-            VisitorsInLine = new Queue<VisitorDto>();
-            VisitorsInRide = new Queue<VisitorDto>();
-
             // todo: Let's change this later to a flexible setup
             //setEmployeeSkillRequirement(WorkplaceSkill.Control, 2);
             //setEmployeeSkillRequirement(WorkplaceSkill.Host, 3);
@@ -75,19 +72,19 @@ namespace DddEfteling.Rides.Entities
 
         public int MaxPersons { get; }
 
-        private Queue<VisitorDto> VisitorsInLine { get; set; }
+        private Queue<VisitorDto> VisitorsInLine { get; set; } = new Queue<VisitorDto>();
 
-        private Queue<VisitorDto> VisitorsInRide { get; set; }
+        private Queue<VisitorDto> VisitorsInRide { get; set; } = new Queue<VisitorDto>();
 
         public Coordinate Coordinates { get; }
 
         public DateTime EndTime { get; set; }
 
-        public Dictionary<Guid, WorkplaceSkill> employeesToSkill { get; }
+        public Dictionary<Guid, WorkplaceSkill> EmployeesToSkill { get; } = new Dictionary<Guid, WorkplaceSkill>();
 
         public void AddEmployee(Guid guid, WorkplaceSkill skill)
         {
-            this.employeesToSkill.Add(guid, skill);
+            this.EmployeesToSkill.Add(guid, skill);
         }
 
         public bool HasVisitor(VisitorDto visitor)
@@ -150,7 +147,21 @@ namespace DddEfteling.Rides.Entities
         public RideDto ToDto()
         {
             return new RideDto(this.Guid, this.Name, this.Status.ToString(), this.MinimumAge, this.MinimumLength,
-                this.Duration, this.MaxPersons, this.Coordinates, this.LocationType);
+                this.Duration, this.MaxPersons, this.Coordinates, this.LocationType)
+            {
+                Guid = this.Guid,
+                Name = this.Name,
+                Status = this.Status.ToString(),
+                MinimumAge = this.MinimumAge,
+                MinimumLength = this.MinimumLength,
+                DurationInSec = (int)this.Duration.TotalSeconds,
+                MaxPersons = this.MaxPersons,
+                Coordinates = this.Coordinates,
+                LocationType = this.LocationType,
+                VisitorsInLine = this.VisitorsInLine.Count,
+                VisitorsInRide = this.VisitorsInRide.Count,
+                EmployeesToSkill = this.EmployeesToSkill.ToDictionary( kv => kv.Key.ToString(), kv => kv.Value.ToString())
+            };
         }
 
     }

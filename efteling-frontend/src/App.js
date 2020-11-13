@@ -1,5 +1,6 @@
 import './App.css';
 import LiveMap from "./LiveMap"
+import Statistics from "./Statistics";
 import React from 'react';
 import axios from 'axios';
 import { connect } from "react-redux";
@@ -7,6 +8,8 @@ import { setFairyTales } from "./redux/fairy-tale-actions";
 import { setRides } from "./redux/ride-actions";
 import { setStands } from "./redux/stand-actions";
 import { setVisitors } from "./redux/visitor-actions";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 class App extends React.Component{
 
@@ -15,7 +18,7 @@ class App extends React.Component{
     this.getFairyTales();
     this.getRides();
     this.getStands();
-    this.getVisitors();
+    setInterval(() => this.getVisitors(), 1000);
   }
 
   getFairyTales = async () => {
@@ -39,7 +42,10 @@ class App extends React.Component{
   }
 
   render() { 
-    return <LiveMap/>;
+    return <div className="App">
+        <LiveMap/>
+        <Statistics />
+        </div>;
   };
 }
 
