@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'fontsource-roboto';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'ol/ol.css';
 
 import { Provider } from 'react-redux'
 import store from './redux/store'

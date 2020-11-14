@@ -160,7 +160,8 @@ namespace DddEfteling.Rides.Entities
                 LocationType = this.LocationType,
                 VisitorsInLine = this.VisitorsInLine.Count,
                 VisitorsInRide = this.VisitorsInRide.Count,
-                EmployeesToSkill = this.EmployeesToSkill.ToDictionary( kv => kv.Key.ToString(), kv => kv.Value.ToString())
+                EmployeesToSkill = this.EmployeesToSkill.ToDictionary(kv => kv.Key.ToString(), kv => kv.Value.ToString()),
+                EndTime = this.EndTime.ToString("H:mm")
             };
         }
 

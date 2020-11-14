@@ -42,7 +42,7 @@ namespace DddEfteling.Park
                     name: DefaultCorsPolicy,
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:3999", "http://localhost:3998", "http://localhost:3997", "http://localhost:3996", "http://localhost:3995", "http://localhost:3000");
+                    builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
                 });
             });
         }

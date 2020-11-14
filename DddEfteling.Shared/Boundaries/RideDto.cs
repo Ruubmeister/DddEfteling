@@ -20,7 +20,7 @@ namespace DddEfteling.Shared.Boundaries
 
         public int VisitorsInLine { get; set; }
         public int VisitorsInRide { get; set; }
-        public int EndTime { get; set; }
+        public string EndTime { get; set; }
 
         public Dictionary<string, string> EmployeesToSkill { get; set; } = new Dictionary<string, string>();
 

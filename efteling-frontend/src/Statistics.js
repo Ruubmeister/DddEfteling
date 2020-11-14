@@ -10,6 +10,8 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col"
 import Card from "react-bootstrap/Card";
+import Table from "react-bootstrap/Table";
+import StatisticsCard from "./StatisticsCard"
 
 class Statistics extends React.Component {
 
@@ -24,21 +26,30 @@ class Statistics extends React.Component {
   
     render() {
         const rideStatistics = this.props.rides.map(ride => 
-            <Col xs={6} md={4} lg={4} key={ride.guid}>
-
-                <Card style={{ "margin": "20px"}}>
-                    <Card.Body>
-                        <Card.Title>{ride.name}</Card.Title>
-                        <Card.Text>
-                        Visitors in line: 
-                        </Card.Text>
-                    </Card.Body>
-                </Card>
+            <Col xs={6} md={4} lg={3} key={ride.guid}>
+                <StatisticsCard ride={ride} />
             </Col>
             )
 
       return <Container fluid>
           <Row>
+          <Col xs={6} md={4} lg={3}>
+            <Card style={{ "margin": "10px 0"}}>
+                <Card.Body>
+                    <Card.Title>Park</Card.Title>
+                    <Card.Text>
+                    <Table striped bordered hover size="sm">
+                        <tbody>
+                            <tr>
+                                <td>Bezoekers in park</td>
+                                <td>{this.props.visitors.length}</td>
+                            </tr>
+                        </tbody>
+                    </Table>
+                    </Card.Text>
+                </Card.Body>
+            </Card>
+            </Col>
               {rideStatistics}
           </Row>
       </Container>;

@@ -8,7 +8,6 @@ import { setFairyTales } from "./redux/fairy-tale-actions";
 import { setRides } from "./redux/ride-actions";
 import { setStands } from "./redux/stand-actions";
 import { setVisitors } from "./redux/visitor-actions";
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 class App extends React.Component{
@@ -16,7 +15,7 @@ class App extends React.Component{
   constructor(props) {
     super(props);
     this.getFairyTales();
-    this.getRides();
+    setInterval(() => this.getRides(), 1000);
     this.getStands();
     setInterval(() => this.getVisitors(), 1000);
   }
