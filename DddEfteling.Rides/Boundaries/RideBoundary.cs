@@ -34,5 +34,26 @@ namespace DddEfteling.Rides.Boundaries
             var excludedGuidList = excludedGuids.Length > 0 ? new List<string>(excludedGuids.Split(",")).ConvertAll(guidStr => Guid.Parse(guidStr)) : new List<Guid>();
             return rideControl.NearestRide(guid, excludedGuidList).ToDto();
         }
+
+        [HttpPut("{guid}/status")]
+        public ActionResult<RideDto> PutStatus(Guid guid, [FromBody] RideDto rideDto)
+        {
+            switch (rideDto.Status.Trim().ToLower())
+            {
+                case "open":
+                    this.rideControl.RideToOpen(guid);
+                    break;
+                case "closed":
+                    this.rideControl.RideToClosed(guid);
+                    break;
+                case "maintenance":
+                    this.rideControl.RideToMaintenance(guid);
+                    break;
+                default:
+                    return BadRequest("Status not found");
+            }
+
+            return this.rideControl.FindRide(guid).ToDto();
+        }
     }
 }

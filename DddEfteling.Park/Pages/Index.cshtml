@@ -16,7 +16,7 @@
                     <tbody>
                         <tr>
                             <th scope="row">Bezoekers</th>
-                            <td>0</td>
+                            <td class="visitor-counter">0</td>
                         </tr>
                         <tr>
                             <th scope="row">Medewerkers</th>
@@ -64,5 +64,12 @@
                 </table>
             </div>
         </div>
+    </div>
+    <div class="row row-cols-6" id="ride-statistics">
+        <script id="ride-stats-template" type="text/x-jquery-tmpl">
+            <div class="column">
+                <h4>${name}</h4>
+            </div>
+        </script>
     </div>
 </div>

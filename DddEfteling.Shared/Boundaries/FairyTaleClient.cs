@@ -20,11 +20,13 @@ namespace DddEfteling.Shared.Boundaries
             string url = "/api/v1/fairy-tales";
             Uri targetUri = new Uri(client.BaseAddress, url);
 
-            var streamTask = client.GetStringAsync(targetUri.AbsoluteUri);
+            var request = new HttpRequestMessage(HttpMethod.Get, targetUri.AbsoluteUri);
 
-            if (streamTask.IsCompletedSuccessfully)
+            var streamTask = client.SendAsync(request).Result;
+
+            if (streamTask.IsSuccessStatusCode)
             {
-                return JsonConvert.DeserializeObject<List<FairyTaleDto>>(streamTask.Result);
+                return JsonConvert.DeserializeObject<List<FairyTaleDto>>(streamTask.Content.ReadAsStringAsync().Result);
             }
 
             return new List<FairyTaleDto>();
@@ -35,11 +37,13 @@ namespace DddEfteling.Shared.Boundaries
             string url = "/api/v1/fairy-tales/random";
             Uri targetUri = new Uri(client.BaseAddress, url);
 
-            var streamTask = client.GetStringAsync(targetUri.AbsoluteUri);
+            var request = new HttpRequestMessage(HttpMethod.Get, targetUri.AbsoluteUri);
 
-            if (streamTask.IsCompletedSuccessfully)
+            var streamTask = client.SendAsync(request).Result;
+
+            if (streamTask.IsSuccessStatusCode)
             {
-                return JsonConvert.DeserializeObject<FairyTaleDto>(streamTask.Result);
+                return JsonConvert.DeserializeObject<FairyTaleDto>(streamTask.Content.ReadAsStringAsync().Result);
             }
 
             return null;
@@ -56,11 +60,13 @@ namespace DddEfteling.Shared.Boundaries
 
             Uri targetUri = new Uri(client.BaseAddress, url);
 
-            var streamTask = client.GetStringAsync(QueryHelpers.AddQueryString(targetUri.AbsoluteUri, urlParams));
+            var request = new HttpRequestMessage(HttpMethod.Get, targetUri.AbsoluteUri);
 
-            if (streamTask.IsCompletedSuccessfully)
+            var streamTask = client.SendAsync(request).Result;
+
+            if (streamTask.IsSuccessStatusCode)
             {
-                return JsonConvert.DeserializeObject<FairyTaleDto>(streamTask.Result);
+                return JsonConvert.DeserializeObject<FairyTaleDto>(streamTask.Content.ReadAsStringAsync().Result);
             }
 
             return null;

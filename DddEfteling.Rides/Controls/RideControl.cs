@@ -116,6 +116,47 @@ namespace DddEfteling.Rides.Controls
             });
         }
 
+        public void RideToMaintenance(Guid guid)
+        {
+            Ride ride = this.rides.First(ride => ride.Guid.Equals(guid));
+
+            if(ride == null)
+            {
+                return;
+            }
+
+            ride.ToMaintenance();
+        }
+
+        public void RideToOpen(Guid guid)
+        {
+            Ride ride = this.rides.First(ride => ride.Guid.Equals(guid));
+
+            if (ride == null)
+            {
+                return;
+            }
+
+            ride.ToOpen();
+        }
+
+        public void RideToClosed(Guid guid)
+        {
+            Ride ride = this.rides.First(ride => ride.Guid.Equals(guid));
+
+            if (ride == null)
+            {
+                return;
+            }
+
+            ride.ToClosed();
+        }
+
+        public Ride FindRide(Guid guid)
+        {
+            return rides.First(ride => ride.Guid.Equals(guid));
+        }
+
         public Ride NearestRide(Guid rideGuid, List<Guid> exclusionList)
         {
             Ride ride = this.rides.First(ride => ride.Guid.Equals(rideGuid));
@@ -202,5 +243,13 @@ namespace DddEfteling.Rides.Controls
         public void HandleVisitorSteppingInRideLine(Guid visitorGuid, Guid rideGuid);
 
         public void HandleEmployeeChangedWorkplace(WorkplaceDto workplace, Guid employee, WorkplaceSkill skill);
+
+        public void RideToMaintenance(Guid guid);
+
+        public void RideToOpen(Guid guid);
+
+        public void RideToClosed(Guid guid);
+
+        public Ride FindRide(Guid guid);
     }
 }

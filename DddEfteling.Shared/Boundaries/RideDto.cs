@@ -1,6 +1,7 @@
 ﻿using DddEfteling.Shared.Entities;
 using Geolocation;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DddEfteling.Shared.Boundaries
@@ -16,6 +17,13 @@ namespace DddEfteling.Shared.Boundaries
         public int MaxPersons { get; set; }
         public LocationType LocationType { get; set; }
         public Coordinate Coordinates { get; set; }
+
+        public int VisitorsInLine { get; set; }
+        public int VisitorsInRide { get; set; }
+        public string EndTime { get; set; }
+
+        public Dictionary<string, string> EmployeesToSkill { get; set; } = new Dictionary<string, string>();
+
 
         public RideDto()
         {

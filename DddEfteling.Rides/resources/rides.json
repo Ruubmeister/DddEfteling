@@ -10,10 +10,10 @@
     },
     "maxPersons": 54,
     "realm": "Ruigrijk",
-	"coordinates": {
-		"lat": 51.64829,
-		"long": 5.05073
-	}
+    "coordinates": {
+      "lat": 51.64829,
+      "long": 5.05073
+    }
   },
   {
     "status": "Closed",
@@ -26,10 +26,10 @@
     },
     "maxPersons": 200,
     "realm": "Reizenrijk",
-	"coordinates": {
-		"lat": 51.65224,
-		"long": 5.05222
-	}
+    "coordinates": {
+      "lat": 51.65224,
+      "long": 5.05222
+    }
   },
   {
     "status": "Closed",
@@ -42,10 +42,10 @@
     },
     "maxPersons": 150,
     "realm": "Marerijk",
-	"coordinates": {
-		"lat": 51.65233,
-		"long": 5.04612
-	}
+    "coordinates": {
+      "lat": 51.65233,
+      "long": 5.04612
+    }
   },
   {
     "status": "Closed",
@@ -58,10 +58,10 @@
     },
     "maxPersons": 70,
     "realm": "Anderrijk",
-	"coordinates": {
-		"lat": 51.64900,
-		"long": 5.04673
-	}
+    "coordinates": {
+      "lat": 51.64900,
+      "long": 5.04673
+    }
   },
   {
     "status": "Closed",
@@ -74,10 +74,10 @@
     },
     "maxPersons": 210,
     "realm": "Anderrijk",
-	"coordinates": {
-		"lat": 51.64719,
-		"long": 5.04529
-	}
+    "coordinates": {
+      "lat": 51.64719,
+      "long": 5.04529
+    }
   },
   {
     "status": "Closed",
@@ -90,10 +90,10 @@
     },
     "maxPersons": 200,
     "realm": "Reizenrijk",
-	"coordinates": {
-		"lat": 51.65049,
-		"long": 5.05124
-	}
+    "coordinates": {
+      "lat": 51.65049,
+      "long": 5.05124
+    }
   },
   {
     "status": "Closed",
@@ -106,10 +106,10 @@
     },
     "maxPersons": 50,
     "realm": "Ruigrijk",
-	"coordinates": {
-		"lat": 51.64877,
-		"long": 5.05341
-	}
+    "coordinates": {
+      "lat": 51.64877,
+      "long": 5.05341
+    }
   },
   {
     "status": "Closed",
@@ -122,10 +122,10 @@
     },
     "maxPersons": 52,
     "realm": "Ruigrijk",
-	"coordinates": {
-		"lat": 51.64686,
-		"long": 5.05244
-	}
+    "coordinates": {
+      "lat": 51.64686,
+      "long": 5.05244
+    }
   },
   {
     "status": "Closed",
@@ -138,10 +138,10 @@
     },
     "maxPersons": 40,
     "realm": "Reizenrijk",
-	"coordinates": {
-		"lat": 51.64820,
-		"long": 5.05352
-	}
+    "coordinates": {
+      "lat": 51.64820,
+      "long": 5.05352
+    }
   },
   {
     "status": "Closed",
@@ -154,10 +154,10 @@
     },
     "maxPersons": 60,
     "realm": "Reizenrijk",
-	"coordinates": {
-		"lat": 51.65043,
-		"long": 5.05072
-	}
+    "coordinates": {
+      "lat": 51.65043,
+      "long": 5.05072
+    }
   },
   {
     "status": "Closed",
@@ -170,10 +170,10 @@
     },
     "maxPersons": 250,
     "realm": "Ruigrijk",
-	"coordinates": {
-		"lat": 51.64723,
-		"long": 5.04894
-	}
+    "coordinates": {
+      "lat": 51.64723,
+      "long": 5.04894
+    }
   },
   {
     "status": "Closed",
@@ -186,10 +186,10 @@
     },
     "maxPersons": 80,
     "realm": "Anderrijk",
-	"coordinates": {
-		"lat": 51.64876,
-		"long": 5.04853
-	}
+    "coordinates": {
+      "lat": 51.64876,
+      "long": 5.04853
+    }
   },
   {
     "status": "Closed",
@@ -202,10 +202,10 @@
     },
     "maxPersons": 30,
     "realm": "Ruigrijk",
-	"coordinates": {
-		"lat": 51.64763,
-		"long": 5.05361
-	}
+    "coordinates": {
+      "lat": 51.64763,
+      "long": 5.05361
+    }
   },
   {
     "status": "Closed",
@@ -218,10 +218,10 @@
     },
     "maxPersons": 200,
     "realm": "Fantasierijk",
-	"coordinates": {
-		"lat": 51.65003,
-		"long": 5.04974
-	}
+    "coordinates": {
+      "lat": 51.65003,
+      "long": 5.04974
+    }
   },
   {
     "status": "Closed",
@@ -234,10 +234,10 @@
     },
     "maxPersons": 80,
     "realm": "Marerijk",
-	"coordinates": {
-		"lat": 51.65302,
-		"long": 5.04727
-	}
+    "coordinates": {
+      "lat": 51.65302,
+      "long": 5.04727
+    }
   },
   {
     "status": "Closed",
@@ -250,10 +250,10 @@
     },
     "maxPersons": 50,
     "realm": "Ruigrijk",
-	"coordinates": {
-		"lat": 51.64756,
-		"long": 5.05224
-	}
+    "coordinates": {
+      "lat": 51.64756,
+      "long": 5.05224
+    }
   },
   {
     "status": "Closed",
@@ -266,9 +266,153 @@
     },
     "maxPersons": 40,
     "realm": "Ruigrijk",
-	"coordinates": {
-		"lat": 51.65210,
-		"long": 5.05268
-	}
+    "coordinates": {
+      "lat": 51.65210,
+      "long": 5.05268
+    }
+  },
+  {
+    "status": "Closed",
+    "name": "Monorail",
+    "minimumAge": "0",
+    "minimumLength": "0",
+    "duration": {
+      "minutes": 2,
+      "seconds": 30
+    },
+    "maxPersons": 45,
+    "realm": "Ruigrijk",
+    "coordinates": {
+      "lat": 51.65281,
+      "long": 5.04902
+    }
+  },
+  {
+    "status": "Closed",
+    "name": "Land van Laaf",
+    "minimumAge": "0",
+    "minimumLength": "0",
+    "duration": {
+      "minutes": 3,
+      "seconds": 0
+    },
+    "maxPersons": 40,
+    "realm": "Ruigrijk",
+    "coordinates": {
+      "lat": 51.65328,
+      "long": 5.04854
+    }
+  },
+  {
+    "status": "Closed",
+    "name": "Raveleijn",
+    "minimumAge": "0",
+    "minimumLength": "0",
+    "duration": {
+      "minutes": 15,
+      "seconds": 0
+    },
+    "maxPersons": 40,
+    "realm": "Ruigrijk",
+    "coordinates": {
+      "lat": 51.65304,
+      "long": 5.04627
+    }
+  },
+  {
+    "status": "Closed",
+    "name": "Carrousel",
+    "minimumAge": "0",
+    "minimumLength": "0",
+    "duration": {
+      "minutes": 5,
+      "seconds": 0
+    },
+    "maxPersons": 20,
+    "realm": "Ruigrijk",
+    "coordinates": {
+      "lat": 51.65221,
+      "long": 5.04916
+    }
+  },
+  {
+    "status": "Closed",
+    "name": "Vlindermolen",
+    "minimumAge": "0",
+    "minimumLength": "0",
+    "duration": {
+      "minutes": 5,
+      "seconds": 0
+    },
+    "maxPersons": 20,
+    "realm": "Ruigrijk",
+    "coordinates": {
+      "lat": 51.65256,
+      "long": 5.05010
+    }
+  },
+  {
+    "status": "Closed",
+    "name": "Kleine Zweefmolen",
+    "minimumAge": "0",
+    "minimumLength": "0",
+    "duration": {
+      "minutes": 5,
+      "seconds": 0
+    },
+    "maxPersons": 20,
+    "realm": "Ruigrijk",
+    "coordinates": {
+      "lat": 51.65283,
+      "long": 5.04991
+    }
+  },
+  {
+    "status": "Closed",
+    "name": "Monsieur Canibale",
+    "minimumAge": "0",
+    "minimumLength": "0",
+    "duration": {
+      "minutes": 4,
+      "seconds": 30
+    },
+    "maxPersons": 20,
+    "realm": "Ruigrijk",
+    "coordinates": {
+      "lat": 51.65169,
+      "long": 5.05205
+    }
+  },
+  {
+    "status": "Closed",
+    "name": "Kinderspoor",
+    "minimumAge": "0",
+    "minimumLength": "0",
+    "duration": {
+      "minutes": 4,
+      "seconds": 15
+    },
+    "maxPersons": 30,
+    "realm": "Ruigrijk",
+    "coordinates": {
+      "lat": 51.64975,
+      "long": 5.05339
+    }
+  },
+  {
+    "status": "Closed",
+    "name": "Max en Moritz",
+    "minimumAge": "0",
+    "minimumLength": 0.70,
+    "duration": {
+      "minutes": 1,
+      "seconds": 45
+    },
+    "maxPersons": 40,
+    "realm": "Ruigrijk",
+    "coordinates": {
+      "lat": 51.64808,
+      "long": 5.04741
+    }
   }
 ]
