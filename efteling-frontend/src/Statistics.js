@@ -37,7 +37,6 @@ class Statistics extends React.Component {
             <Card style={{ "margin": "10px 0"}}>
                 <Card.Body>
                     <Card.Title>Park</Card.Title>
-                    <Card.Text>
                     <Table striped bordered hover size="sm">
                         <tbody>
                             <tr>
@@ -46,7 +45,6 @@ class Statistics extends React.Component {
                             </tr>
                         </tbody>
                     </Table>
-                    </Card.Text>
                 </Card.Body>
             </Card>
             </Col>

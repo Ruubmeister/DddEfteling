@@ -108,7 +108,6 @@ class LiveMap extends React.Component {
     this.props.visitors.forEach(visitor => {
 
       var mapVisitor = visitorsSource.getFeatureById(visitor.guid);
-
       if(mapVisitor == null){
         var iconFeature = this.getFeature(visitor.guid, visitor.currentLocation.longitude, visitor.currentLocation.latitude);
         visitorsSource.addFeature(iconFeature);

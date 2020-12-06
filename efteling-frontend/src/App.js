@@ -1,5 +1,6 @@
 import './App.css';
 import LiveMap from "./LiveMap"
+import Music from "./Music"
 import Statistics from "./Statistics";
 import React from 'react';
 import axios from 'axios';
@@ -43,6 +44,9 @@ class App extends React.Component{
   render() { 
     return <div className="App">
         <LiveMap/>
+        <div className="footer">
+          Ruben Lelieveld © - Domain Driven Efteling - <Music url="/private/achtergrondmuziek.mp3" />
+          </div> 
         <Statistics />
         </div>;
   };
