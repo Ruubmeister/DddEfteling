@@ -50,10 +50,10 @@ class LiveMap extends React.Component {
 
     eftelingMap = null;
 
-    visitorsLayer = null;
-    ridesLayer = null;
-    fairyTalesLayer = null;
-    standsLayer = null;
+    visitorsLayer = this.getEmptyLayer();
+    ridesLayer = this.getEmptyLayer();
+    fairyTalesLayer = this.getEmptyLayer();
+    standsLayer = this.getEmptyLayer();
 
   constructor(props) {
     super(props);
@@ -73,25 +73,16 @@ class LiveMap extends React.Component {
           zoom: 16
       })
     });
+
+    this.eftelingMap.addLayer(this.ridesLayer);
+    this.eftelingMap.addLayer(this.fairyTalesLayer);
+    this.eftelingMap.addLayer(this.standsLayer);
+    this.eftelingMap.addLayer(this.visitorsLayer);
   }
 
-  getLocationLayer(data, iconStyle){
-    var features = [];
-
-    data.forEach(item => {
-        var iconFeature = new Feature({
-            geometry: new Point(
-                    fromLonLat([item.coordinates.longitude, item.coordinates.latitude])
-            ),
-            name: item.name
-        });
-
-        iconFeature.setStyle(iconStyle);
-        features.push(iconFeature);
-    });
-
+  getEmptyLayer(){
     var vectorSource = new VectorSource({
-        features: features
+      features: []
     });
 
     var vectorLayer = new VectorLayer({
@@ -99,80 +90,94 @@ class LiveMap extends React.Component {
     });
 
     return vectorLayer;
-
   }
 
-  getVisitorLayer(){
+  getFeature(guid, longitude, latitude){
+    var iconFeature = new Feature({
+      geometry: new Point(
+          fromLonLat([longitude, latitude])
+      )
+    });
 
-    var features = []
+    iconFeature.setId(guid);
 
+    return iconFeature;
+  }
+
+  updateVisitors(){
+    var visitorsSource = this.visitorsLayer.getSource();
     this.props.visitors.forEach(visitor => {
+      
+      var mapVisitor = visitorsSource.getFeatureById(visitor.guid);
 
-      var iconFeature = new Feature({
-          geometry: new Point(
-              fromLonLat([visitor.currentLocation.longitude, visitor.currentLocation.latitude])
-          ),
-          name: visitor.Guid
-      });
+      if(mapVisitor == null){
+        var iconFeature = this.getFeature(visitor.guid, visitor.currentLocation.longitude, visitor.currentLocation.latitude);
+        visitorsSource.addFeature(iconFeature);
 
-      features.push(iconFeature);
+      } else {
+        mapVisitor.getGeometry().setCoordinates(fromLonLat([visitor.currentLocation.longitude, visitor.currentLocation.latitude]));
+      }
     });
+  }
 
-    var vectorSource = new VectorSource({
-        features: features
+  updateRides(){
+    var ridesSource = this.ridesLayer.getSource();
+    this.props.rides.forEach(ride => {
+      
+      var mapRide = ridesSource.getFeatureById(ride.guid);
+
+      if(mapRide == null){
+        var iconFeature = this.getFeature(ride.guid, ride.coordinates.longitude, ride.coordinates.latitude);
+        iconFeature.setStyle(rideIconStyle);
+        ridesSource.addFeature(iconFeature);
+
+      } else {
+        mapRide.getGeometry().setCoordinates(fromLonLat([ride.coordinates.longitude, ride.coordinates.latitude]));
+      }
     });
+  }
 
-    var visitorVectorLayer = new VectorLayer({
-        source: vectorSource
+  updateFairyTales(){
+    var fairyTalesSource = this.fairyTalesLayer.getSource();
+    this.props.fairyTales.forEach(tale => {
+      
+      var mapTale = fairyTalesSource.getFeatureById(tale.guid);
+
+      if(mapTale == null){
+        var iconFeature = this.getFeature(tale.guid, tale.coordinates.longitude, tale.coordinates.latitude);
+        iconFeature.setStyle(fairyTaleIconStyle);
+        fairyTalesSource.addFeature(iconFeature);
+
+      } else {
+        mapTale.getGeometry().setCoordinates(fromLonLat([tale.coordinates.longitude, tale.coordinates.latitude]));
+      }
     });
-
-    return visitorVectorLayer;
   }
 
-  getRideLayer(){
-    return this.getLocationLayer(this.props.rides, rideIconStyle);
-  }
+  updateStands(){
+    var standsSource = this.standsLayer.getSource();
+    this.props.stands.forEach(stand => {
+      
+      var mapStand = standsSource.getFeatureById(stand.guid);
 
-  getFairyTaleLayer(){
-    return this.getLocationLayer(this.props.fairyTales, fairyTaleIconStyle);
-  }
+      if(mapStand == null){
+        var iconFeature = this.getFeature(stand.guid, stand.coordinates.longitude, stand.coordinates.latitude);
+        iconFeature.setStyle(standIconStyle);
+        standsSource.addFeature(iconFeature);
 
-  getStandLayer(){
-    return this.getLocationLayer(this.props.stands, standIconStyle);
-  }
-
-  removeLayers(){
-    if(this.visitorsLayer != null){
-      this.eftelingMap.removeLayer(this.visitorsLayer);
-    }
-    if(this.ridesLayer != null){
-      this.eftelingMap.removeLayer(this.ridesLayer);
-    }
-    if(this.fairyTalesLayer != null){
-      this.eftelingMap.removeLayer(this.fairyTalesLayer);
-    }
-    if(this.standsLayer != null){
-      this.eftelingMap.removeLayer(this.standsLayer);
-    }
-  }
-
-  addLayers(){
-
-    this.eftelingMap.addLayer(this.ridesLayer);
-    this.eftelingMap.addLayer(this.fairyTalesLayer);
-    this.eftelingMap.addLayer(this.standsLayer);
-    this.eftelingMap.addLayer(this.visitorsLayer);
+      } else {
+        mapStand.getGeometry().setCoordinates(fromLonLat([stand.coordinates.longitude, stand.coordinates.latitude]));
+      }
+    });
   }
   
   
     render() {
         if(this.eftelingMap != null){
-          this.removeLayers();
-          this.visitorsLayer = this.getVisitorLayer();
-          this.ridesLayer = this.getRideLayer();
-          this.fairyTalesLayer = this.getFairyTaleLayer();
-          this.standsLayer = this.getStandLayer();
-          this.addLayers();
+          this.updateVisitors();
+          this.updateFairyTales();
+          this.updateRides();
+          this.updateStands();
         }
 
       return <div ref={this.map} className="ol-map"> </div>;
