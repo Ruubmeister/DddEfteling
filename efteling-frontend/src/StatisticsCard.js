@@ -94,7 +94,6 @@ class StatisticsCard extends React.Component {
                             </Dropdown>
                             </ButtonToolbar>
                         </Card.Title>
-                        <Card.Text>
                         <Table striped bordered hover size="sm">
                             <thead>
                                 <tr>
@@ -111,7 +110,6 @@ class StatisticsCard extends React.Component {
                                 </tr>
                             </tbody>
                         </Table>
-                        </Card.Text>
                     </Card.Body>
                 </Card>
     }
