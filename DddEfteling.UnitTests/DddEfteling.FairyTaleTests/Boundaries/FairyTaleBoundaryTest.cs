@@ -39,10 +39,10 @@ namespace DddEfteling.FairyTaleTests.Boundaries
         }
 
         [Fact]
-        public void GetNearestFairyTale_HasFairyTales_ExpectFairyTale()
+        public void GetNewFairyTaleLocation_HasFairyTales_ExpectFairyTale()
         {
-            this.fairyTaleControl.Setup(control => control.NearestFairyTale(It.IsAny<Guid>(), It.IsAny<List<Guid>>())).Returns(new FairyTale());
-            ActionResult<FairyTaleDto> tale = fairyTaleBoundary.GetNearestFairyTale(Guid.NewGuid(), "");
+            this.fairyTaleControl.Setup(control => control.NextLocation(It.IsAny<Guid>(), It.IsAny<List<Guid>>())).Returns(new FairyTale());
+            ActionResult<FairyTaleDto> tale = fairyTaleBoundary.GetNewFairyTaleLocation(Guid.NewGuid(), "");
 
             Assert.NotNull(tale);
         }

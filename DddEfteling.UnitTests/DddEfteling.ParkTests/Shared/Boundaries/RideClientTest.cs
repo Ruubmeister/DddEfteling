@@ -70,7 +70,7 @@ namespace DddEfteling.ParkTests.Shared.Boundaries
             HttpClient httpClient = HttpClientMockHelper.GetMockedHttpClient(JsonConvert.SerializeObject(""), System.Net.HttpStatusCode.NotFound);
             var rideClient = new RideClient(httpClient);
 
-            var result = rideClient.GetNearestRide(Guid.NewGuid(), new List<Guid>());
+            var result = rideClient.GetNextLocation(Guid.NewGuid(), new List<Guid>());
 
             Assert.Null(result);
         }
@@ -82,7 +82,7 @@ namespace DddEfteling.ParkTests.Shared.Boundaries
             HttpClient httpClient = HttpClientMockHelper.GetMockedHttpClient(JsonConvert.SerializeObject(new RideDto()));
             var rideClient = new RideClient(httpClient);
 
-            var result = rideClient.GetNearestRide(Guid.NewGuid(), new List<Guid>());
+            var result = rideClient.GetNextLocation(Guid.NewGuid(), new List<Guid>());
 
             Assert.NotNull(result);
         }

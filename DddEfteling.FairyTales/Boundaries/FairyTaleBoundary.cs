@@ -28,12 +28,12 @@ namespace DddEfteling.FairyTales.Boundaries
             return fairyTaleControl.GetRandom().ToDto();
         }
 
-        [HttpGet("/{guid}/nearest")]
-        public ActionResult<FairyTaleDto> GetNearestFairyTale(Guid guid, [FromQuery(Name = "exclude")] string excludedGuids)
+        [HttpGet("/{guid}/new-location")]
+        public ActionResult<FairyTaleDto> GetNewFairyTaleLocation(Guid guid, [FromQuery(Name = "exclude")] string excludedGuids)
         {
 
             var excludedGuidList = excludedGuids.Length > 0 ? new List<string>(excludedGuids.Split(",")).ConvertAll(guidStr => Guid.Parse(guidStr)) : new List<Guid>();
-            return fairyTaleControl.NearestFairyTale(guid, excludedGuidList).ToDto();
+            return fairyTaleControl.NextLocation(guid, excludedGuidList).ToDto();
         }
     }
 }

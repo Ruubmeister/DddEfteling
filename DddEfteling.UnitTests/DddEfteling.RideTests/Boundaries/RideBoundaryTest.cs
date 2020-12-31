@@ -34,18 +34,18 @@ namespace DddEfteling.RideTests.Boundaries
         public void GetRandomRide_HasRide_ExpectRide()
         {
             this.rideControl.Setup(control => control.GetRandom()).Returns(new Ride());
-            ActionResult<RideDto> tale = rideBoundary.GetRandomRide();
+            ActionResult<RideDto> ride = rideBoundary.GetRandomRide();
 
-            Assert.NotNull(tale);
+            Assert.NotNull(ride);
         }
 
         [Fact]
-        public void GetNearestFairyTale_HasFairyTales_ExpectFairyTale()
+        public void GetNextRide_HasRides_ExpectRide()
         {
-            this.rideControl.Setup(control => control.NearestRide(It.IsAny<Guid>(), It.IsAny<List<Guid>>())).Returns(new Ride());
-            ActionResult<RideDto> tale = rideBoundary.GetNearestRide(Guid.NewGuid(), "");
+            this.rideControl.Setup(control => control.NextLocation(It.IsAny<Guid>(), It.IsAny<List<Guid>>())).Returns(new Ride());
+            ActionResult<RideDto> ride = rideBoundary.GetNewRideLocation(Guid.NewGuid(), "");
 
-            Assert.NotNull(tale);
+            Assert.NotNull(ride);
         }
     }
 }
