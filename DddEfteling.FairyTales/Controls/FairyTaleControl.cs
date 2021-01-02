@@ -48,6 +48,22 @@ namespace DddEfteling.FairyTales.Controls
             return this.fairyTales.First(tale => tale.Guid.Equals(nextTale));
         }
 
+        public FairyTale NextLocation(Guid rideGuid, List<Guid> exclusionList)
+        {
+            FairyTale tale = this.fairyTales.First(ride => ride.Guid.Equals(rideGuid));
+            try
+            {
+                List<KeyValuePair<double, Guid>> talesToPick = tale.DistanceToOthers.Where(keyVal => !exclusionList.Contains(keyVal.Value)).Take(3).ToList();
+                Guid nextTale = talesToPick.ElementAt(random.Next(talesToPick.Count)).Value;
+                return this.fairyTales.First(tale => tale.Guid.Equals(nextTale));
+            }
+            catch (IndexOutOfRangeException e)
+            {
+                logger.LogWarning("Something went wrong when getting a next location from origin {TaleName}: {Exception}", tale.Name, e);
+            }
+            return this.GetRandom();
+        }
+
         public FairyTale FindFairyTaleByName(string name)
         {
             return fairyTales.FirstOrDefault(tale => tale.Name.Equals(name));
@@ -111,6 +127,8 @@ namespace DddEfteling.FairyTales.Controls
         public FairyTale GetRandom();
 
         public FairyTale NearestFairyTale(Guid fairyTaleGuid, List<Guid> exclusionList);
+
+        public FairyTale NextLocation(Guid rideGuid, List<Guid> exclusionList);
 
         public void HandleVisitorArrivingAtFairyTale(Guid visitor);
 

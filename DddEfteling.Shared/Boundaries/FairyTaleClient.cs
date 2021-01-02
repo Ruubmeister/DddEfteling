@@ -49,9 +49,9 @@ namespace DddEfteling.Shared.Boundaries
             return null;
         }
 
-        public FairyTaleDto GetNearestFairyTale(Guid guid, List<Guid> excludedGuid)
+        public FairyTaleDto GetNewFairyTaleLocation(Guid guid, List<Guid> excludedGuid)
         {
-            string url = $"/api/v1/fairy-tales/{guid}/nearest";
+            string url = $"/api/v1/fairy-tales/{guid}/new-location";
 
             var urlParams = new Dictionary<string, string>
             {
@@ -79,7 +79,7 @@ namespace DddEfteling.Shared.Boundaries
 
         public FairyTaleDto GetRandomFairyTale();
 
-        public FairyTaleDto GetNearestFairyTale(Guid guid, List<Guid> excludedGuid);
+        public FairyTaleDto GetNewFairyTaleLocation(Guid guid, List<Guid> excludedGuid);
 
     }
 }

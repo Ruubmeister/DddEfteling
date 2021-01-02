@@ -96,6 +96,32 @@ namespace DddEfteling.RideTests.Controls
             Assert.NotNull(closest);
             Assert.Equal("Joris en de Draak", closest.Name);
         }
+        
+        [Fact]
+        public void NextLocation_GetNextFromDeVliegendeHollanderWithoutExclusions_ExpectCorrectRide()
+        {
+            Ride ride = this.rideControl.All().First(tale => tale.Name.Equals("De Vliegende Hollander"));
+
+            Ride closest = this.rideControl.NextLocation(ride.Guid, new List<System.Guid>());
+            Assert.NotNull(closest);
+
+            List<string> expected = new List<string>() { "Joris en de Draak", "Python", "Monsieur Cannibale" };
+            Assert.Contains(closest.Name, expected);
+        }
+
+        [Fact]
+        public void NextLocation_GetNextFromDeVliegendeHollanderWithExclusions_ExpectCorrectRide()
+        {
+            Ride ride = this.rideControl.All().First(tale => tale.Name.Equals("De Vliegende Hollander"));
+
+            List<Ride> excludedTales = this.rideControl.All().Where(tale => tale.Name.Equals("Joris en de Draak") || tale.Name.Equals("Baron 1898") || tale.Name.Equals("Polka Marina")).ToList();
+
+            Ride closest = this.rideControl.NextLocation(ride.Guid, excludedTales.ConvertAll(tale => tale.Guid));
+            Assert.NotNull(closest);
+
+            List<string> expected = new List<string>() { "Python", "Monsieur Cannibale", "Halve Maen" };
+            Assert.Contains(closest.Name, expected);
+        }
 
         [Fact]
         public void NearestRide_GetNearestFromDeVliegendeHollanderWithExclusions_ExpectPython()

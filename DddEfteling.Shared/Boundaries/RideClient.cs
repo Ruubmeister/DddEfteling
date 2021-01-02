@@ -50,9 +50,9 @@ namespace DddEfteling.Shared.Boundaries
             return null;
         }
 
-        public RideDto GetNearestRide(Guid guid, List<Guid> excludedGuid)
+        public RideDto GetNextLocation(Guid guid, List<Guid> excludedGuid)
         {
-            string url = $"/api/v1/rides/{guid}/nearest";
+            string url = $"/api/v1/rides/{guid}/new-location";
 
             var urlParams = new Dictionary<string, string>
             {
@@ -80,7 +80,7 @@ namespace DddEfteling.Shared.Boundaries
 
         public RideDto GetRandomRide();
 
-        public RideDto GetNearestRide(Guid guid, List<Guid> excludedGuid);
+        public RideDto GetNextLocation(Guid guid, List<Guid> excludedGuid);
 
     }
 }

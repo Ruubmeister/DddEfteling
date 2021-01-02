@@ -70,7 +70,7 @@ namespace DddEfteling.ParkTests.Shared.Boundaries
             HttpClient httpClient = HttpClientMockHelper.GetMockedHttpClient(JsonConvert.SerializeObject(""), System.Net.HttpStatusCode.NotFound);
             var fairyTaleClient = new FairyTaleClient(httpClient);
 
-            var result = fairyTaleClient.GetNearestFairyTale(Guid.NewGuid(), new List<Guid>());
+            var result = fairyTaleClient.GetNewFairyTaleLocation(Guid.NewGuid(), new List<Guid>());
 
             Assert.Null(result);
         }
@@ -82,7 +82,7 @@ namespace DddEfteling.ParkTests.Shared.Boundaries
             HttpClient httpClient = HttpClientMockHelper.GetMockedHttpClient(JsonConvert.SerializeObject(new FairyTaleDto()));
             var fairyTaleClient = new FairyTaleClient(httpClient);
 
-            var result = fairyTaleClient.GetNearestFairyTale(Guid.NewGuid(), new List<Guid>());
+            var result = fairyTaleClient.GetNewFairyTaleLocation(Guid.NewGuid(), new List<Guid>());
 
             Assert.NotNull(result);
         }

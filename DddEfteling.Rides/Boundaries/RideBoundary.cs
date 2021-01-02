@@ -28,11 +28,11 @@ namespace DddEfteling.Rides.Boundaries
             return rideControl.GetRandom().ToDto();
         }
 
-        [HttpGet("{guid}/nearest")]
-        public ActionResult<RideDto> GetNearestRide(Guid guid, [FromQuery(Name = "exclude")] string excludedGuids)
+        [HttpGet("{guid}/new-location")]
+        public ActionResult<RideDto> GetNewRideLocation(Guid guid, [FromQuery(Name = "exclude")] string excludedGuids)
         {
             var excludedGuidList = excludedGuids.Length > 0 ? new List<string>(excludedGuids.Split(",")).ConvertAll(guidStr => Guid.Parse(guidStr)) : new List<Guid>();
-            return rideControl.NearestRide(guid, excludedGuidList).ToDto();
+            return rideControl.NextLocation(guid, excludedGuidList).ToDto();
         }
 
         [HttpPut("{guid}/status")]

@@ -20,6 +20,7 @@ namespace DddEfteling.Rides.Controls
         private readonly IEventProducer eventProducer;
         private readonly IEmployeeClient employeeClient;
         private readonly IVisitorClient visitorClient;
+        private readonly Random random = new Random();
 
         public RideControl() { }
 
@@ -165,6 +166,21 @@ namespace DddEfteling.Rides.Controls
             return this.rides.First(tale => tale.Guid.Equals(nextRide));
         }
 
+        public Ride NextLocation(Guid rideGuid, List<Guid> exclusionList)
+        {
+            Ride ride = this.rides.First(ride => ride.Guid.Equals(rideGuid));
+            try
+            {
+                List<KeyValuePair<double, Guid>> ridesToPick = ride.DistanceToOthers.Where(keyVal => !exclusionList.Contains(keyVal.Value)).Take(3).ToList();
+                Guid nextRide = ridesToPick.ElementAt(random.Next(ridesToPick.Count)).Value;
+                return this.rides.First(tale => tale.Guid.Equals(nextRide));
+            } catch(IndexOutOfRangeException e)
+            {
+                logger.LogWarning("Something went wrong when getting a next location from origin {RideName}: {Exception}", ride.Name, e);
+            }
+            return this.GetRandom();
+        }
+
         private void CheckRequiredEmployees(Ride ride)
         {
             // Todo: Fix this
@@ -240,6 +256,9 @@ namespace DddEfteling.Rides.Controls
         public void HandleOpenRides();
 
         public Ride NearestRide(Guid rideGuid, List<Guid> exclusionList);
+
+        public Ride NextLocation(Guid rideGuid, List<Guid> exclusionList);
+
         public void HandleVisitorSteppingInRideLine(Guid visitorGuid, Guid rideGuid);
 
         public void HandleEmployeeChangedWorkplace(WorkplaceDto workplace, Guid employee, WorkplaceSkill skill);

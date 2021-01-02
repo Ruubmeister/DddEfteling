@@ -162,7 +162,7 @@ namespace DddEfteling.Visitors.Controls
 
                     if (previousLocation != null && type.Equals(previousLocation?.LocationType))
                     {
-                        fairyTale = fairyTaleClient.GetNearestFairyTale(previousLocation.Guid,
+                        fairyTale = fairyTaleClient.GetNewFairyTaleLocation(previousLocation.Guid,
                         visitor.VisitedLocations.Values.Select(location => location.Guid).ToList());
                     }
 
@@ -180,7 +180,7 @@ namespace DddEfteling.Visitors.Controls
 
                     if (previousLocation != null && type.Equals(previousLocation?.LocationType))
                     {
-                        ride = rideClient.GetNearestRide(previousLocation.Guid,
+                        ride = rideClient.GetNextLocation(previousLocation.Guid,
                         visitor.VisitedLocations.Values.Select(location => location.Guid).ToList());
                     }
 
@@ -198,7 +198,7 @@ namespace DddEfteling.Visitors.Controls
 
                     if (previousLocation != null && type.Equals(previousLocation?.LocationType))
                     {
-                        stand = rideClient.GetNearestRide(previousLocation.Guid,
+                        stand = rideClient.GetNextLocation(previousLocation.Guid,
                         visitor.VisitedLocations.Values.Select(location => location.Guid).ToList());
                     }
 
