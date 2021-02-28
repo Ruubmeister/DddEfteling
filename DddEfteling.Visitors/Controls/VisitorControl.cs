@@ -20,6 +20,7 @@ namespace DddEfteling.Visitors.Controls
         private readonly IMediator mediator;
         private readonly IRideClient rideClient;
         private readonly IFairyTaleClient fairyTaleClient;
+        private readonly IStandClient standClient;
         private readonly IOptions<VisitorSettings> visitorSettings;
         private readonly Coordinate startCoordinate = new Coordinate(51.649175, 5.045545);
         private readonly ILogger<VisitorControl> logger;
@@ -27,11 +28,12 @@ namespace DddEfteling.Visitors.Controls
 
         public readonly Dictionary<Guid, DateTime> IdleVisitors = new Dictionary<Guid, DateTime>();
         public readonly ConcurrentDictionary<Guid, DateTime> BusyVisitors = new ConcurrentDictionary<Guid, DateTime>();
+        public readonly ConcurrentDictionary<string, Guid> VisitorsWaitingForOrder = new ConcurrentDictionary<string, Guid>();
 
         private ConcurrentBag<Visitor> Visitors { get; } = new ConcurrentBag<Visitor>();
 
         public VisitorControl(IMediator mediator, IOptions<VisitorSettings> settings, ILogger<VisitorControl> logger,
-            IRideClient rideClient, IFairyTaleClient fairyTaleClient, IEventProducer eventProducer)
+            IRideClient rideClient, IFairyTaleClient fairyTaleClient, IEventProducer eventProducer, IStandClient standClient)
         {
             this.mediator = mediator;
             this.visitorSettings = settings;
@@ -39,6 +41,7 @@ namespace DddEfteling.Visitors.Controls
             this.rideClient = rideClient;
             this.fairyTaleClient = fairyTaleClient;
             this.eventProducer = eventProducer;
+            this.standClient = standClient;
         }
 
         public void HandleIdleVisitors()
@@ -94,6 +97,13 @@ namespace DddEfteling.Visitors.Controls
                         Event watchingFairyTale = new Event(EventType.ArrivedAtFairyTale, EventSource.Visitor, eventPayload);
                         eventProducer.Produce(watchingFairyTale);
                     }
+                    else if (visitor.TargetLocation.LocationType.Equals(LocationType.STAND))
+                    {
+                        this.logger.LogInformation($"Visitor {visitor.Guid} arrived at stand {visitor.TargetLocation.Name}");
+                        StandDto stand = standClient.GetStand(visitor.TargetLocation.Guid);
+                        string ticket = standClient.OrderDinner(stand.Guid, visitor.PickStandProducts(stand));
+                        this.VisitorsWaitingForOrder.TryAdd(ticket, visitor.Guid);
+                    }
                 }
                 else
                 {
@@ -102,6 +112,19 @@ namespace DddEfteling.Visitors.Controls
                     this.NotifyIdleVisitor(visitor.Guid);
                 }
             }
+        }
+
+        public void NotifyOrderReady(string guid)
+        {
+            if (this.VisitorsWaitingForOrder.TryGetValue(guid, out Guid visitorGuid))
+            {
+                Visitor visitor = Visitors.First(visitor => visitor.Guid.Equals(visitorGuid));
+                visitor.PickUpOrder(standClient, guid);
+                // Todo: Fix hardcoded values 
+                DateTime timeWhenConsumed = DateTime.Now.AddMinutes(2);
+                this.IdleVisitors.Add(visitor.Guid, timeWhenConsumed);
+            }
+
         }
 
         public void NotifyIdleVisitor(Guid guid)
@@ -194,20 +217,20 @@ namespace DddEfteling.Visitors.Controls
                     break;
                 case LocationType.STAND:
 
-                    RideDto stand = null;
+                    StandDto stand = null;
 
                     if (previousLocation != null && type.Equals(previousLocation?.LocationType))
                     {
-                        stand = rideClient.GetNextLocation(previousLocation.Guid,
+                        stand = standClient.GetNewStandLocation(previousLocation.Guid,
                         visitor.VisitedLocations.Values.Select(location => location.Guid).ToList());
                     }
 
                     if (stand == null)
                     {
-                        stand = rideClient.GetRandomRide();
+                        stand = standClient.GetRandomStand();
                     }
 
-                    logger.LogInformation($"Temp: Walking to ride {stand?.Name}");
+                    logger.LogInformation($"Walking to stand {stand?.Name}");
                     visitor.TargetLocation = stand;
                     break;
             }
@@ -227,6 +250,10 @@ namespace DddEfteling.Visitors.Controls
                 case LocationType.RIDE:
                     RideDto ride = rideClient.GetRandomRide();
                     visitor.TargetLocation = ride;
+                    break;
+                case LocationType.STAND:
+                    StandDto stand = standClient.GetRandomStand();
+                    visitor.TargetLocation = stand;
                     break;
             }
 
@@ -274,5 +301,7 @@ namespace DddEfteling.Visitors.Controls
         public void AddBusyVisitor(Guid visitorGuid, DateTime dateTime);
 
         public Visitor GetVisitor(Guid guid);
+
+        public void NotifyOrderReady(string guid);
     }
 }

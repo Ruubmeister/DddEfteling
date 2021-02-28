@@ -47,6 +47,16 @@ namespace DddEfteling.Visitors
             })
                 .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(6, _ => TimeSpan.FromSeconds(10)));
 
+            services.AddHttpClient<IStandClient, StandClient>(c =>
+            {
+                c.BaseAddress = new Uri(Configuration["StandUrl"]);
+                c.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue("Application/Json"));
+                c.DefaultRequestHeaders.Add("User-Agent", "Efteling");
+
+            })
+                .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(6, _ => TimeSpan.FromSeconds(10)));
+
             services.AddSingleton<IEventProducer, EventProducer>();
             services.AddSingleton<IEventConsumer, EventConsumer>();
             services.AddSingleton<IVisitorControl, VisitorControl>();

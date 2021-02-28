@@ -24,18 +24,21 @@ namespace DddEfteling.VisitorTests.Control
         private readonly IFairyTaleClient fairyTaleClient;
         private readonly IRideClient rideClient;
         private readonly IEventProducer eventProducer;
+        private readonly IStandClient standClient;
 
         public VisitorControlTest()
         {
             this.fairyTaleClient = Mock.Of<IFairyTaleClient>();
             this.rideClient = Mock.Of<IRideClient>();
             this.eventProducer = Mock.Of<IEventProducer>();
+            this.standClient = Mock.Of<IStandClient>();
         }
 
         [Fact]
         public void AddVisitors_AddThree_ExpectThree()
         {
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient, fairyTaleClient, eventProducer);
+            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient, fairyTaleClient,
+                eventProducer, standClient);
 
             visitorControl.AddVisitors(3);
             Assert.Equal(3, visitorControl.All().Count);
@@ -47,11 +50,14 @@ namespace DddEfteling.VisitorTests.Control
         {
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
 
-            VisitorControl visitorControl = new VisitorControl(mediatorMock.Object, settings, logger, rideClient, fairyTaleClient, eventProducer);
+            VisitorControl visitorControl = new VisitorControl(mediatorMock.Object, settings, logger, rideClient,
+                fairyTaleClient, eventProducer, standClient);
             Guid guid = Guid.NewGuid();
             visitorControl.NotifyIdleVisitor(guid);
 
-            mediatorMock.Verify(mock => mock.Publish(It.Is<VisitorEvent>(visitorEvent => visitorEvent.VisitorGuid.Equals(guid)), CancellationToken.None));
+            mediatorMock.Verify(mock =>
+                mock.Publish(It.Is<VisitorEvent>(visitorEvent => visitorEvent.VisitorGuid.Equals(guid)),
+                    CancellationToken.None));
         }
 
         [Fact]
@@ -59,7 +65,8 @@ namespace DddEfteling.VisitorTests.Control
         {
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
 
-            VisitorControl visitorControl = new VisitorControl(mediatorMock.Object, settings, logger, rideClient, fairyTaleClient, eventProducer);
+            VisitorControl visitorControl = new VisitorControl(mediatorMock.Object, settings, logger, rideClient,
+                fairyTaleClient, eventProducer, standClient);
             visitorControl.HandleBusyVisitors();
 
             mediatorMock.Verify(mock => mock.Publish(It.IsAny<VisitorEvent>(), CancellationToken.None), Times.Never);
@@ -71,7 +78,8 @@ namespace DddEfteling.VisitorTests.Control
         {
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
 
-            VisitorControl visitorControl = new VisitorControl(mediatorMock.Object, settings, logger, rideClient, fairyTaleClient, eventProducer);
+            VisitorControl visitorControl = new VisitorControl(mediatorMock.Object, settings, logger, rideClient,
+                fairyTaleClient, eventProducer, standClient);
             Visitor visitor = new Visitor();
             DateTime dt = DateTime.Now.AddMinutes(1);
             visitorControl.AddBusyVisitor(visitor.Guid, dt);
@@ -86,7 +94,8 @@ namespace DddEfteling.VisitorTests.Control
         {
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
 
-            VisitorControl visitorControl = new VisitorControl(mediatorMock.Object, settings, logger, rideClient, fairyTaleClient, eventProducer);
+            VisitorControl visitorControl = new VisitorControl(mediatorMock.Object, settings, logger, rideClient,
+                fairyTaleClient, eventProducer, standClient);
             visitorControl.AddVisitors(1);
             Visitor visitor = visitorControl.All().First();
             DateTime dt = DateTime.Now.Subtract(TimeSpan.FromSeconds(1));
@@ -99,7 +108,8 @@ namespace DddEfteling.VisitorTests.Control
         [Fact]
         public void AddIdleVisitor_VisitorNotIdleYet_ExpectVisitorInIdleList()
         {
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient, fairyTaleClient, eventProducer);
+            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient, fairyTaleClient,
+                eventProducer, standClient);
             Guid guid = Guid.NewGuid();
             DateTime dt = DateTime.Now;
             visitorControl.AddIdleVisitor(guid, dt);
@@ -112,7 +122,8 @@ namespace DddEfteling.VisitorTests.Control
         [Fact]
         public void AddBusyVisitor_VisitorNotBusyYet_ExpectVisitorInBusyList()
         {
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient, fairyTaleClient, eventProducer);
+            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient, fairyTaleClient,
+                eventProducer, standClient);
             Guid guid = Guid.NewGuid();
             DateTime dt = DateTime.Now;
             visitorControl.AddBusyVisitor(guid, dt);
@@ -125,7 +136,8 @@ namespace DddEfteling.VisitorTests.Control
         [Fact]
         public void GetVisitors_AddThree_ExpectEachVisitor()
         {
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient, fairyTaleClient, eventProducer);
+            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient, fairyTaleClient,
+                eventProducer, standClient);
 
             visitorControl.AddVisitors(3);
             List<Visitor> visitors = visitorControl.All();
@@ -144,7 +156,8 @@ namespace DddEfteling.VisitorTests.Control
             rideClient.Setup(client => client.GetRandomRide()).Returns(new RideDto());
 
 
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object, fairyTaleClient.Object, eventProducer.Object);
+            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object,
+                fairyTaleClient.Object, eventProducer.Object, standClient);
             Visitor visitor = new Visitor();
 
             Assert.Null(visitor.TargetLocation);
@@ -164,7 +177,8 @@ namespace DddEfteling.VisitorTests.Control
             fairyTaleClient.Setup(client => client.GetRandomFairyTale()).Returns(new FairyTaleDto());
             rideClient.Setup(client => client.GetRandomRide()).Returns(new RideDto());
 
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object, fairyTaleClient.Object, eventProducer.Object);
+            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object,
+                fairyTaleClient.Object, eventProducer.Object, standClient);
             Visitor visitor = new Visitor();
             visitor.AddVisitedLocation(rideDto);
 
@@ -187,7 +201,8 @@ namespace DddEfteling.VisitorTests.Control
             fairyTaleClient.Setup(client => client.GetRandomFairyTale()).Returns(new FairyTaleDto());
             rideClient.Setup(client => client.GetRandomRide()).Returns(new RideDto());
 
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object, fairyTaleClient.Object, eventProducer.Object);
+            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object,
+                fairyTaleClient.Object, eventProducer.Object, standClient);
             Visitor visitor = new Visitor();
             visitor.AddVisitedLocation(fairyTaleDto);
 
@@ -206,12 +221,15 @@ namespace DddEfteling.VisitorTests.Control
 
             Mock<IFairyTaleClient> fairyTaleClient = new Mock<IFairyTaleClient>();
             Mock<IRideClient> rideClient = new Mock<IRideClient>();
+            Mock<IStandClient> standClient = new Mock<IStandClient>();
             Mock<IEventProducer> eventProducer = new Mock<IEventProducer>();
 
             fairyTaleClient.Setup(client => client.GetRandomFairyTale()).Returns(new FairyTaleDto());
             rideClient.Setup(client => client.GetRandomRide()).Returns(new RideDto());
+            standClient.Setup(client => client.GetRandomStand()).Returns(new StandDto());
 
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object, fairyTaleClient.Object, eventProducer.Object);
+            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object,
+                fairyTaleClient.Object, eventProducer.Object, standClient.Object);
             Visitor visitor = new Visitor();
             visitor.AddVisitedLocation(standDto);
 
@@ -219,7 +237,7 @@ namespace DddEfteling.VisitorTests.Control
 
             visitorControl.SetNewLocation(visitor);
             Assert.NotNull(visitor.TargetLocation);
-            Assert.Equal(LocationType.RIDE, visitor.TargetLocation.LocationType);
+            Assert.Equal(LocationType.STAND, visitor.TargetLocation.LocationType);
         }
 
         [Fact]
@@ -242,7 +260,8 @@ namespace DddEfteling.VisitorTests.Control
             fairyTaleClient.Setup(client => client.GetRandomFairyTale()).Returns(taleDto);
             rideClient.Setup(client => client.GetRandomRide()).Returns(rideDto);
 
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object, fairyTaleClient.Object, eventProducer.Object);
+            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object,
+                fairyTaleClient.Object, eventProducer.Object, standClient);
             visitorControl.AddVisitors(1);
             Visitor visitor = visitorControl.All().First();
             visitor.TargetLocation = null;
@@ -285,7 +304,8 @@ namespace DddEfteling.VisitorTests.Control
             fairyTaleClient.Setup(client => client.GetRandomFairyTale()).Returns(taleDto);
             rideClient.Setup(client => client.GetRandomRide()).Returns(rideDto);
 
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object, fairyTaleClient.Object, eventProducer.Object);
+            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object,
+                fairyTaleClient.Object, eventProducer.Object, standClient);
             visitorControl.AddVisitors(1);
             Visitor visitor = visitorControl.All().First();
             Coordinate startLocation = visitor.CurrentLocation;
@@ -318,7 +338,8 @@ namespace DddEfteling.VisitorTests.Control
             fairyTaleClient.Setup(client => client.GetRandomFairyTale()).Returns(taleDto);
             rideClient.Setup(client => client.GetRandomRide()).Returns(rideDto);
 
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object, fairyTaleClient.Object, eventProducer.Object);
+            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object,
+                fairyTaleClient.Object, eventProducer.Object, standClient);
             visitorControl.AddVisitors(1);
             Visitor visitor = visitorControl.All().First();
 
@@ -360,7 +381,8 @@ namespace DddEfteling.VisitorTests.Control
             fairyTaleClient.Setup(client => client.GetRandomFairyTale()).Returns(taleDto);
             rideClient.Setup(client => client.GetRandomRide()).Returns(rideDto);
 
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object, fairyTaleClient.Object, eventProducer.Object);
+            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object,
+                fairyTaleClient.Object, eventProducer.Object, standClient);
             visitorControl.AddVisitors(1);
             Visitor visitor = visitorControl.All().First();
             visitor.TargetLocation = rideDto;
@@ -377,7 +399,8 @@ namespace DddEfteling.VisitorTests.Control
             Assert.NotEmpty(visitorControl.IdleVisitors);
             visitorControl.HandleIdleVisitors();
             Assert.Empty(visitorControl.IdleVisitors);
-            eventProducer.Verify(producer => producer.Produce(It.Is<Event>(eventOut => eventOut.Type.Equals(EventType.StepInRideLine))));
+            eventProducer.Verify(producer =>
+                producer.Produce(It.Is<Event>(eventOut => eventOut.Type.Equals(EventType.StepInRideLine))));
         }
 
         [Fact]
@@ -400,7 +423,8 @@ namespace DddEfteling.VisitorTests.Control
             fairyTaleClient.Setup(client => client.GetRandomFairyTale()).Returns(taleDto);
             rideClient.Setup(client => client.GetRandomRide()).Returns(rideDto);
 
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object, fairyTaleClient.Object, eventProducer.Object);
+            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object,
+                fairyTaleClient.Object, eventProducer.Object, standClient);
             visitorControl.AddVisitors(1);
             Visitor visitor = visitorControl.All().First();
             visitor.TargetLocation = taleDto;
@@ -417,8 +441,58 @@ namespace DddEfteling.VisitorTests.Control
             Assert.NotEmpty(visitorControl.IdleVisitors);
             visitorControl.HandleIdleVisitors();
             Assert.Empty(visitorControl.IdleVisitors);
-            eventProducer.Verify(producer => producer.Produce(It.Is<Event>(eventOut => eventOut.Type.Equals(EventType.ArrivedAtFairyTale))));
+            eventProducer.Verify(producer =>
+                producer.Produce(It.Is<Event>(eventOut => eventOut.Type.Equals(EventType.ArrivedAtFairyTale))));
         }
+        
+        
+        [Fact]
+        public void NotifyOrderReady_OrderExists_ExpectVisitorIdle(){
+            FairyTaleDto fairyTaleDto = new FairyTaleDto();
 
+            Mock<IFairyTaleClient> fairyTaleClient = new Mock<IFairyTaleClient>();
+            Mock<IRideClient> rideClient = new Mock<IRideClient>();
+            Mock<IEventProducer> eventProducer = new Mock<IEventProducer>();
+
+            fairyTaleClient.Setup(client => client.GetRandomFairyTale()).Returns(new FairyTaleDto());
+            rideClient.Setup(client => client.GetRandomRide()).Returns(new RideDto());
+
+            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object, fairyTaleClient.Object, eventProducer.Object, standClient);
+
+            Guid guid = Guid.NewGuid();
+            
+            visitorControl.AddVisitors(1);
+
+            Visitor visitor = visitorControl.All().First();
+
+            visitorControl.VisitorsWaitingForOrder.TryAdd(guid.ToString(), visitor.Guid);
+            visitorControl.NotifyOrderReady(guid.ToString());
+            Assert.True(visitorControl.IdleVisitors.ContainsKey(visitor.Guid));
+
+        }
+        
+        [Fact]
+        public void NotifyOrderReady_OrderDoesNotExists_ExpectNoVisitorIdle(){
+            FairyTaleDto fairyTaleDto = new FairyTaleDto();
+
+            Mock<IFairyTaleClient> fairyTaleClient = new Mock<IFairyTaleClient>();
+            Mock<IRideClient> rideClient = new Mock<IRideClient>();
+            Mock<IEventProducer> eventProducer = new Mock<IEventProducer>();
+
+            fairyTaleClient.Setup(client => client.GetRandomFairyTale()).Returns(new FairyTaleDto());
+            rideClient.Setup(client => client.GetRandomRide()).Returns(new RideDto());
+
+            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object, fairyTaleClient.Object, eventProducer.Object, standClient);
+
+            Guid guid = Guid.NewGuid();
+            
+            visitorControl.AddVisitors(1);
+
+            Visitor visitor = visitorControl.All().First();
+
+            visitorControl.NotifyOrderReady(guid.ToString());
+            Assert.False(visitorControl.IdleVisitors.ContainsKey(visitor.Guid));
+
+        }
     }
 }

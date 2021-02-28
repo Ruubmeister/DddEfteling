@@ -5,15 +5,15 @@ namespace DddEfteling.Shared.Boundaries
     public abstract class KafkaProducer
     {
 
-        private readonly ProducerConfig config = new ProducerConfig
-        {
-            BootstrapServers = "192.168.1.247:9092"
-        };
-
         protected readonly IProducer<Null, string> Producer;
 
-        protected KafkaProducer()
+        protected KafkaProducer(string broker)
         {
+            var config = new ProducerConfig
+            {
+                BootstrapServers = broker
+            };
+            
             this.Producer = new ProducerBuilder<Null, string>(config).Build();
         }
 

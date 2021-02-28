@@ -16,8 +16,7 @@ namespace DddEfteling.FairyTales.Controls
         private readonly ConcurrentBag<FairyTale> fairyTales;
         private readonly ILogger logger;
         private readonly Random random = new Random();
-        private readonly IEventProducer eventProducer;
-
+        private readonly IEventProducer eventProducer; 
         public FairyTaleControl() { }
 
         public FairyTaleControl(ILogger<FairyTaleControl> logger, IEventProducer eventProducer)

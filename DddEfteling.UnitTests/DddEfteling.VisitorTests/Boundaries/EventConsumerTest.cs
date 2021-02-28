@@ -5,7 +5,10 @@ using Moq;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using Microsoft.Extensions.Configuration;
 using Xunit;
+using IConfiguration = Castle.Core.Configuration.IConfiguration;
 
 namespace DddEfteling.VisitorTests.Boundaries
 {
@@ -14,6 +17,13 @@ namespace DddEfteling.VisitorTests.Boundaries
         private readonly EventConsumer eventConsumer;
         private readonly Mock<IVisitorControl> visitorMock;
 
+        IConfigurationRoot Configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string>
+            {
+                {"KafkaBroker", "localhost"}
+            })
+            .Build();
+
         public EventConsumerTest()
         {
             this.visitorMock = new Mock<IVisitorControl>();
@@ -21,7 +31,7 @@ namespace DddEfteling.VisitorTests.Boundaries
             this.visitorMock.Setup(control => control.AddIdleVisitor(It.IsAny<Guid>(), It.Ref<DateTime>.IsAny));
             this.visitorMock.Setup(control => control.AddBusyVisitor(It.IsAny<Guid>(), It.Ref<DateTime>.IsAny));
 
-            this.eventConsumer = new EventConsumer(this.visitorMock.Object);
+            this.eventConsumer = new EventConsumer(this.visitorMock.Object, Configuration);
         }
 
         [Fact]

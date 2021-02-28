@@ -4,7 +4,7 @@ using DddEfteling.Shared.Entities;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
-namespace DddEfteling.Park.Boundaries
+namespace DddEfteling.Stands.Boundaries
 {
     public class EventProducer : KafkaProducer, IEventProducer
     {

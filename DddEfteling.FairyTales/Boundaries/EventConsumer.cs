@@ -3,6 +3,7 @@ using DddEfteling.Shared.Boundaries;
 using DddEfteling.Shared.Entities;
 using Newtonsoft.Json;
 using System;
+using Microsoft.Extensions.Configuration;
 
 namespace DddEfteling.FairyTales.Boundaries
 {
@@ -11,7 +12,8 @@ namespace DddEfteling.FairyTales.Boundaries
 
         private readonly IFairyTaleControl fairyTaleControl;
 
-        public EventConsumer(IFairyTaleControl fairyTaleControl) : base("domainEvents", "192.168.1.247:9092", "fairytales")
+        public EventConsumer(IFairyTaleControl fairyTaleControl, IConfiguration configuration) :
+            base("domainEvents", configuration["KafkaBroker"], "fairytales")
         {
 
             this.fairyTaleControl = fairyTaleControl;

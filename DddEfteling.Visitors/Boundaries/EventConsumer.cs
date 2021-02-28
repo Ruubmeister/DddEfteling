@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace DddEfteling.Visitors.Boundaries
 {
@@ -14,7 +15,8 @@ namespace DddEfteling.Visitors.Boundaries
 
         private readonly IVisitorControl visitorControl;
 
-        public EventConsumer(IVisitorControl visitorControl) : base("domainEvents", "192.168.1.247:9092", "visitors")
+        public EventConsumer(IVisitorControl visitorControl, IConfiguration configuration) :
+            base("domainEvents", configuration["KafkaBroker"], "visitors")
         {
 
             this.visitorControl = visitorControl;
@@ -40,6 +42,10 @@ namespace DddEfteling.Visitors.Boundaries
                 incomingEvent.Payload.TryGetValue("EndDateTime", out string endDateTime))
             {
                 this.visitorControl.AddBusyVisitor(Guid.Parse(visitorGuid), DateTime.Parse(endDateTime));
+            }
+            else if (incomingEvent.Type.Equals(EventType.OrderReady) && incomingEvent.Payload.TryGetValue("Order", out string order))
+            {
+                this.visitorControl.NotifyOrderReady(order);
             }
         }
     }

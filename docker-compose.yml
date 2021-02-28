@@ -3,43 +3,123 @@ version: '3.4'
 services:
 
   dddeftelingpark:
-    image: ${DOCKER_REGISTRY-}dddeftelingpark
+    image: dddeftelingpark
+    depends_on:
+      - kafka
     build:
       context: .
       dockerfile: DddEfteling.Park/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - FairyTaleUrl=http://dddeftelingfairytales:3999
+      - ParkUrl=http://dddeftelingpark:3998
+      - RideUrl=http://dddeftelingrides:3997
+      - StandUrl=http://dddeftelingstands:3996
+      - VisitorUrl=http://dddeftelingvisitors:3995
+      - KafkaBroker=kafka:9092
+    ports:
+      - "3998:3998"
 
   dddeftelingrides:
-    image: ${DOCKER_REGISTRY-}dddeftelingrides
+    image: dddeftelingrides
     depends_on: 
       - dddeftelingpark
+      - kafka
     build:
       context: .
       dockerfile: DddEfteling.Rides/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - FairyTaleUrl=http://dddeftelingfairytales:3999
+      - ParkUrl=http://dddeftelingpark:3998
+      - RideUrl=http://dddeftelingrides:3997
+      - StandUrl=http://dddeftelingstands:3996
+      - VisitorUrl=http://dddeftelingvisitors:3995
+      - KafkaBroker=kafka:9092
+    ports:
+      - "3997:3997"
+    
   
   dddeftelingfairytales:
-    image: ${DOCKER_REGISTRY-}dddeftelingfairytales
+    image: dddeftelingfairytales
     depends_on: 
       - dddeftelingpark
+      - kafka
     build:
       context: .
       dockerfile: DddEfteling.FairyTales/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - FairyTaleUrl=http://dddeftelingfairytales:3999
+      - ParkUrl=http://dddeftelingpark:3998
+      - RideUrl=http://dddeftelingrides:3997
+      - StandUrl=http://dddeftelingstands:3996
+      - VisitorUrl=http://dddeftelingvisitors:3995
+      - KafkaBroker=kafka:9092
+    ports:
+      - "3999:3999"
 
   dddeftelingstands:
-    image: ${DOCKER_REGISTRY-}dddeftelingstands
+    image: dddeftelingstands
     depends_on: 
       - dddeftelingpark
+      - kafka
     build:
       context: .
       dockerfile: DddEfteling.Stands/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - FairyTaleUrl=http://dddeftelingfairytales:3999
+      - ParkUrl=http://dddeftelingpark:3998
+      - RideUrl=http://dddeftelingrides:3997
+      - StandUrl=http://dddeftelingstands:3996
+      - VisitorUrl=http://dddeftelingvisitors:3995
+      - KafkaBroker=kafka:9092
+    ports:
+      - "3996:3996"
 
   dddeftelingvisitors:
-    image: ${DOCKER_REGISTRY-}dddeftelingvisitors
+    image: dddeftelingvisitors
     depends_on: 
       - dddeftelingpark
       - dddeftelingrides
       - dddeftelingfairytales
       - dddeftelingstands
+      - kafka
     restart: on-failure
     build:
       context: .
       dockerfile: DddEfteling.Visitors/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - FairyTaleUrl=http://dddeftelingfairytales:3999
+      - ParkUrl=http://dddeftelingpark:3998
+      - RideUrl=http://dddeftelingrides:3997
+      - StandUrl=http://dddeftelingstands:3996
+      - VisitorUrl=http://dddeftelingvisitors:3995
+      - KafkaBroker=kafka:9092
+    ports:
+      - "3995:3995"
+      
+  kafka:
+    image: wurstmeister/kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CREATE_TOPICS: domainEvents:10:1
+    ports:
+      - 9092:9092
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181

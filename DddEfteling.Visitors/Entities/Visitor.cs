@@ -48,6 +48,29 @@ namespace DddEfteling.Visitors.Entities
             return VisitedLocations[VisitedLocations.Keys.Max()];
         }
 
+        public List<string> PickStandProducts(StandDto stand)
+        {
+            var products = new List<string>
+            {
+                stand.Meals.OrderBy(x => Guid.NewGuid()).FirstOrDefault(),
+                stand.Drinks.OrderBy(x => Guid.NewGuid()).FirstOrDefault()
+            };
+
+            products.RemoveAll(product => product == null);
+
+            return products;
+        }
+
+        public void PickUpOrder(IStandClient client, string order)
+        {
+            DinnerDto dinner = client.GetOrder(order);
+
+            if(dinner != null)
+            {
+                this.TargetLocation = null;
+            }
+        }
+
         public void AddVisitedLocation(ILocationDto location)
         {
             if (!VisitedLocations.ContainsValue(location))
@@ -90,6 +113,13 @@ namespace DddEfteling.Visitors.Entities
         {
             this.locationSelector.ReduceAndBalance(LocationType.RIDE);
             this.AddVisitedLocation(ride);
+            this.TargetLocation = null;
+        }
+        
+        public void OrderAtStand(StandDto stand)
+        {
+            this.locationSelector.ReduceAndBalance(LocationType.STAND);
+            this.AddVisitedLocation(stand);
             this.TargetLocation = null;
         }
 

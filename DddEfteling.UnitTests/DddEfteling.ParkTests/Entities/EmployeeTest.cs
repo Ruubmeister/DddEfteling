@@ -3,6 +3,7 @@ using DddEfteling.Shared.Boundaries;
 using DddEfteling.Shared.Entities;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Xunit;
 
 namespace DddEfteling.ParkTests.Entities
@@ -12,7 +13,7 @@ namespace DddEfteling.ParkTests.Entities
         [Fact]
         public void Construct_employeeIsConstructed_expectsEmployee()
         {
-            DateTime dateOfBirth = DateTime.Parse("24-11-1988");
+            DateTime dateOfBirth = DateTime.ParseExact("24-11-1988", "dd-MM-yyyy", CultureInfo.InvariantCulture);
             Employee employee = new Employee("Jan", "Jansen", new List<WorkplaceSkill>() { WorkplaceSkill.Engineer });
 
             Assert.Equal("Jan", employee.FirstName);
