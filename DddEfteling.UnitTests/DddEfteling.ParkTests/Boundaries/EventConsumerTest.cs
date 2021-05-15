@@ -6,6 +6,7 @@ using Moq;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 using Xunit;
 
 namespace DddEfteling.ParkTests.Boundaries
@@ -14,13 +15,20 @@ namespace DddEfteling.ParkTests.Boundaries
     {
         private readonly EventConsumer eventConsumer;
         private readonly Mock<IEmployeeControl> employeeMock;
+        
+        IConfigurationRoot Configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string>
+            {
+                {"KafkaBroker", "localhost"}
+            })
+            .Build();
 
         public EventConsumerTest()
         {
             this.employeeMock = new Mock<IEmployeeControl>();
             this.employeeMock.Setup(control => control.AssignEmployee(It.Ref<WorkplaceDto>.IsAny, It.Ref<WorkplaceSkill>.IsAny));
 
-            this.eventConsumer = new EventConsumer(this.employeeMock.Object);
+            this.eventConsumer = new EventConsumer(this.employeeMock.Object, Configuration);
         }
 
         [Fact]

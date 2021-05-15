@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+using DddEfteling.Stands.Boundaries;
 using DddEfteling.Stands.Controls;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,6 +23,7 @@ namespace DddEfteling.Stands
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IStandControl, StandControl>();
+            services.AddSingleton<IEventProducer, EventProducer>();
             services.AddControllers();
             services.AddCors(options =>
             {
@@ -34,7 +37,7 @@ namespace DddEfteling.Stands
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IStandControl standControl)
         {
             if (env.IsDevelopment())
             {
@@ -47,6 +50,15 @@ namespace DddEfteling.Stands
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            _ = Task.Run(() =>
+            {
+                while (true)
+                {
+                    standControl.HandleProducedOrders();
+                    Task.Delay(1000).Wait();
+                }
             });
         }
     }

@@ -17,7 +17,7 @@ namespace DddEfteling.Shared.Controls
             LastNames = ReadJsonFile("resources/last-names.json");
         }
 
-        private List<string> ReadJsonFile(string file)
+        private static List<string> ReadJsonFile(string file)
         {
             using StreamReader r = new StreamReader(file);
             string json = r.ReadToEnd();

@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.Extensions.Options;
 using Moq;
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace DddEfteling.VisitorTests.Entities
@@ -133,6 +134,108 @@ namespace DddEfteling.VisitorTests.Entities
 
             Assert.True(visitor.CurrentLocation.Longitude < ride.Coordinates.Longitude);
             Assert.True(visitor.CurrentLocation.Longitude > 5.04797);
+        }
+
+        [Fact]
+        public void PickStandProducts_GivenStandWithProducts_ExpectProducts()
+        {
+            var meals = new List<string>() {"Product 1", "Product 2"};
+            var drinks = new List<string>() {"Drink 1", "Drink 2"};
+            
+            Visitor visitor = new Visitor();
+            StandDto standDto = new StandDto(Guid.NewGuid(), "Stand", new Coordinate(), meals, drinks);
+
+            List<string> products = visitor.PickStandProducts(standDto);
+
+            bool inMeals = false;
+            bool inDrinks = false;
+            
+            foreach(var product in products)
+            {
+                if (standDto.Drinks.Contains(product))
+                {
+                    inDrinks = true;
+                }else if (standDto.Meals.Contains(product))
+                {
+                    inMeals = true;
+                }
+            }
+            Assert.Equal(2, products.Count);
+            Assert.True(inDrinks);
+            Assert.True(inMeals);
+        }
+        
+        [Fact]
+        public void PickStandProducts_GivenStandWithMeals_ExpectMeal()
+        {
+            var meals = new List<string>() {"Product 1", "Product 2"};
+            var drinks = new List<string>();
+            
+            Visitor visitor = new Visitor();
+            StandDto standDto = new StandDto(Guid.NewGuid(), "Stand", new Coordinate(), meals, drinks);
+
+            List<string> products = visitor.PickStandProducts(standDto);
+
+            bool inMeals = false;
+            bool inDrinks = false;
+            
+            foreach(var product in products)
+            {
+                if (standDto.Drinks.Contains(product))
+                {
+                    inDrinks = true;
+                }else if (standDto.Meals.Contains(product))
+                {
+                    inMeals = true;
+                }
+            }
+            Assert.Single( products);
+            Assert.False(inDrinks);
+            Assert.True(inMeals);
+        }
+        
+        [Fact]
+        public void PickStandProducts_GivenStandWithDrinks_ExpectDrink()
+        {
+            var meals = new List<string>();
+            var drinks = new List<string>() {"Product 1", "Product 2"};
+            
+            Visitor visitor = new Visitor();
+            StandDto standDto = new StandDto(Guid.NewGuid(), "Stand", new Coordinate(), meals, drinks);
+
+            List<string> products = visitor.PickStandProducts(standDto);
+
+            bool inMeals = false;
+            bool inDrinks = false;
+            
+            foreach(var product in products)
+            {
+                if (standDto.Drinks.Contains(product))
+                {
+                    inDrinks = true;
+                }else if (standDto.Meals.Contains(product))
+                {
+                    inMeals = true;
+                }
+            }
+            
+            Assert.Single(products);
+            Assert.True(inDrinks);
+            Assert.False(inMeals);
+        }
+        
+        [Fact]
+        public void PickStandProducts_GivenStandWithoutDrinks_ExpectEmptyList()
+        {
+            var meals = new List<string>();
+            var drinks = new List<string>();
+            
+            Visitor visitor = new Visitor();
+            StandDto standDto = new StandDto(Guid.NewGuid(), "Stand", new Coordinate(), meals, drinks);
+
+            List<string> products = visitor.PickStandProducts(standDto);
+
+            Assert.Empty(products);
         }
     }
 }

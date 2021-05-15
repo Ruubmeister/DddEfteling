@@ -6,6 +6,7 @@ using Moq;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 using Xunit;
 
 namespace DddEfteling.RideTests.Boundaries
@@ -14,6 +15,13 @@ namespace DddEfteling.RideTests.Boundaries
     {
         private readonly EventConsumer eventConsumer;
         private readonly Mock<IRideControl> rideMock;
+        
+        IConfigurationRoot Configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string>
+            {
+                {"KafkaBroker", "localhost"}
+            })
+            .Build();
 
         public EventConsumerTest()
         {
@@ -23,7 +31,7 @@ namespace DddEfteling.RideTests.Boundaries
             this.rideMock.Setup(control => control.OpenRides());
             this.rideMock.Setup(control => control.CloseRides());
 
-            this.eventConsumer = new EventConsumer(this.rideMock.Object);
+            this.eventConsumer = new EventConsumer(this.rideMock.Object, Configuration);
         }
 
         [Fact]

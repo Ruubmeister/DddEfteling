@@ -3,6 +3,7 @@ using DddEfteling.Shared.Boundaries;
 using DddEfteling.Shared.Entities;
 using Newtonsoft.Json;
 using System;
+using Microsoft.Extensions.Configuration;
 
 namespace DddEfteling.Park.Boundaries
 {
@@ -11,7 +12,8 @@ namespace DddEfteling.Park.Boundaries
 
         private readonly IEmployeeControl employeeControl;
 
-        public EventConsumer(IEmployeeControl employeeControl) : base("domainEvents", "192.168.1.247:9092", "fairytales")
+        public EventConsumer(IEmployeeControl employeeControl, IConfiguration configuration) :
+            base("domainEvents", configuration["KafkaBroker"], "park")
         {
 
             this.employeeControl = employeeControl;

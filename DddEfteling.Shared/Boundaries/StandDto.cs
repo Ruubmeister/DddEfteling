@@ -22,6 +22,8 @@ namespace DddEfteling.Shared.Boundaries
 
         public StandDto(Guid guid, string name, Coordinate coodinates, List<string> meals, List<string> drinks)
         {
+            LocationType = LocationType.STAND;
+            
             this.Guid = guid;
             this.Name = name;
             this.Meals = meals;

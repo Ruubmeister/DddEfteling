@@ -3,6 +3,7 @@ using DddEfteling.Shared.Boundaries;
 using DddEfteling.Shared.Entities;
 using Newtonsoft.Json;
 using System;
+using Microsoft.Extensions.Configuration;
 
 namespace DddEfteling.Rides.Boundaries
 {
@@ -11,7 +12,8 @@ namespace DddEfteling.Rides.Boundaries
 
         private readonly IRideControl rideControl;
 
-        public EventConsumer(IRideControl rideControl) : base("domainEvents", "192.168.1.247:9092", "fairytales")
+        public EventConsumer(IRideControl rideControl, IConfiguration configuration) :
+            base("domainEvents", configuration["KafkaBroker"], "rides")
         {
 
             this.rideControl = rideControl;

@@ -9,6 +9,7 @@
     <Import_RootNamespace>DddEfteling.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Boundaries\DinnerDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Boundaries\EmployeeClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Boundaries\EmployeeDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Boundaries\FairyTaleClient.cs" />

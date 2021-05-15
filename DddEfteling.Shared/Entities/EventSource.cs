@@ -2,6 +2,6 @@
 {
     public enum EventSource
     {
-        Ride, FairyTale, Visitor, Employee, Park
+        Ride, FairyTale, Visitor, Employee, Park, Stand
     }
 }

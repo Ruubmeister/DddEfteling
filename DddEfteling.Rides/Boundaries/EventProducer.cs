@@ -1,13 +1,14 @@
 ﻿using Confluent.Kafka;
 using DddEfteling.Shared.Boundaries;
 using DddEfteling.Shared.Entities;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace DddEfteling.Rides.Boundaries
 {
     public class EventProducer : KafkaProducer, IEventProducer
     {
-        public EventProducer() : base() { }
+        public EventProducer(IConfiguration configuration) : base(configuration["KafkaBroker"]) { }
 
         public EventProducer(IProducer<Null, string> producer) : base(producer)
         {

@@ -3,6 +3,6 @@
     public enum EventType
     {
         StatusChanged, RequestEmployee, Idle, VisitorsUnboarded, StepInRideLine, WatchingFairyTale, ArrivedAtFairyTale,
-        EmployeeChangedWorkplace
+        EmployeeChangedWorkplace, OrderReady, OrderReceived
     }
 }

@@ -1,7 +1,4 @@
-﻿
-
-using Microsoft.AspNetCore.WebUtilities;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -52,12 +49,7 @@ namespace DddEfteling.Shared.Boundaries
 
         public RideDto GetNextLocation(Guid guid, List<Guid> excludedGuid)
         {
-            string url = $"/api/v1/rides/{guid}/new-location";
-
-            var urlParams = new Dictionary<string, string>
-            {
-                {"exclude", String.Join(",", excludedGuid.ToArray())}
-            };
+            string url = $"/api/v1/rides/{guid}/new-location?exclude={String.Join(",", excludedGuid.ToArray())}";
 
             Uri targetUri = new Uri(client.BaseAddress, url);
 
