@@ -9,17 +9,14 @@ using System.Text.Json.Serialization;
 
 namespace DddEfteling.Rides.Entities
 {
-    public class Ride : Workplace, ILocation
+    public class Ride : Location
     {
 
-        public Ride()
-        {
-            this.LocationType = LocationType.RIDE;
-        }
+        public Ride() : base(Guid.NewGuid(), LocationType.RIDE) { }
 
         [SuppressMessage("csharpsquid", "S107")]
-        public Ride(RideStatus status, Coordinate coordinates, String name, int minimumAge, double minimumLength, TimeSpan duration,
-            int maxPersons)
+        public Ride (RideStatus status, Coordinate coordinates, String name, int minimumAge, double minimumLength, TimeSpan duration,
+            int maxPersons): base(Guid.NewGuid(), LocationType.RIDE) 
         {
             Status = status;
             Name = name;
@@ -28,25 +25,17 @@ namespace DddEfteling.Rides.Entities
             Duration = duration;
             MaxPersons = maxPersons;
             Coordinates = coordinates;
-            LocationType = LocationType.RIDE;
 
             // todo: Let's change this later to a flexible setup
             //setEmployeeSkillRequirement(WorkplaceSkill.Control, 2);
             //setEmployeeSkillRequirement(WorkplaceSkill.Host, 3);
         }
 
-        [JsonIgnore]
-        public SortedDictionary<double, Guid> DistanceToOthers { get; } = new SortedDictionary<double, Guid>();
-
         public void ToMaintenance()
         {
             this.Status = RideStatus.Maintenance;
             this.VisitorsInLine = new Queue<VisitorDto>();
             this.VisitorsInRide = new Queue<VisitorDto>();
-        }
-        public void AddDistanceToOthers(double distance, Guid rideGuid)
-        {
-            this.DistanceToOthers.Add(distance, rideGuid);
         }
 
         public void ToOpen()
@@ -62,8 +51,6 @@ namespace DddEfteling.Rides.Entities
 
         public RideStatus Status { get; set; }
 
-        public string Name { get; }
-
         public int MinimumAge { get; }
 
         public double MinimumLength { get; }
@@ -75,8 +62,6 @@ namespace DddEfteling.Rides.Entities
         private Queue<VisitorDto> VisitorsInLine { get; set; } = new Queue<VisitorDto>();
 
         private Queue<VisitorDto> VisitorsInRide { get; set; } = new Queue<VisitorDto>();
-
-        public Coordinate Coordinates { get; }
 
         public DateTime EndTime { get; set; }
 
@@ -137,11 +122,6 @@ namespace DddEfteling.Rides.Entities
 
                 this.VisitorsInRide.Enqueue(this.VisitorsInLine.Dequeue());
             }
-        }
-
-        public double GetDistanceTo(Ride ride)
-        {
-            return GeoCalculator.GetDistance(this.Coordinates, ride.Coordinates, 2, DistanceUnit.Meters);
         }
 
         public RideDto ToDto()

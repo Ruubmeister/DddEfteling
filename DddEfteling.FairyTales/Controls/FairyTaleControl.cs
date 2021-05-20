@@ -8,6 +8,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DddEfteling.Shared.Controls;
 
 namespace DddEfteling.FairyTales.Controls
 {
@@ -16,16 +17,19 @@ namespace DddEfteling.FairyTales.Controls
         private readonly ConcurrentBag<FairyTale> fairyTales;
         private readonly ILogger logger;
         private readonly Random random = new Random();
-        private readonly IEventProducer eventProducer; 
+        private readonly IEventProducer eventProducer;
+        private readonly ILocationService locationService;
         public FairyTaleControl() { }
 
-        public FairyTaleControl(ILogger<FairyTaleControl> logger, IEventProducer eventProducer)
+        public FairyTaleControl(ILogger<FairyTaleControl> logger, IEventProducer eventProducer, 
+            ILocationService locationService)
         {
             fairyTales = LoadFairyTales();
             this.logger = logger;
             this.eventProducer = eventProducer;
-
-            CalculateFairyTaleDistances();
+            this.locationService = locationService;
+            
+            this.locationService.CalculateLocationDistances(fairyTales);
 
             this.logger.LogInformation($"Loaded fairy tales count: {fairyTales.Count}");
         }
@@ -41,26 +45,14 @@ namespace DddEfteling.FairyTales.Controls
 
         public FairyTale NearestFairyTale(Guid fairyTaleGuid, List<Guid> exclusionList)
         {
-            FairyTale tale = this.fairyTales.First(tale => tale.Guid.Equals(fairyTaleGuid));
-            Guid nextTale = tale.DistanceToOthers.First(keyVal => !exclusionList.Contains(keyVal.Value)).Value;
-
-            return this.fairyTales.First(tale => tale.Guid.Equals(nextTale));
+            FairyTale tale = fairyTales.First(tale => tale.Guid.Equals(fairyTaleGuid));
+            return locationService.NearestLocation(tale, fairyTales, exclusionList);
         }
 
-        public FairyTale NextLocation(Guid rideGuid, List<Guid> exclusionList)
+        public FairyTale NextLocation(Guid taleGuid, List<Guid> exclusionList)
         {
-            FairyTale tale = this.fairyTales.First(ride => ride.Guid.Equals(rideGuid));
-            try
-            {
-                List<KeyValuePair<double, Guid>> talesToPick = tale.DistanceToOthers.Where(keyVal => !exclusionList.Contains(keyVal.Value)).Take(3).ToList();
-                Guid nextTale = talesToPick.ElementAt(random.Next(talesToPick.Count)).Value;
-                return this.fairyTales.First(tale => tale.Guid.Equals(nextTale));
-            }
-            catch (IndexOutOfRangeException e)
-            {
-                logger.LogWarning("Something went wrong when getting a next location from origin {TaleName}: {Exception}", tale.Name, e);
-            }
-            return this.GetRandom();
+            FairyTale tale = fairyTales.First(tale => tale.Guid.Equals(taleGuid));
+            return locationService.NextLocation(tale, fairyTales, exclusionList) ?? this.GetRandom();
         }
 
         public FairyTale FindFairyTaleByName(string name)
@@ -71,24 +63,6 @@ namespace DddEfteling.FairyTales.Controls
         public List<FairyTale> All()
         {
             return fairyTales.ToList();
-        }
-
-        private void CalculateFairyTaleDistances()
-        {
-            foreach (FairyTale tale in fairyTales)
-            {
-                foreach (FairyTale toTale in fairyTales)
-                {
-                    if (tale.Equals(toTale))
-                    {
-                        continue;
-                    }
-
-                    tale.AddDistanceToOthers(tale.GetDistanceTo(toTale), toTale.Guid);
-                    logger.LogDebug($"Calculated distance from {tale.Name} to {toTale.Name}");
-                }
-            }
-            logger.LogDebug("Calculated distance to all fairy tales");
         }
         public FairyTale GetRandom()
         {
