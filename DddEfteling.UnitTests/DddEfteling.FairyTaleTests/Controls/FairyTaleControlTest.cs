@@ -7,6 +7,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DddEfteling.Shared.Controls;
 using Xunit;
 
 namespace DddEfteling.FairyTaleTests.Controls
@@ -19,8 +20,10 @@ namespace DddEfteling.FairyTaleTests.Controls
         public FairyTaleControlTest()
         {
             ILogger<FairyTaleControl> logger = Mock.Of<ILogger<FairyTaleControl>>();
+            ILogger<LocationService> locationLogger = Mock.Of<ILogger<LocationService>>();
             this.eventProducer = new Mock<IEventProducer>();
-            this.fairyTaleControl = new FairyTaleControl(logger, this.eventProducer.Object);
+            ILocationService locationService = new LocationService(locationLogger, new Random());
+            this.fairyTaleControl = new FairyTaleControl(logger, this.eventProducer.Object, locationService);
 
         }
 
@@ -48,55 +51,6 @@ namespace DddEfteling.FairyTaleTests.Controls
             FairyTale tale = fairyTaleControl.GetRandom();
             Assert.NotNull(tale);
             Assert.Contains(tale, fairyTaleControl.All());
-        }
-
-
-        [Fact]
-        public void NearestFairyTale_GetNearestFromDeZesDienarenWithoutExclusions_ExpectKleineZeemeermin()
-        {
-            FairyTale tale = this.fairyTaleControl.All().First(tale => tale.Name.Equals("De Zes Dienaren"));
-
-            FairyTale closest = this.fairyTaleControl.NearestFairyTale(tale.Guid, new List<System.Guid>());
-            Assert.NotNull(closest);
-            Assert.Equal("De Kleine Zeemeermin", closest.Name);
-        }
-
-        [Fact]
-        public void NearestFairyTale_GetNearestFromDeZesDienarenWithExclusions_ExpectKleineZeemeermin()
-        {
-            FairyTale tale = this.fairyTaleControl.All().First(tale => tale.Name.Equals("De Zes Dienaren"));
-
-            List<FairyTale> excludedTales = this.fairyTaleControl.All().Where(tale => tale.Name.Equals("De Kleine Zeemeermin") || tale.Equals("Raponsje") || tale.Equals("Roodkapje")).ToList();
-
-            FairyTale closest = this.fairyTaleControl.NearestFairyTale(tale.Guid, excludedTales.ConvertAll(tale => tale.Guid));
-            Assert.NotNull(closest);
-            Assert.Equal("Draak Lichtgeraakt", closest.Name);
-        }
-
-        [Fact]
-        public void NextFairyTale_GetNearestFromDeZesDienarenWithoutExclusions_ExpectCorrectTale()
-        {
-            FairyTale tale = this.fairyTaleControl.All().First(tale => tale.Name.Equals("De Zes Dienaren"));
-
-            FairyTale closest = this.fairyTaleControl.NextLocation(tale.Guid, new List<System.Guid>());
-            Assert.NotNull(closest);
-
-            List<string> expected = new List<string>() { "Draak Lichtgeraakt", "De Kleine Zeemeermin", "Roodkapje" };
-            Assert.Contains(closest.Name, expected);
-        }
-
-        [Fact]
-        public void NextFairyTale_GetNearestFromDeZesDienarenWithExclusions_ExpectCorrectTale()
-        {
-            FairyTale tale = this.fairyTaleControl.All().First(tale => tale.Name.Equals("De Zes Dienaren"));
-
-            List<FairyTale> excludedTales = this.fairyTaleControl.All().Where(tale => tale.Name.Equals("De Kleine Zeemeermin") || tale.Name.Equals("Raponsje") || tale.Name.Equals("Roodkapje")).ToList();
-
-            FairyTale closest = this.fairyTaleControl.NextLocation(tale.Guid, excludedTales.ConvertAll(tale => tale.Guid));
-            Assert.NotNull(closest);
-
-            List<string> expected = new List<string>() { "Draak Lichtgeraakt", "Kabouterdorp", "Het stoute prinsesje" };
-            Assert.Contains(closest.Name, expected);
         }
 
         [Fact]

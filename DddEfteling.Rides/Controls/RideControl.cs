@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using DddEfteling.Shared.Controls;
 
 namespace DddEfteling.Rides.Controls
 {
@@ -21,19 +22,22 @@ namespace DddEfteling.Rides.Controls
         private readonly IEmployeeClient employeeClient;
         private readonly IVisitorClient visitorClient;
         private readonly Random random = new Random();
+        private readonly ILocationService locationService;
 
         public RideControl() { }
 
-        public RideControl(ILogger<RideControl> logger, IEventProducer eventProducer, IEmployeeClient employeeClient, IVisitorClient visitorClient)
+        public RideControl(ILogger<RideControl> logger, IEventProducer eventProducer, IEmployeeClient employeeClient,
+            IVisitorClient visitorClient, ILocationService locationService)
         {
             this.rides = LoadRides();
             this.logger = logger;
             this.eventProducer = eventProducer;
             this.employeeClient = employeeClient;
             this.visitorClient = visitorClient;
+            this.locationService = locationService;
 
             this.logger.LogInformation($"Loaded ride count: {rides.Count}");
-            this.CalculateRideDistances();
+            locationService.CalculateLocationDistances(rides);
         }
 
         private ConcurrentBag<Ride> LoadRides()
@@ -161,47 +165,18 @@ namespace DddEfteling.Rides.Controls
         public Ride NearestRide(Guid rideGuid, List<Guid> exclusionList)
         {
             Ride ride = this.rides.First(ride => ride.Guid.Equals(rideGuid));
-            Guid nextRide = ride.DistanceToOthers.First(keyVal => !exclusionList.Contains(keyVal.Value)).Value;
-
-            return this.rides.First(tale => tale.Guid.Equals(nextRide));
+            return locationService.NearestLocation(ride, rides, exclusionList);
         }
 
         public Ride NextLocation(Guid rideGuid, List<Guid> exclusionList)
         {
             Ride ride = this.rides.First(ride => ride.Guid.Equals(rideGuid));
-            try
-            {
-                List<KeyValuePair<double, Guid>> ridesToPick = ride.DistanceToOthers.Where(keyVal => !exclusionList.Contains(keyVal.Value)).Take(3).ToList();
-                Guid nextRide = ridesToPick.ElementAt(random.Next(ridesToPick.Count)).Value;
-                return this.rides.First(tale => tale.Guid.Equals(nextRide));
-            } catch(IndexOutOfRangeException e)
-            {
-                logger.LogWarning("Something went wrong when getting a next location from origin {RideName}: {Exception}", ride.Name, e);
-            }
-            return this.GetRandom();
+            return locationService.NextLocation(ride, rides, exclusionList) ?? this.GetRandom();
         }
 
         private void CheckRequiredEmployees(Ride ride)
         {
             // Todo: Fix this
-        }
-
-        private void CalculateRideDistances()
-        {
-            foreach (Ride ride in rides)
-            {
-                foreach (Ride toRide in rides)
-                {
-                    if (ride.Equals(toRide))
-                    {
-                        continue;
-                    }
-
-                    ride.AddDistanceToOthers(ride.GetDistanceTo(toRide), toRide.Guid);
-                    logger.LogDebug($"Calculated distance from {ride.Name} to {toRide.Name}");
-                }
-            }
-            logger.LogDebug($"Ride distances calculated");
         }
 
         public Ride GetRandom()

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
+using DddEfteling.Shared.Controls;
 using DddEfteling.Shared.Entities;
 using Xunit;
 
@@ -18,7 +19,9 @@ namespace DddEfteling.StandTests.Controls
         {
             ILogger<StandControl> logger = Mock.Of<ILogger<StandControl>>();
             IEventProducer eventProducer = Mock.Of<IEventProducer>();
-            this.standControl = new StandControl(logger, eventProducer);
+            ILocationService locationService = new LocationService(Mock.Of<ILogger<LocationService>>(), 
+                new Random());
+            this.standControl = new StandControl(logger, eventProducer, locationService);
         }
 
         [Fact]
@@ -70,8 +73,10 @@ namespace DddEfteling.StandTests.Controls
             
             ILogger<StandControl> logger = Mock.Of<ILogger<StandControl>>();
             Mock<IEventProducer> eventProducer = new Mock<IEventProducer>();
+            ILocationService locationService = new LocationService(Mock.Of<ILogger<LocationService>>(), 
+                new Random());
             
-            StandControl standControl = new StandControl(logger, eventProducer.Object, openDinnerOrders, ordersDoneAtTime);
+            StandControl standControl = new StandControl(logger, eventProducer.Object, openDinnerOrders, ordersDoneAtTime, locationService);
             
             standControl.HandleProducedOrders();
             
@@ -99,8 +104,10 @@ namespace DddEfteling.StandTests.Controls
             
             ILogger<StandControl> logger = Mock.Of<ILogger<StandControl>>();
             Mock<IEventProducer> eventProducer = new Mock<IEventProducer>();
+            ILocationService locationService = new LocationService(Mock.Of<ILogger<LocationService>>(), 
+                new Random());
             
-            StandControl standControl = new StandControl(logger, eventProducer.Object, openDinnerOrders, ordersDoneAtTime);
+            StandControl standControl = new StandControl(logger, eventProducer.Object, openDinnerOrders, ordersDoneAtTime, locationService);
             
             standControl.HandleProducedOrders();
             
@@ -128,8 +135,10 @@ namespace DddEfteling.StandTests.Controls
             
             ILogger<StandControl> logger = Mock.Of<ILogger<StandControl>>();
             Mock<IEventProducer> eventProducer = new Mock<IEventProducer>();
+            ILocationService locationService = new LocationService(Mock.Of<ILogger<LocationService>>(), 
+                new Random());
             
-            StandControl standControl = new StandControl(logger, eventProducer.Object, openDinnerOrders, ordersDoneAtTime);
+            StandControl standControl = new StandControl(logger, eventProducer.Object, openDinnerOrders, ordersDoneAtTime, locationService);
             
             standControl.HandleProducedOrders();
             
@@ -153,8 +162,10 @@ namespace DddEfteling.StandTests.Controls
             
             ILogger<StandControl> logger = Mock.Of<ILogger<StandControl>>();
             Mock<IEventProducer> eventProducer = new Mock<IEventProducer>();
+            ILocationService locationService = new LocationService(Mock.Of<ILogger<LocationService>>(), 
+                new Random());
             
-            StandControl standControl = new StandControl(logger, eventProducer.Object, openDinnerOrders, ordersDoneAtTime);
+            StandControl standControl = new StandControl(logger, eventProducer.Object, openDinnerOrders, ordersDoneAtTime, locationService);
 
             Assert.Throws<InvalidOperationException>(() => standControl.GetReadyDinner(dinner1Guid.ToString()));
         }
@@ -169,8 +180,10 @@ namespace DddEfteling.StandTests.Controls
             
             ILogger<StandControl> logger = Mock.Of<ILogger<StandControl>>();
             Mock<IEventProducer> eventProducer = new Mock<IEventProducer>();
+            ILocationService locationService = new LocationService(Mock.Of<ILogger<LocationService>>(), 
+                new Random());
             
-            StandControl standControl = new StandControl(logger, eventProducer.Object, openDinnerOrders, ordersDoneAtTime);
+            StandControl standControl = new StandControl(logger, eventProducer.Object, openDinnerOrders, ordersDoneAtTime, locationService);
 
             Assert.Throws<ArgumentNullException>(() => standControl.GetReadyDinner(dinnerGuid.ToString()));
         }
@@ -189,62 +202,16 @@ namespace DddEfteling.StandTests.Controls
             
             ILogger<StandControl> logger = Mock.Of<ILogger<StandControl>>();
             Mock<IEventProducer> eventProducer = new Mock<IEventProducer>();
+            ILocationService locationService = new LocationService(Mock.Of<ILogger<LocationService>>(), 
+                new Random());
             
-            StandControl standControl = new StandControl(logger, eventProducer.Object, openDinnerOrders, ordersDoneAtTime);
+            StandControl standControl = new StandControl(logger, eventProducer.Object, openDinnerOrders, ordersDoneAtTime, locationService);
 
             Dinner result = standControl.GetReadyDinner(dinnerGuid.ToString());
             Assert.Equal(dinner, result);
             
             // It should now throw a null exception, as the dinner is removed
             Assert.Throws<ArgumentNullException>(() => standControl.GetReadyDinner(dinnerGuid.ToString()));
-        }
-        
-        [Fact]
-        public void NearestStand_GetNearestFromDeGuldenGaardeWithoutExclusions_ExpectLekkernijen()
-        {
-            Stand stand = this.standControl.All().First(tale => tale.Name.Equals("De Gulden Gaarde"));
-
-            Stand closest = this.standControl.NearestStand(stand.Guid, new List<System.Guid>());
-            Assert.NotNull(closest);
-            Assert.Equal("Lekkernijen", closest.Name);
-        }
-
-        [Fact]
-        public void NearestFairyTale_GetNearestFromDeGuldenGaardeWithExclusions_ExpectKleineZeemeermin()
-        {
-            Stand stand = this.standControl.All().First(currStand => currStand.Name.Equals("De Gulden Gaarde"));
-
-            List<Stand> excludedStands = this.standControl.All().Where(currStand => currStand.Name.Equals("Lekkernijen")).ToList();
-
-            Stand closest = this.standControl.NearestStand(stand.Guid, excludedStands.ConvertAll(tale => tale.Guid));
-            Assert.NotNull(closest);
-            Assert.Equal("Unoxkraam Marerijk", closest.Name);
-        }
-
-        [Fact]
-        public void NextFairyTale_GetNearestFromDeGuldenGaardeWithoutExclusions_ExpectCorrectTale()
-        {
-            Stand stand = this.standControl.All().First(currStand => currStand.Name.Equals("De Gulden Gaarde"));
-
-            Stand closest = this.standControl.NextLocation(stand.Guid, new List<System.Guid>());
-            Assert.NotNull(closest);
-
-            List<string> expected = new List<string>() { "Unoxkraam Marerijk", "Lekkernijen", "Eigenheymer Marerijk" };
-            Assert.Contains(closest.Name, expected);
-        }
-
-        [Fact]
-        public void NextFairyTale_GetNearestFromDeZesDienarenWithExclusions_ExpectCorrectTale()
-        {
-            Stand stand = this.standControl.All().First(currStand => currStand.Name.Equals("De Gulden Gaarde"));
-
-            List<Stand> excluded = this.standControl.All().Where(currStand => currStand.Name.Equals("Lekkernijen") || currStand.Name.Equals("Unoxkraam Marerijk")).ToList();
-
-            Stand closest = this.standControl.NextLocation(stand.Guid, excluded.ConvertAll(currStand => currStand.Guid));
-            Assert.NotNull(closest);
-
-            List<string> expected = new List<string>() { "Eigenheymer Marerijk", "De Kleyne Klaroen", "Het Wapen van Raveleijn" };
-            Assert.Contains(closest.Name, expected);
         }
     }
 }

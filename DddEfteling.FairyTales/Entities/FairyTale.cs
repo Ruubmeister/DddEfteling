@@ -8,41 +8,20 @@ using System.Text.Json.Serialization;
 
 namespace DddEfteling.FairyTales.Entities
 {
-    public class FairyTale : ILocation
+    public class FairyTale : Location
     {
 
-        public FairyTale() { }
+        public FairyTale() : base(Guid.NewGuid(), LocationType.FAIRYTALE) { }
 
-        public FairyTale(String name, Coordinate coordinates)
+        public FairyTale(String name, Coordinate coordinates): base(Guid.NewGuid(), LocationType.FAIRYTALE)
         {
             this.Name = name;
             this.Coordinates = coordinates;
-            LocationType = LocationType.FAIRYTALE;
         }
-
-        public Guid Guid { get; } = Guid.NewGuid();
 
         [JsonIgnore]
         public ConcurrentDictionary<Guid, DateTime> VisitorWithTimeDone { get; } = new ConcurrentDictionary<Guid, DateTime>();
-
-        public LocationType LocationType { get; }
-
-        [JsonIgnore]
-        public SortedDictionary<double, Guid> DistanceToOthers { get; } = new SortedDictionary<double, Guid>();
-
-        public string Name { get; }
-
-        public Coordinate Coordinates { get; }
-
-        public double GetDistanceTo(FairyTale tale)
-        {
-            return GeoCalculator.GetDistance(this.Coordinates, tale.Coordinates, 2, DistanceUnit.Meters);
-        }
-
-        public void AddDistanceToOthers(double distance, Guid taleGuid)
-        {
-            this.DistanceToOthers.Add(distance, taleGuid);
-        }
+        
 
         public FairyTaleDto ToDto()
         {

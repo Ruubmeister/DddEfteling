@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Collections.Generic;
+using DddEfteling.Shared.Controls;
 using Xunit;
 
 namespace DddEfteling.StandTests.Boundaries
@@ -19,7 +20,10 @@ namespace DddEfteling.StandTests.Boundaries
         {
             ILogger<StandControl> logger = Mock.Of<ILogger<StandControl>>();
             IEventProducer eventProducer = Mock.Of<IEventProducer>();
-            this.standControl = new StandControl(logger, eventProducer);
+            ILocationService locationService = new LocationService(Mock.Of<ILogger<LocationService>>(), 
+                new Random());
+            
+            this.standControl = new StandControl(logger, eventProducer, locationService);
             this.standBoundary = new StandBoundary(standControl);
         }
 

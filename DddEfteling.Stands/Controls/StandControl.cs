@@ -4,49 +4,54 @@ using DddEfteling.Stands.Entities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DddEfteling.Shared.Controls;
 
 namespace DddEfteling.Stands.Controls
 {
     public class StandControl : IStandControl
     {
-        private readonly List<Stand> stands;
+        private readonly ConcurrentBag<Stand> stands;
 
         private readonly Dictionary<Guid, Dinner> openDinnerOrders = new Dictionary<Guid, Dinner>();
         private readonly Dictionary<Guid, DateTime> ordersDoneAtTime = new Dictionary<Guid, DateTime>();
         private readonly IEventProducer eventProducer;
         private readonly Random random = new Random();
         private readonly ILogger logger;
+        private readonly ILocationService locationService;
 
 
-        public StandControl(ILogger<StandControl> logger, IEventProducer eventProducer)
+        public StandControl(ILogger<StandControl> logger, IEventProducer eventProducer, ILocationService locationService)
         {
             this.stands = this.LoadStands();
             this.logger = logger;
             this.eventProducer = eventProducer;
-            CalculateStandDistances();
+            this.locationService = locationService;
+            locationService.CalculateLocationDistances(this.stands);
         }
 
         public StandControl(ILogger<StandControl> logger, IEventProducer eventProducer,
-            Dictionary<Guid, Dinner> openDinnerOrders, Dictionary<Guid, DateTime> ordersDoneAtTime)
+            Dictionary<Guid, Dinner> openDinnerOrders, Dictionary<Guid, DateTime> ordersDoneAtTime, ILocationService locationService)
         {
             this.stands = this.LoadStands();
             this.logger = logger;
             this.eventProducer = eventProducer;
+            this.locationService = locationService;
             this.openDinnerOrders = openDinnerOrders;
             this.ordersDoneAtTime = ordersDoneAtTime;
-            CalculateStandDistances();
+            locationService.CalculateLocationDistances(this.stands);
         }
 
-        private List<Stand> LoadStands()
+        private ConcurrentBag<Stand> LoadStands()
         {
             using StreamReader r = new StreamReader("resources/stands.json");
             string json = r.ReadToEnd();
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.Converters.Add(new StandConverter());
-            return JsonConvert.DeserializeObject<List<Stand>>(json, settings);
+            return JsonConvert.DeserializeObject<ConcurrentBag<Stand>>(json, settings);
 
         }
 
@@ -141,7 +146,7 @@ namespace DddEfteling.Stands.Controls
 
         public List<Stand> All()
         {
-            return stands;
+            return stands.ToList();
         }
 
         public Stand GetRandom()
@@ -149,46 +154,16 @@ namespace DddEfteling.Stands.Controls
             return this.stands.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
         }
 
-        private void CalculateStandDistances()
-        {
-            foreach (Stand stand in stands)
-            {
-                foreach (Stand toStand in stands)
-                {
-                    if (stand.Equals(toStand))
-                    {
-                        continue;
-                    }
-
-                    stand.AddDistanceToOthers(stand.GetDistanceTo(toStand), toStand.Guid);
-                    logger.LogDebug($"Calculated distance from {stand.Name} to {toStand.Name}");
-                }
-            }
-            logger.LogDebug("Calculated distance to all fairy tales");
-        }
-
         public Stand NearestStand(Guid standGuid, List<Guid> exclusionList)
         {
-            Stand stand = this.stands.First(stand => stand.Guid.Equals(standGuid));
-            Guid nextStand = stand.DistanceToOthers.First(keyVal => !exclusionList.Contains(keyVal.Value)).Value;
-
-            return this.stands.First(stand => stand.Guid.Equals(nextStand));
+            Stand stand = GetStand(standGuid);
+            return locationService.NearestLocation(stand, stands, exclusionList);
         }
 
         public Stand NextLocation(Guid standGuid, List<Guid> exclusionList)
         {
-            Stand stand = this.stands.First(stand => stand.Guid.Equals(standGuid));
-            try
-            {
-                List<KeyValuePair<double, Guid>> standsToPick = stand.DistanceToOthers.Where(keyVal => !exclusionList.Contains(keyVal.Value)).Take(3).ToList();
-                Guid nextStand = standsToPick.ElementAt(random.Next(standsToPick.Count)).Value;
-                return this.stands.First(stand => stand.Guid.Equals(nextStand));
-            }
-            catch (IndexOutOfRangeException e)
-            {
-                logger.LogWarning("Something went wrong when getting a next location from origin {StandName}: {Exception}", stand.Name, e);
-            }
-            return this.GetRandom();
+            Stand stand = GetStand(standGuid);
+            return locationService.NextLocation(stand, stands, exclusionList) ?? this.GetRandom();
         }
 
     }

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DddEfteling.Shared.Controls;
 using Xunit;
 
 namespace DddEfteling.RideTests.Controls
@@ -24,6 +25,7 @@ namespace DddEfteling.RideTests.Controls
             ILogger<RideControl> logger = Mock.Of<ILogger<RideControl>>();
             Mock<IVisitorClient> visitorClientMock = new Mock<IVisitorClient>();
             Mock<IEmployeeClient> employeeClient = new Mock<IEmployeeClient>();
+            ILocationService locationService = new LocationService(Mock.Of<ILogger<LocationService>>(), new Random());
 
             visitorClientMock.Setup(client => client.GetVisitor(It.IsAny<Guid>())).Returns(visitor);
 
@@ -31,7 +33,7 @@ namespace DddEfteling.RideTests.Controls
                 employeeControl => employeeControl.GetEmployees(It.IsAny<Ride>())
                 ).Returns(new List<Employee>());*/
 
-            this.rideControl = new RideControl(logger, eventProducer.Object, employeeClient.Object, visitorClientMock.Object);
+            this.rideControl = new RideControl(logger, eventProducer.Object, employeeClient.Object, visitorClientMock.Object, locationService);
         }
 
         [Fact]
@@ -84,55 +86,6 @@ namespace DddEfteling.RideTests.Controls
             Ride ride = rideControl.GetRandom();
             Assert.NotNull(ride);
             Assert.Contains(ride, rideControl.All());
-        }
-
-
-        [Fact]
-        public void NearestRide_GetNearestFromDeVliegendeHollanderWithoutExclusions_ExpectJorisEnDeDraak()
-        {
-            Ride ride = this.rideControl.All().First(tale => tale.Name.Equals("De Vliegende Hollander"));
-
-            Ride closest = this.rideControl.NearestRide(ride.Guid, new List<System.Guid>());
-            Assert.NotNull(closest);
-            Assert.Equal("Joris en de Draak", closest.Name);
-        }
-        
-        [Fact]
-        public void NextLocation_GetNextFromDeVliegendeHollanderWithoutExclusions_ExpectCorrectRide()
-        {
-            Ride ride = this.rideControl.All().First(tale => tale.Name.Equals("De Vliegende Hollander"));
-
-            Ride closest = this.rideControl.NextLocation(ride.Guid, new List<System.Guid>());
-            Assert.NotNull(closest);
-
-            List<string> expected = new List<string>() { "Joris en de Draak", "Python", "Monsieur Cannibale" };
-            Assert.Contains(closest.Name, expected);
-        }
-
-        [Fact]
-        public void NextLocation_GetNextFromDeVliegendeHollanderWithExclusions_ExpectCorrectRide()
-        {
-            Ride ride = this.rideControl.All().First(tale => tale.Name.Equals("De Vliegende Hollander"));
-
-            List<Ride> excludedTales = this.rideControl.All().Where(tale => tale.Name.Equals("Joris en de Draak") || tale.Name.Equals("Baron 1898") || tale.Name.Equals("Polka Marina")).ToList();
-
-            Ride closest = this.rideControl.NextLocation(ride.Guid, excludedTales.ConvertAll(tale => tale.Guid));
-            Assert.NotNull(closest);
-
-            List<string> expected = new List<string>() { "Python", "Monsieur Cannibale", "Halve Maen" };
-            Assert.Contains(closest.Name, expected);
-        }
-
-        [Fact]
-        public void NearestRide_GetNearestFromDeVliegendeHollanderWithExclusions_ExpectPython()
-        {
-            Ride tale = this.rideControl.All().First(tale => tale.Name.Equals("De Vliegende Hollander"));
-
-            List<Ride> excludedTales = this.rideControl.All().Where(tale => tale.Name.Equals("Joris en de Draak") || tale.Equals("Baron 1898") || tale.Equals("Polka Marina")).ToList();
-
-            Ride closest = this.rideControl.NearestRide(tale.Guid, excludedTales.ConvertAll(tale => tale.Guid));
-            Assert.NotNull(closest);
-            Assert.Equal("Python", closest.Name);
         }
 
         [Fact]
