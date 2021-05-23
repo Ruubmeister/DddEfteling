@@ -14,59 +14,50 @@ namespace DddEfteling.FairyTales.Controls
 {
     public class FairyTaleControl : IFairyTaleControl
     {
-        private readonly ConcurrentBag<FairyTale> fairyTales;
         private readonly ILogger logger;
         private readonly Random random = new Random();
         private readonly IEventProducer eventProducer;
         private readonly ILocationService locationService;
+        private readonly LocationRepository<FairyTale> taleRepo;
+        
         public FairyTaleControl() { }
 
         public FairyTaleControl(ILogger<FairyTaleControl> logger, IEventProducer eventProducer, 
             ILocationService locationService)
         {
-            fairyTales = LoadFairyTales();
+            this.taleRepo = new LocationRepository<FairyTale>(locationService, 
+                new LocationConverter<FairyTale>( (obj) => new FairyTale(obj)));
+            
             this.logger = logger;
             this.eventProducer = eventProducer;
             this.locationService = locationService;
             
-            this.locationService.CalculateLocationDistances(fairyTales);
-
-            this.logger.LogInformation($"Loaded fairy tales count: {fairyTales.Count}");
-        }
-
-        private ConcurrentBag<FairyTale> LoadFairyTales()
-        {
-            using StreamReader r = new StreamReader("resources/fairy-tales.json");
-            string json = r.ReadToEnd();
-            JsonSerializerSettings settings = new JsonSerializerSettings();
-            settings.Converters.Add(new FairyTaleConverter());
-            return new ConcurrentBag<FairyTale>(JsonConvert.DeserializeObject<List<FairyTale>>(json, settings));
-        }
-
-        public FairyTale NearestFairyTale(Guid fairyTaleGuid, List<Guid> exclusionList)
-        {
-            FairyTale tale = fairyTales.First(tale => tale.Guid.Equals(fairyTaleGuid));
-            return locationService.NearestLocation(tale, fairyTales, exclusionList);
-        }
-
-        public FairyTale NextLocation(Guid taleGuid, List<Guid> exclusionList)
-        {
-            FairyTale tale = fairyTales.First(tale => tale.Guid.Equals(taleGuid));
-            return locationService.NextLocation(tale, fairyTales, exclusionList) ?? this.GetRandom();
+            this.locationService.CalculateLocationDistances(taleRepo.All());
         }
 
         public FairyTale FindFairyTaleByName(string name)
         {
-            return fairyTales.FirstOrDefault(tale => tale.Name.Equals(name));
+            return taleRepo.FindByName(name);
+        }
+
+        public FairyTale GetRandom()
+        {
+            return taleRepo.GetRandom();
         }
 
         public List<FairyTale> All()
         {
-            return fairyTales.ToList();
-        }
-        public FairyTale GetRandom()
+            return taleRepo.AllAsList();
+        } 
+
+        public FairyTale NearestFairyTale(Guid fairyTaleGuid, List<Guid> exclusionList)
         {
-            return this.fairyTales.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
+            return taleRepo.NearestLocation(fairyTaleGuid, exclusionList);
+        }
+
+        public FairyTale NextLocation(Guid taleGuid, List<Guid> exclusionList)
+        {
+            return taleRepo.NextLocation(taleGuid, exclusionList);
         }
 
         public void HandleVisitorArrivingAtFairyTale(Guid visitor)

@@ -30,5 +30,13 @@
     <ProjectReference Include="..\..\DddEfteling.Rides\DddEfteling.Rides.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="resources\ride.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 
 </Project>

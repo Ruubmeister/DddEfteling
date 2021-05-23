@@ -25,23 +25,6 @@ namespace DddEfteling.StandTests.Controls
         }
 
         [Fact]
-        public void FindRideByName_FindPollesPannenkoeken_ExpectStand()
-        {
-
-            Stand stand = standControl.FindStandByName("Polles pannenkoeken");
-            Assert.NotNull(stand);
-            Assert.Equal("Polles pannenkoeken", stand.Name);
-        }
-
-        [Fact]
-        public void All_GetAllStands_ExpectStands()
-        {
-            List<Stand> stands = standControl.All();
-            Assert.NotEmpty(stands);
-            Assert.Single(stands.Where(stand => stand.Name.Equals("Polles pannenkoeken")));
-        }
-
-        [Fact]
         public void PlaceOrder_GivenValidOrder_ExpectTicket()
         {
             var stand = standControl.GetRandom();

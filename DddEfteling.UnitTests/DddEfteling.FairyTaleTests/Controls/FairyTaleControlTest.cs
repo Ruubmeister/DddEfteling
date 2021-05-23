@@ -28,32 +28,6 @@ namespace DddEfteling.FairyTaleTests.Controls
         }
 
         [Fact]
-        public void FindFairyTaleByName_FindSneeuwwitje_ExpectFairyTale()
-        {
-
-            FairyTale tale = fairyTaleControl.FindFairyTaleByName("Sneeuwwitje");
-            Assert.NotNull(tale);
-            Assert.Equal("Sneeuwwitje", tale.Name);
-        }
-
-        [Fact]
-        public void All_GetAllFairyTales_ExpectAllFairytales()
-        {
-            List<FairyTale> fairyTales = fairyTaleControl.All();
-
-            Assert.NotEmpty(fairyTales);
-            Assert.Single(fairyTales.Where(fairytale => fairytale.Name.Equals("Sneeuwwitje")));
-        }
-
-        [Fact]
-        public void Random_GetRandomTale_ExpectRandomTale()
-        {
-            FairyTale tale = fairyTaleControl.GetRandom();
-            Assert.NotNull(tale);
-            Assert.Contains(tale, fairyTaleControl.All());
-        }
-
-        [Fact]
         public void HandleVisitorArrivingAtFairyTale_GivenVisitorArriving_ExpectEventProducerCalled()
         {
             Guid guid = Guid.NewGuid();

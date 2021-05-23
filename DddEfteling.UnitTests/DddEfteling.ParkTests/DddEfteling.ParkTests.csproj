@@ -34,4 +34,11 @@
     <Folder Include="Shared\Entities" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="resources\locationimpl.json" />
+    <Content Include="resources\locationimpl.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

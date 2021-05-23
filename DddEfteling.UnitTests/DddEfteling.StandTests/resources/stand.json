@@ -1,0 +1,842 @@
+[
+  {
+    "name": "De Gulden Gaarde",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.6522,
+      "long": 5.04609
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Polles pannenkoeken",
+    "realm": "Fantasierijk",
+    "coordinates": {
+      "lat": 51.65023,
+      "long": 5.04896
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Lekkernijen",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65245,
+      "long": 5.04613
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Het Wapen van Raveleijn",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65335,
+      "long": 5.0461
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Unoxkraam Marerijk",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65267,
+      "long": 5.04741
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Eigenheymer Marerijk",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65237,
+      "long": 5.04785
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Het Witte Paard",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65213,
+      "long": 5.04858
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "'t Gebraad",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65182,
+      "long": 5.04841
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "In De Gelaarsde Kat",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65177,
+      "long": 5.04846
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "'t Poffertje",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65183,
+      "long": 5.04889
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "In den Hoorn des Overvloeds",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65243,
+      "long": 5.04929
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Den Suykerbuyk",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65225,
+      "long": 5.05007
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Smulpaap",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65236,
+      "long": 5.05041
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Den Olycke Tweelingh",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65258,
+      "long": 5.05045
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "De Soete Inval",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65182,
+      "long": 5.0494
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "'t Suyker Huys",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65167,
+      "long": 5.04939
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Carrousel Paleis bar",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65117,
+      "long": 5.04909
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Unoxkraam Reizenrijk",
+    "realm": "Reizenrijk",
+    "coordinates": {
+      "lat": 51.65196,
+      "long": 5.05153
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Panorama",
+    "realm": "Reizenrijk",
+    "coordinates": {
+      "lat": 51.65174,
+      "long": 5.05269
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Toko Pagode",
+    "realm": "Reizenrijk",
+    "coordinates": {
+      "lat": 51.65071,
+      "long": 5.05101
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "De Flierefluiter",
+    "realm": "Ruigrijk",
+    "coordinates": {
+      "lat": 51.64958,
+      "long": 5.05357
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "De Meermin",
+    "realm": "Ruigrijk",
+    "coordinates": {
+      "lat": 51.64861,
+      "long": 5.05242
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "De Verleiding",
+    "realm": "Ruigrijk",
+    "coordinates": {
+      "lat": 51.64833,
+      "long": 5.05301
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "De Hongerige Machinist",
+    "realm": "Ruigrijk",
+    "coordinates": {
+      "lat": 51.64816,
+      "long": 5.05401
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "De Rustende Reiziger",
+    "realm": "Ruigrijk",
+    "coordinates": {
+      "lat": 51.64773,
+      "long": 5.05404
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "De Eigenheymer Ruigrijk",
+    "realm": "Ruigrijk",
+    "coordinates": {
+      "lat": 51.64798,
+      "long": 5.05304
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Burgerhuys de Likkebaerd",
+    "realm": "Ruigrijk",
+    "coordinates": {
+      "lat": 51.64769,
+      "long": 5.05325
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Unoxkraam Ruigrijk",
+    "realm": "Ruigrijk",
+    "coordinates": {
+      "lat": 51.64766,
+      "long": 5.05266
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "De Kombuys",
+    "realm": "Ruigrijk",
+    "coordinates": {
+      "lat": 51.64715,
+      "long": 5.05258
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Kabinet der Strijdlustigen",
+    "realm": "Ruigrijk",
+    "coordinates": {
+      "lat": 51.64661,
+      "long": 5.0519
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Casa Caracol",
+    "realm": "Anderrijk",
+    "coordinates": {
+      "lat": 51.64758,
+      "long": 5.04909
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Unoxkraam Anderrijk",
+    "realm": "Anderrijk",
+    "coordinates": {
+      "lat": 51.6478,
+      "long": 5.04863
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Het Seylend Fregat",
+    "realm": "Anderrijk",
+    "coordinates": {
+      "lat": 51.64804,
+      "long": 5.04873
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "De Eigenheymer Anderrijk",
+    "realm": "Anderrijk",
+    "coordinates": {
+      "lat": 51.64799,
+      "long": 5.04711
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Frau Boltes Kuche",
+    "realm": "Anderrijk",
+    "coordinates": {
+      "lat": 51.6481,
+      "long": 5.04657
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Oase",
+    "realm": "Anderrijk",
+    "coordinates": {
+      "lat": 51.64748,
+      "long": 5.04603
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "De Witte Walvis",
+    "realm": "Anderrijk",
+    "coordinates": {
+      "lat": 51.6486,
+      "long": 5.04876
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "'t Melkhuysje",
+    "realm": "Ruigrijk",
+    "coordinates": {
+      "lat": 51.64792,
+      "long": 5.05044
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Fabula Restaurant",
+    "realm": "Anderrijk",
+    "coordinates": {
+      "lat": 51.64894,
+      "long": 5.04656
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "Rondje van de Molen",
+    "realm": "Fantasierijk",
+    "coordinates": {
+      "lat": 51.65029,
+      "long": 5.04854
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "De Smaeckmaker",
+    "realm": "Fantasierijk",
+    "coordinates": {
+      "lat": 51.65052,
+      "long": 5.04953
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  },
+  {
+    "name": "De Kleyne Klaroen",
+    "realm": "Marerijk",
+    "coordinates": {
+      "lat": 51.65082,
+      "long": 5.04574
+    },
+    "products": [
+      {
+        "name": "Appelpannenkoek",
+        "price": 6.70,
+        "type": "meal"
+      },
+      {
+        "name": "Cola",
+        "price": 1.60,
+        "type": "drink"
+      }
+    ]
+  }
+]

@@ -10,6 +10,7 @@ using Polly;
 using System;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using DddEfteling.Shared.Controls;
 
 namespace DddEfteling.Rides
 {
@@ -50,9 +51,11 @@ namespace DddEfteling.Rides
 
 
             services.AddControllers();
+            services.AddSingleton<Random>();
             services.AddSingleton<IEventConsumer, EventConsumer>();
             services.AddSingleton<IEventProducer, EventProducer>();
             services.AddSingleton<IRideControl, RideControl>();
+            services.AddSingleton<ILocationService, LocationService>();
             services.AddCors(options =>
             {
                 options.AddPolicy(

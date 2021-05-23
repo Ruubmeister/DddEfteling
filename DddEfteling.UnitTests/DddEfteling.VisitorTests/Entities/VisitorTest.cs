@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Xunit;
 
 namespace DddEfteling.VisitorTests.Entities
@@ -93,6 +94,7 @@ namespace DddEfteling.VisitorTests.Entities
             {
                 RideDto ride = new RideDto();
                 visitor.AddVisitedLocation(ride);
+                Thread.Sleep(10);
             }
 
             Assert.NotEmpty(visitor.VisitedLocations);

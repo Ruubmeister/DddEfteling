@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json.Serialization;
+using Newtonsoft.Json.Linq;
 
 namespace DddEfteling.Rides.Entities
 {
@@ -29,6 +30,20 @@ namespace DddEfteling.Rides.Entities
             // todo: Let's change this later to a flexible setup
             //setEmployeeSkillRequirement(WorkplaceSkill.Control, 2);
             //setEmployeeSkillRequirement(WorkplaceSkill.Host, 3);
+        }
+
+        public Ride(JObject obj): base(Guid.NewGuid(), LocationType.RIDE) 
+        {
+
+            Status = RideStatus.Closed;
+            Coordinates = new Coordinate(obj["coordinates"]["lat"].ToObject<double>(),
+                obj["coordinates"]["long"].ToObject<double>());
+            Name = obj["name"].ToString();
+            MinimumAge = int.Parse(obj["minimumAge"].ToString());
+            MinimumLength = double.Parse(obj["minimumLength"].ToString());
+            Duration = new TimeSpan(0, int.Parse(obj["duration"]["minutes"].ToString()),
+                int.Parse(obj["duration"]["seconds"].ToString()));
+            MaxPersons = int.Parse(obj["maxPersons"].ToString());
         }
 
         public void ToMaintenance()

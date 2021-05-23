@@ -26,15 +26,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)Boundaries\WorkplaceDto.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\CoordinateExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\EnumExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\LocationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\NameService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\StringExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\Event.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\EventSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\EventType.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Entities\LocationType.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Entities\Location.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\WorkplaceSkill.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\Workplace.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Locations\Control\LocationConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Locations\Control\LocationService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Locations\Entities\Location.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Locations\Entities\LocationRepository.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Locations\Entities\LocationType.cs" />
   </ItemGroup>
 </Project>
