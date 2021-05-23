@@ -16,37 +16,27 @@ namespace DddEfteling.Rides.Controls
 {
     public class RideControl : IRideControl
     {
-        private readonly ConcurrentBag<Ride> rides;
         private readonly ILogger logger;
         private readonly IEventProducer eventProducer;
         private readonly IEmployeeClient employeeClient;
         private readonly IVisitorClient visitorClient;
         private readonly Random random = new Random();
         private readonly ILocationService locationService;
+        private readonly LocationRepository<Ride> rideRepo;
 
         public RideControl() { }
 
         public RideControl(ILogger<RideControl> logger, IEventProducer eventProducer, IEmployeeClient employeeClient,
             IVisitorClient visitorClient, ILocationService locationService)
         {
-            this.rides = LoadRides();
+            rideRepo = new LocationRepository<Ride>(locationService, 
+                new LocationConverter<Ride>((x) => new Ride(x)));
             this.logger = logger;
             this.eventProducer = eventProducer;
             this.employeeClient = employeeClient;
             this.visitorClient = visitorClient;
             this.locationService = locationService;
-
-            this.logger.LogInformation($"Loaded ride count: {rides.Count}");
-            locationService.CalculateLocationDistances(rides);
-        }
-
-        private ConcurrentBag<Ride> LoadRides()
-        {
-            using StreamReader r = new StreamReader("resources/rides.json");
-            string json = r.ReadToEnd();
-            JsonSerializerSettings settings = new JsonSerializerSettings();
-            settings.Converters.Add(new RideConverter());
-            return new ConcurrentBag<Ride>(JsonConvert.DeserializeObject<List<Ride>>(json, settings));
+            locationService.CalculateLocationDistances(rideRepo.All());
         }
 
         public void ToMaintenance(Ride ride)
@@ -57,17 +47,17 @@ namespace DddEfteling.Rides.Controls
 
         public Ride FindRideByName(string name)
         {
-            return rides.FirstOrDefault(ride => ride.Name.Equals(name));
+            return rideRepo.FindByName(name);
         }
 
         public List<Ride> All()
         {
-            return rides.ToList();
+            return rideRepo.AllAsList();
         }
 
         public void OpenRides()
         {
-            foreach (Ride ride in rides.Where(ride => ride.Status.Equals(RideStatus.Closed)))
+            foreach (Ride ride in rideRepo.All().Where(ride => ride.Status.Equals(RideStatus.Closed)))
             {
                 ride.ToOpen();
                 logger.LogInformation($"Ride {ride.Name} opened");
@@ -77,7 +67,7 @@ namespace DddEfteling.Rides.Controls
 
         public void HandleOpenRides()
         {
-            foreach (Ride ride in rides.Where(ride => ride.Status.Equals(RideStatus.Open)))
+            foreach (Ride ride in rideRepo.All().Where(ride => ride.Status.Equals(RideStatus.Open)))
             {
 
                 if (ride.EndTime > DateTime.Now)
@@ -112,7 +102,7 @@ namespace DddEfteling.Rides.Controls
         {
             await Task.Run(() =>
             {
-                foreach (Ride ride in rides.Where(ride => ride.Status.Equals(RideStatus.Open)))
+                foreach (Ride ride in rideRepo.All().Where(ride => ride.Status.Equals(RideStatus.Open)))
                 {
                     logger.LogInformation($"Ride {ride.Name} closed");
                     ride.ToClosed();
@@ -123,7 +113,7 @@ namespace DddEfteling.Rides.Controls
 
         public void RideToMaintenance(Guid guid)
         {
-            Ride ride = this.rides.First(ride => ride.Guid.Equals(guid));
+            Ride ride = this.rideRepo.All().First(ride => ride.Guid.Equals(guid));
 
             if(ride == null)
             {
@@ -135,7 +125,7 @@ namespace DddEfteling.Rides.Controls
 
         public void RideToOpen(Guid guid)
         {
-            Ride ride = this.rides.First(ride => ride.Guid.Equals(guid));
+            Ride ride = this.rideRepo.All().First(ride => ride.Guid.Equals(guid));
 
             if (ride == null)
             {
@@ -147,7 +137,7 @@ namespace DddEfteling.Rides.Controls
 
         public void RideToClosed(Guid guid)
         {
-            Ride ride = this.rides.First(ride => ride.Guid.Equals(guid));
+            Ride ride = this.rideRepo.All().First(ride => ride.Guid.Equals(guid));
 
             if (ride == null)
             {
@@ -159,19 +149,17 @@ namespace DddEfteling.Rides.Controls
 
         public Ride FindRide(Guid guid)
         {
-            return rides.First(ride => ride.Guid.Equals(guid));
+            return rideRepo.FindByGuid(guid);
         }
 
         public Ride NearestRide(Guid rideGuid, List<Guid> exclusionList)
         {
-            Ride ride = this.rides.First(ride => ride.Guid.Equals(rideGuid));
-            return locationService.NearestLocation(ride, rides, exclusionList);
+            return rideRepo.NearestLocation(rideGuid, exclusionList);
         }
 
         public Ride NextLocation(Guid rideGuid, List<Guid> exclusionList)
         {
-            Ride ride = this.rides.First(ride => ride.Guid.Equals(rideGuid));
-            return locationService.NextLocation(ride, rides, exclusionList) ?? this.GetRandom();
+            return rideRepo.NextLocation(rideGuid, exclusionList);
         }
 
         private void CheckRequiredEmployees(Ride ride)
@@ -181,14 +169,14 @@ namespace DddEfteling.Rides.Controls
 
         public Ride GetRandom()
         {
-            return this.rides.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
+            return this.rideRepo.GetRandom();
         }
 
         public void HandleEmployeeChangedWorkplace(WorkplaceDto workplace, Guid employee, WorkplaceSkill skill)
         {
-            if (this.rides.Any(ride => ride.Guid.Equals(workplace.Guid)))
+            if (this.rideRepo.All().Any(ride => ride.Guid.Equals(workplace.Guid)))
             {
-                Ride ride = rides.First(ride => ride.Guid.Equals(workplace.Guid));
+                Ride ride = rideRepo.All().First(ride => ride.Guid.Equals(workplace.Guid));
 
                 ride.AddEmployee(employee, skill);
             }
@@ -196,7 +184,7 @@ namespace DddEfteling.Rides.Controls
 
         public void HandleVisitorSteppingInRideLine(Guid visitorGuid, Guid rideGuid)
         {
-            Ride ride = rides.First(ride => ride.Guid.Equals(rideGuid));
+            Ride ride = rideRepo.All().First(ride => ride.Guid.Equals(rideGuid));
             if (ride.Status.Equals(RideStatus.Open))
             {
                 VisitorDto visitor = visitorClient.GetVisitor(visitorGuid);

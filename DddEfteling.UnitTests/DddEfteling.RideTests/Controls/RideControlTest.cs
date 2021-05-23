@@ -37,14 +37,6 @@ namespace DddEfteling.RideTests.Controls
         }
 
         [Fact]
-        public void FindRideByName_FindDroomvlucht_ExpectRide()
-        {
-            Ride ride = rideControl.FindRideByName("Droomvlucht");
-            Assert.NotNull(ride);
-            Assert.Equal("Droomvlucht", ride.Name);
-        }
-
-        [Fact]
         public void ToMaintenance_SetRideStatusToMaintenance_ExpectMaintenance()
         {
             Ride ride = rideControl.FindRideByName("Droomvlucht");
@@ -52,14 +44,6 @@ namespace DddEfteling.RideTests.Controls
 
             rideControl.ToMaintenance(ride);
             Assert.Equal(RideStatus.Maintenance, ride.Status);
-        }
-
-        [Fact]
-        public void All_GetAllRides_ExpectRides()
-        {
-            List<Ride> rides = rideControl.All();
-            Assert.NotEmpty(rides);
-            Assert.Single(rides.Where(ride => ride.Name.Equals("Python")));
         }
 
         [Fact]
@@ -78,14 +62,6 @@ namespace DddEfteling.RideTests.Controls
             Task.Delay(1000).Wait();
             Assert.Empty(rideControl.All().Where(ride => ride.Status.Equals(RideStatus.Open)));
             Assert.NotEmpty(rideControl.All().Where(ride => ride.Status.Equals(RideStatus.Closed)));
-        }
-
-        [Fact]
-        public void Random_GetRandomRide_ExpectRandomRide()
-        {
-            Ride ride = rideControl.GetRandom();
-            Assert.NotNull(ride);
-            Assert.Contains(ride, rideControl.All());
         }
 
         [Fact]

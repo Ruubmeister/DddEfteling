@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Test 1",
+    "coordinates": {
+      "lat": 51.6,
+      "long": 5.0
+    }
+  },
+  {
+    "name": "Test 2",
+    "coordinates": {
+      "lat": 51.8,
+      "long": 5.2
+    }
+  }
+]

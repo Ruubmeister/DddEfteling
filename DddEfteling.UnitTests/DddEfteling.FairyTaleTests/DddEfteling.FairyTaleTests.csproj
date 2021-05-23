@@ -30,4 +30,12 @@
     <ProjectReference Include="..\..\DddEfteling.FairyTales\DddEfteling.FairyTales.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="resources\fairytale.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

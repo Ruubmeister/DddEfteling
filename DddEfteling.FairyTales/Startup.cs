@@ -1,3 +1,4 @@
+using System;
 using DddEfteling.FairyTales.Boundaries;
 using DddEfteling.FairyTales.Controls;
 using Microsoft.AspNetCore.Builder;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
+using DddEfteling.Shared.Controls;
 
 namespace DddEfteling.FairyTales
 {
@@ -24,9 +26,11 @@ namespace DddEfteling.FairyTales
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSingleton<Random>();
             services.AddSingleton<IEventProducer, EventProducer>();
             services.AddSingleton<IEventConsumer, EventConsumer>();
             services.AddSingleton<IFairyTaleControl, FairyTaleControl>();
+            services.AddSingleton<ILocationService, LocationService>();
 
             services.AddCors(options =>
             {

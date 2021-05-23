@@ -14,7 +14,7 @@ namespace DddEfteling.Shared.Entities
             Guid = guid;
             LocationType = type;
         }
-        
+
         public Guid Guid { get; set; }
         
         public string Name { get; set; }

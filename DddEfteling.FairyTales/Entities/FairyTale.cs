@@ -5,6 +5,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using Newtonsoft.Json.Linq;
 
 namespace DddEfteling.FairyTales.Entities
 {
@@ -17,6 +18,15 @@ namespace DddEfteling.FairyTales.Entities
         {
             this.Name = name;
             this.Coordinates = coordinates;
+        }
+
+        public FairyTale(JObject obj): base(System.Guid.NewGuid(), LocationType.FAIRYTALE)
+        {
+            this.Name = obj["name"].ToString();
+            this.Coordinates = new Coordinate(
+                obj["coordinates"]["lat"].ToObject<double>(),
+                obj["coordinates"]["long"].ToObject<double>()
+                );
         }
 
         [JsonIgnore]

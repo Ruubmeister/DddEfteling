@@ -1,4 +1,6 @@
+using System;
 using System.Threading.Tasks;
+using DddEfteling.Shared.Controls;
 using DddEfteling.Stands.Boundaries;
 using DddEfteling.Stands.Controls;
 using Microsoft.AspNetCore.Builder;
@@ -22,8 +24,10 @@ namespace DddEfteling.Stands
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<Random>();
             services.AddSingleton<IStandControl, StandControl>();
             services.AddSingleton<IEventProducer, EventProducer>();
+            services.AddSingleton<ILocationService, LocationService>();
             services.AddControllers();
             services.AddCors(options =>
             {

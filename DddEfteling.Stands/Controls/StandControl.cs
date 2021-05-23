@@ -14,50 +14,39 @@ namespace DddEfteling.Stands.Controls
 {
     public class StandControl : IStandControl
     {
-        private readonly ConcurrentBag<Stand> stands;
 
         private readonly Dictionary<Guid, Dinner> openDinnerOrders = new Dictionary<Guid, Dinner>();
         private readonly Dictionary<Guid, DateTime> ordersDoneAtTime = new Dictionary<Guid, DateTime>();
         private readonly IEventProducer eventProducer;
         private readonly Random random = new Random();
         private readonly ILogger logger;
-        private readonly ILocationService locationService;
+        private readonly LocationRepository<Stand> standRepo;
 
 
         public StandControl(ILogger<StandControl> logger, IEventProducer eventProducer, ILocationService locationService)
         {
-            this.stands = this.LoadStands();
             this.logger = logger;
             this.eventProducer = eventProducer;
-            this.locationService = locationService;
-            locationService.CalculateLocationDistances(this.stands);
+            this.standRepo = new LocationRepository<Stand>(locationService,
+                new LocationConverter<Stand>((x) => new Stand(x)));
+            locationService.CalculateLocationDistances(this.standRepo.All());
         }
 
         public StandControl(ILogger<StandControl> logger, IEventProducer eventProducer,
             Dictionary<Guid, Dinner> openDinnerOrders, Dictionary<Guid, DateTime> ordersDoneAtTime, ILocationService locationService)
         {
-            this.stands = this.LoadStands();
             this.logger = logger;
             this.eventProducer = eventProducer;
-            this.locationService = locationService;
             this.openDinnerOrders = openDinnerOrders;
             this.ordersDoneAtTime = ordersDoneAtTime;
-            locationService.CalculateLocationDistances(this.stands);
-        }
-
-        private ConcurrentBag<Stand> LoadStands()
-        {
-            using StreamReader r = new StreamReader("resources/stands.json");
-            string json = r.ReadToEnd();
-            JsonSerializerSettings settings = new JsonSerializerSettings();
-            settings.Converters.Add(new StandConverter());
-            return JsonConvert.DeserializeObject<ConcurrentBag<Stand>>(json, settings);
-
+            this.standRepo = new LocationRepository<Stand>(locationService,
+                new LocationConverter<Stand>((x) => new Stand(x)));
+            locationService.CalculateLocationDistances(this.standRepo.All());
         }
 
         public string PlaceOrder(Guid standGuid, List<string> products)
         {
-            Stand stand = stands.First(s => s.Guid.Equals(standGuid));
+            Stand stand = standRepo.All().First(s => s.Guid.Equals(standGuid));
 
             Dinner dinner = new Dinner(
                     stand.Meals.FindAll(meal => products.Contains(meal.Name)),
@@ -136,34 +125,32 @@ namespace DddEfteling.Stands.Controls
 
         public Stand FindStandByName(string name)
         {
-            return this.stands.FirstOrDefault(stand => stand.Name.Equals(name));
+            return standRepo.FindByName(name);
         }
 
         public Stand GetStand(Guid guid)
         {
-            return this.stands.First(stand => stand.Guid.Equals(guid));
+            return standRepo.FindByGuid(guid);
         }
 
         public List<Stand> All()
         {
-            return stands.ToList();
+            return standRepo.AllAsList();
         }
 
         public Stand GetRandom()
         {
-            return this.stands.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
+            return standRepo.GetRandom();
         }
 
         public Stand NearestStand(Guid standGuid, List<Guid> exclusionList)
         {
-            Stand stand = GetStand(standGuid);
-            return locationService.NearestLocation(stand, stands, exclusionList);
+            return standRepo.NearestLocation(standGuid, exclusionList);
         }
 
         public Stand NextLocation(Guid standGuid, List<Guid> exclusionList)
         {
-            Stand stand = GetStand(standGuid);
-            return locationService.NextLocation(stand, stands, exclusionList) ?? this.GetRandom();
+            return standRepo.NextLocation(standGuid, exclusionList);
         }
 
     }
