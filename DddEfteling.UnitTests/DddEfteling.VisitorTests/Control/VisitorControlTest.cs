@@ -21,6 +21,9 @@ namespace DddEfteling.VisitorTests.Control
         private readonly IMediator mediator = new Mock<IMediator>().Object;
         private readonly ILogger<VisitorControl> logger = new Mock<ILogger<VisitorControl>>().Object;
         private readonly IOptions<VisitorSettings> settings = new Mock<IOptions<VisitorSettings>>().Object;
+        private readonly Mock<IVisitorRepository> repo = new Mock<IVisitorRepository>();
+        private readonly Mock<IVisitorMovementService> visitorMovementService = new Mock<IVisitorMovementService>();
+        private readonly Mock<ILocationTypeStrategy> locationTypeStrategyMock = new Mock<ILocationTypeStrategy>();
         private readonly IFairyTaleClient fairyTaleClient;
         private readonly IRideClient rideClient;
         private readonly IEventProducer eventProducer;
@@ -37,11 +40,12 @@ namespace DddEfteling.VisitorTests.Control
         [Fact]
         public void AddVisitors_AddThree_ExpectThree()
         {
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient, fairyTaleClient,
-                eventProducer, standClient);
+            repo.Setup(repo => repo.AddVisitors(It.IsAny<int>())).Returns(new List<Visitor>());
+            VisitorControl visitorControl = new VisitorControl(mediator, logger, standClient, repo.Object,
+                visitorMovementService.Object, locationTypeStrategyMock.Object);
 
             visitorControl.AddVisitors(3);
-            Assert.Equal(3, visitorControl.All().Count);
+            repo.Verify(repo => repo.AddVisitors(3));
 
         }
 
@@ -50,8 +54,8 @@ namespace DddEfteling.VisitorTests.Control
         {
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
 
-            VisitorControl visitorControl = new VisitorControl(mediatorMock.Object, settings, logger, rideClient,
-                fairyTaleClient, eventProducer, standClient);
+            VisitorControl visitorControl = new VisitorControl(mediatorMock.Object, logger, standClient, repo.Object,
+                visitorMovementService.Object, locationTypeStrategyMock.Object);
             Guid guid = Guid.NewGuid();
             visitorControl.NotifyIdleVisitor(guid);
 
@@ -59,138 +63,9 @@ namespace DddEfteling.VisitorTests.Control
                 mock.Publish(It.Is<VisitorEvent>(visitorEvent => visitorEvent.VisitorGuid.Equals(guid)),
                     CancellationToken.None));
         }
-
+        
         [Fact]
-        public void HandleBusyVisitors_HasNoBusyVisitors_ExpectNothingHappens()
-        {
-            Mock<IMediator> mediatorMock = new Mock<IMediator>();
-
-            VisitorControl visitorControl = new VisitorControl(mediatorMock.Object, settings, logger, rideClient,
-                fairyTaleClient, eventProducer, standClient);
-            visitorControl.HandleBusyVisitors();
-
-            mediatorMock.Verify(mock => mock.Publish(It.IsAny<VisitorEvent>(), CancellationToken.None), Times.Never);
-            Assert.Empty(visitorControl.BusyVisitors);
-        }
-
-        [Fact]
-        public void HandleBusyVisitors_HasBusyVisitorButNotPassedDate_ExpectNothingHappens()
-        {
-            Mock<IMediator> mediatorMock = new Mock<IMediator>();
-
-            VisitorControl visitorControl = new VisitorControl(mediatorMock.Object, settings, logger, rideClient,
-                fairyTaleClient, eventProducer, standClient);
-            Visitor visitor = new Visitor();
-            DateTime dt = DateTime.Now.AddMinutes(1);
-            visitorControl.AddBusyVisitor(visitor.Guid, dt);
-            visitorControl.HandleBusyVisitors();
-
-            mediatorMock.Verify(mock => mock.Publish(It.IsAny<VisitorEvent>(), CancellationToken.None), Times.Never);
-            Assert.Single(visitorControl.BusyVisitors);
-        }
-
-        [Fact]
-        public void HandleBusyVisitors_HasBusyVisitorAndPassedDate_ExpectCall()
-        {
-            Mock<IMediator> mediatorMock = new Mock<IMediator>();
-
-            VisitorControl visitorControl = new VisitorControl(mediatorMock.Object, settings, logger, rideClient,
-                fairyTaleClient, eventProducer, standClient);
-            visitorControl.AddVisitors(1);
-            Visitor visitor = visitorControl.All().First();
-            DateTime dt = DateTime.Now.Subtract(TimeSpan.FromSeconds(1));
-            visitorControl.AddBusyVisitor(visitor.Guid, dt);
-            visitorControl.HandleBusyVisitors();
-
-            Assert.Empty(visitorControl.BusyVisitors);
-        }
-
-        [Fact]
-        public void AddIdleVisitor_VisitorNotIdleYet_ExpectVisitorInIdleList()
-        {
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient, fairyTaleClient,
-                eventProducer, standClient);
-            Guid guid = Guid.NewGuid();
-            DateTime dt = DateTime.Now;
-            visitorControl.AddIdleVisitor(guid, dt);
-
-            Assert.NotEmpty(visitorControl.IdleVisitors);
-            Assert.True(visitorControl.IdleVisitors.ContainsKey(guid));
-            Assert.Equal(dt, visitorControl.IdleVisitors.First(kv => kv.Key.Equals(guid)).Value);
-        }
-
-        [Fact]
-        public void AddBusyVisitor_VisitorNotBusyYet_ExpectVisitorInBusyList()
-        {
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient, fairyTaleClient,
-                eventProducer, standClient);
-            Guid guid = Guid.NewGuid();
-            DateTime dt = DateTime.Now;
-            visitorControl.AddBusyVisitor(guid, dt);
-
-            Assert.NotEmpty(visitorControl.BusyVisitors);
-            Assert.True(visitorControl.BusyVisitors.ContainsKey(guid));
-            Assert.Equal(dt, visitorControl.BusyVisitors.First(kv => kv.Key.Equals(guid)).Value);
-        }
-
-        [Fact]
-        public void GetVisitors_AddThree_ExpectEachVisitor()
-        {
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient, fairyTaleClient,
-                eventProducer, standClient);
-
-            visitorControl.AddVisitors(3);
-            List<Visitor> visitors = visitorControl.All();
-            visitors.ForEach(visitor => Assert.Equal(visitor, visitorControl.GetVisitor(visitor.Guid)));
-        }
-
-        [Fact]
-        public void SetNewLocation_GetLocationWithoutPreviousType_ExpectRideStandOrFairyTale()
-        {
-
-            Mock<IFairyTaleClient> fairyTaleClient = new Mock<IFairyTaleClient>();
-            Mock<IRideClient> rideClient = new Mock<IRideClient>();
-            Mock<IEventProducer> eventProducer = new Mock<IEventProducer>();
-
-            fairyTaleClient.Setup(client => client.GetRandomFairyTale()).Returns(new FairyTaleDto());
-            rideClient.Setup(client => client.GetRandomRide()).Returns(new RideDto());
-
-
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object,
-                fairyTaleClient.Object, eventProducer.Object, standClient);
-            Visitor visitor = new Visitor();
-
-            Assert.Null(visitor.TargetLocation);
-
-            visitorControl.SetNewLocation(visitor);
-            Assert.NotNull(visitor.TargetLocation);
-        }
-
-        [Fact]
-        public void SetNewLocation_GetLocationWithPreviousTypeIsRide_ExpectRide()
-        {
-            RideDto rideDto = new RideDto();
-            Mock<IFairyTaleClient> fairyTaleClient = new Mock<IFairyTaleClient>();
-            Mock<IRideClient> rideClient = new Mock<IRideClient>();
-            Mock<IEventProducer> eventProducer = new Mock<IEventProducer>();
-
-            fairyTaleClient.Setup(client => client.GetRandomFairyTale()).Returns(new FairyTaleDto());
-            rideClient.Setup(client => client.GetRandomRide()).Returns(new RideDto());
-
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object,
-                fairyTaleClient.Object, eventProducer.Object, standClient);
-            Visitor visitor = new Visitor();
-            visitor.AddVisitedLocation(rideDto);
-
-            Assert.Null(visitor.TargetLocation);
-
-            visitorControl.SetNewLocation(visitor);
-            Assert.NotNull(visitor.TargetLocation);
-            Assert.Equal(LocationType.RIDE, visitor.TargetLocation.LocationType);
-        }
-
-        [Fact]
-        public void SetNewLocation_GetLocationWithPreviousTypeIsFairyTale_ExpectFairyTale()
+        public void NotifyOrderReady_OrderExists_ExpectVisitorIdle()
         {
             FairyTaleDto fairyTaleDto = new FairyTaleDto();
 
@@ -201,278 +76,33 @@ namespace DddEfteling.VisitorTests.Control
             fairyTaleClient.Setup(client => client.GetRandomFairyTale()).Returns(new FairyTaleDto());
             rideClient.Setup(client => client.GetRandomRide()).Returns(new RideDto());
 
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object,
-                fairyTaleClient.Object, eventProducer.Object, standClient);
-            Visitor visitor = new Visitor();
-            visitor.AddVisitedLocation(fairyTaleDto);
+            VisitorControl visitorControl = new VisitorControl(mediator, logger, standClient, repo.Object,
+                visitorMovementService.Object, locationTypeStrategyMock.Object);
 
-            Assert.Null(visitor.TargetLocation);
-
-            visitorControl.SetNewLocation(visitor);
-            Assert.NotNull(visitor.TargetLocation);
-            Assert.Equal(LocationType.FAIRYTALE, visitor.TargetLocation.LocationType);
-        }
-
-
-        [Fact]
-        public void SetNewLocation_GetLocationWithPreviousTypeIsStand_ExpectStand()
-        {
-            StandDto standDto = new StandDto();
-
-            Mock<IFairyTaleClient> fairyTaleClient = new Mock<IFairyTaleClient>();
-            Mock<IRideClient> rideClient = new Mock<IRideClient>();
-            Mock<IStandClient> standClient = new Mock<IStandClient>();
-            Mock<IEventProducer> eventProducer = new Mock<IEventProducer>();
-
-            fairyTaleClient.Setup(client => client.GetRandomFairyTale()).Returns(new FairyTaleDto());
-            rideClient.Setup(client => client.GetRandomRide()).Returns(new RideDto());
-            standClient.Setup(client => client.GetRandomStand()).Returns(new StandDto());
-
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object,
-                fairyTaleClient.Object, eventProducer.Object, standClient.Object);
-            Visitor visitor = new Visitor();
-            visitor.AddVisitedLocation(standDto);
-
-            Assert.Null(visitor.TargetLocation);
-
-            visitorControl.SetNewLocation(visitor);
-            Assert.NotNull(visitor.TargetLocation);
-            Assert.Equal(LocationType.STAND, visitor.TargetLocation.LocationType);
-        }
-
-        [Fact]
-        public void HandleIdleVisitors_HasIdleVisitorWithoutLocation_ExpectLocationAndStep()
-        {
-            Mock<IFairyTaleClient> fairyTaleClient = new Mock<IFairyTaleClient>();
-            Mock<IRideClient> rideClient = new Mock<IRideClient>();
-            Mock<IEventProducer> eventProducer = new Mock<IEventProducer>();
-
-            FairyTaleDto taleDto = new FairyTaleDto
-            {
-                Coordinates = new Coordinate(51.65224, 5.05222)
-            };
-
-            RideDto rideDto = new RideDto
-            {
-                Coordinates = new Coordinate(51.65224, 5.05222)
-            };
-
-            fairyTaleClient.Setup(client => client.GetRandomFairyTale()).Returns(taleDto);
-            rideClient.Setup(client => client.GetRandomRide()).Returns(rideDto);
-
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object,
-                fairyTaleClient.Object, eventProducer.Object, standClient);
-            visitorControl.AddVisitors(1);
-            Visitor visitor = visitorControl.All().First();
-            visitor.TargetLocation = null;
-
-            DateTime idleDt = DateTime.Now.Subtract(TimeSpan.FromSeconds(1));
-
-            visitorControl.AddIdleVisitor(visitor.Guid, idleDt);
-            Assert.Null(visitor.TargetLocation);
-            Assert.True(visitor.CurrentLocation.Latitude > 0);
-            Assert.True(visitor.CurrentLocation.Longitude > 0);
-            Coordinate startLocation = visitor.CurrentLocation;
-
-            Assert.NotEmpty(visitorControl.IdleVisitors);
-            visitorControl.HandleIdleVisitors();
-            Assert.Empty(visitorControl.IdleVisitors);
-            Assert.True(visitor.CurrentLocation.Latitude > startLocation.Latitude);
-            Assert.True(visitor.CurrentLocation.Longitude > startLocation.Longitude);
-            Assert.True(visitor.CurrentLocation.Latitude < 51.65224);
-            Assert.True(visitor.CurrentLocation.Longitude < 5.05222);
-            eventProducer.Verify(producer => producer.Produce(It.IsAny<Event>()), Times.Never);
-        }
-
-        [Fact]
-        public void HandleIdleVisitors_HasNoIdleVisitorWithoutLocation_ExpectNothingHappens()
-        {
-            Mock<IFairyTaleClient> fairyTaleClient = new Mock<IFairyTaleClient>();
-            Mock<IRideClient> rideClient = new Mock<IRideClient>();
-            Mock<IEventProducer> eventProducer = new Mock<IEventProducer>();
-
-            FairyTaleDto taleDto = new FairyTaleDto
-            {
-                Coordinates = new Coordinate(51.65224, 5.05222)
-            };
-
-            RideDto rideDto = new RideDto
-            {
-                Coordinates = new Coordinate(51.65224, 5.05222)
-            };
-
-            fairyTaleClient.Setup(client => client.GetRandomFairyTale()).Returns(taleDto);
-            rideClient.Setup(client => client.GetRandomRide()).Returns(rideDto);
-
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object,
-                fairyTaleClient.Object, eventProducer.Object, standClient);
-            visitorControl.AddVisitors(1);
-            Visitor visitor = visitorControl.All().First();
-            Coordinate startLocation = visitor.CurrentLocation;
-
-            Assert.Empty(visitorControl.IdleVisitors);
-            visitorControl.HandleIdleVisitors();
-            Assert.Empty(visitorControl.IdleVisitors);
-            Assert.Equal(startLocation.Latitude, visitor.CurrentLocation.Latitude);
-            Assert.Equal(startLocation.Longitude, visitor.CurrentLocation.Longitude);
-            eventProducer.Verify(producer => producer.Produce(It.IsAny<Event>()), Times.Never);
-        }
-
-        [Fact]
-        public void HandleIdleVisitors_HasIdleVisitorWithLocation_ExpectSameLocationAndStep()
-        {
-            Mock<IFairyTaleClient> fairyTaleClient = new Mock<IFairyTaleClient>();
-            Mock<IRideClient> rideClient = new Mock<IRideClient>();
-            Mock<IEventProducer> eventProducer = new Mock<IEventProducer>();
-
-            FairyTaleDto taleDto = new FairyTaleDto
-            {
-                Coordinates = new Coordinate(51.65224, 5.05222)
-            };
-
-            RideDto rideDto = new RideDto
-            {
-                Coordinates = new Coordinate(51.65224, 5.05222)
-            };
-
-            fairyTaleClient.Setup(client => client.GetRandomFairyTale()).Returns(taleDto);
-            rideClient.Setup(client => client.GetRandomRide()).Returns(rideDto);
-
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object,
-                fairyTaleClient.Object, eventProducer.Object, standClient);
-            visitorControl.AddVisitors(1);
-            Visitor visitor = visitorControl.All().First();
-
-            DateTime idleDt = DateTime.Now.Subtract(TimeSpan.FromSeconds(1));
-
-            visitorControl.AddIdleVisitor(visitor.Guid, idleDt);
-            Assert.NotNull(visitor.TargetLocation);
-            Assert.True(visitor.CurrentLocation.Latitude > 0);
-            Assert.True(visitor.CurrentLocation.Longitude > 0);
-            Coordinate startLocation = visitor.CurrentLocation;
-
-            Assert.NotEmpty(visitorControl.IdleVisitors);
-            visitorControl.HandleIdleVisitors();
-            Assert.Empty(visitorControl.IdleVisitors);
-            Assert.True(visitor.CurrentLocation.Latitude > startLocation.Latitude);
-            Assert.True(visitor.CurrentLocation.Longitude > startLocation.Longitude);
-            Assert.True(visitor.CurrentLocation.Latitude < 51.65224);
-            Assert.True(visitor.CurrentLocation.Longitude < 5.05222);
-            eventProducer.Verify(producer => producer.Produce(It.IsAny<Event>()), Times.Never);
-        }
-
-        [Fact]
-        public void HandleIdleVisitors_HasIdleVisitorWithLocationIsRideInRange_ExpectArriveAtRide()
-        {
-            Mock<IFairyTaleClient> fairyTaleClient = new Mock<IFairyTaleClient>();
-            Mock<IRideClient> rideClient = new Mock<IRideClient>();
-            Mock<IEventProducer> eventProducer = new Mock<IEventProducer>();
-
-            FairyTaleDto taleDto = new FairyTaleDto
-            {
-                Coordinates = new Coordinate(51.65224, 5.05222)
-            };
-
-            RideDto rideDto = new RideDto
-            {
-                Coordinates = new Coordinate(51.65224, 5.05222)
-            };
-
-            fairyTaleClient.Setup(client => client.GetRandomFairyTale()).Returns(taleDto);
-            rideClient.Setup(client => client.GetRandomRide()).Returns(rideDto);
-
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object,
-                fairyTaleClient.Object, eventProducer.Object, standClient);
-            visitorControl.AddVisitors(1);
-            Visitor visitor = visitorControl.All().First();
-            visitor.TargetLocation = rideDto;
-            visitor.CurrentLocation = new Coordinate(51.65223999999, 5.0522199999);
-
-            DateTime idleDt = DateTime.Now.Subtract(TimeSpan.FromSeconds(1));
-
-            visitorControl.AddIdleVisitor(visitor.Guid, idleDt);
-            Assert.NotNull(visitor.TargetLocation);
-            Assert.True(visitor.CurrentLocation.Latitude > 0);
-            Assert.True(visitor.CurrentLocation.Longitude > 0);
-            Coordinate startLocation = visitor.CurrentLocation;
-
-            Assert.NotEmpty(visitorControl.IdleVisitors);
-            visitorControl.HandleIdleVisitors();
-            Assert.Empty(visitorControl.IdleVisitors);
-            eventProducer.Verify(producer =>
-                producer.Produce(It.Is<Event>(eventOut => eventOut.Type.Equals(EventType.StepInRideLine))));
-        }
-
-        [Fact]
-        public void HandleIdleVisitors_HasIdleVisitorWithLocationIsFairyTaleInRange_ExpectArriveAtRide()
-        {
-            Mock<IFairyTaleClient> fairyTaleClient = new Mock<IFairyTaleClient>();
-            Mock<IRideClient> rideClient = new Mock<IRideClient>();
-            Mock<IEventProducer> eventProducer = new Mock<IEventProducer>();
-
-            FairyTaleDto taleDto = new FairyTaleDto
-            {
-                Coordinates = new Coordinate(51.65224, 5.05222)
-            };
-
-            RideDto rideDto = new RideDto
-            {
-                Coordinates = new Coordinate(51.65224, 5.05222)
-            };
-
-            fairyTaleClient.Setup(client => client.GetRandomFairyTale()).Returns(taleDto);
-            rideClient.Setup(client => client.GetRandomRide()).Returns(rideDto);
-
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object,
-                fairyTaleClient.Object, eventProducer.Object, standClient);
-            visitorControl.AddVisitors(1);
-            Visitor visitor = visitorControl.All().First();
-            visitor.TargetLocation = taleDto;
-            visitor.CurrentLocation = new Coordinate(51.65223999999, 5.0522199999);
-
-            DateTime idleDt = DateTime.Now.Subtract(TimeSpan.FromSeconds(1));
-
-            visitorControl.AddIdleVisitor(visitor.Guid, idleDt);
-            Assert.NotNull(visitor.TargetLocation);
-            Assert.True(visitor.CurrentLocation.Latitude > 0);
-            Assert.True(visitor.CurrentLocation.Longitude > 0);
-            Coordinate startLocation = visitor.CurrentLocation;
-
-            Assert.NotEmpty(visitorControl.IdleVisitors);
-            visitorControl.HandleIdleVisitors();
-            Assert.Empty(visitorControl.IdleVisitors);
-            eventProducer.Verify(producer =>
-                producer.Produce(It.Is<Event>(eventOut => eventOut.Type.Equals(EventType.ArrivedAtFairyTale))));
-        }
-        
-        
-        [Fact]
-        public void NotifyOrderReady_OrderExists_ExpectVisitorIdle(){
-            FairyTaleDto fairyTaleDto = new FairyTaleDto();
-
-            Mock<IFairyTaleClient> fairyTaleClient = new Mock<IFairyTaleClient>();
-            Mock<IRideClient> rideClient = new Mock<IRideClient>();
-            Mock<IEventProducer> eventProducer = new Mock<IEventProducer>();
-
-            fairyTaleClient.Setup(client => client.GetRandomFairyTale()).Returns(new FairyTaleDto());
-            rideClient.Setup(client => client.GetRandomRide()).Returns(new RideDto());
-
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object, fairyTaleClient.Object, eventProducer.Object, standClient);
-
-            Guid guid = Guid.NewGuid();
+            Visitor input = new Visitor();
+            repo.Setup(repo => repo.AddVisitors(It.IsAny<int>())).Returns(new List<Visitor>() {input});
+            repo.Setup(repo => repo.All()).Returns(new List<Visitor>() {input});
+            repo.Setup(repo => repo.GetVisitor(input.Guid)).Returns(input);
             
+            Mock<IVisitorLocationStrategy> strategyMock = new Mock<IVisitorLocationStrategy>();
+            locationTypeStrategyMock.Setup(strategyMock => strategyMock.GetStrategy(It.IsAny<LocationType>()))
+                .Returns(strategyMock.Object);
+
+            Guid guid = Guid.NewGuid();
+
             visitorControl.AddVisitors(1);
 
             Visitor visitor = visitorControl.All().First();
 
             visitorControl.VisitorsWaitingForOrder.TryAdd(guid.ToString(), visitor.Guid);
             visitorControl.NotifyOrderReady(guid.ToString());
-            Assert.True(visitorControl.IdleVisitors.ContainsKey(visitor.Guid));
+            Assert.True(visitor.AvailableAt < DateTime.Now && visitor.AvailableAt > DateTime.Now - TimeSpan.FromSeconds(5));
 
         }
-        
+
         [Fact]
-        public void NotifyOrderReady_OrderDoesNotExists_ExpectNoVisitorIdle(){
+        public void NotifyOrderReady_OrderDoesNotExists_ExpectNoVisitorIdle()
+        {
             FairyTaleDto fairyTaleDto = new FairyTaleDto();
 
             Mock<IFairyTaleClient> fairyTaleClient = new Mock<IFairyTaleClient>();
@@ -482,17 +112,216 @@ namespace DddEfteling.VisitorTests.Control
             fairyTaleClient.Setup(client => client.GetRandomFairyTale()).Returns(new FairyTaleDto());
             rideClient.Setup(client => client.GetRandomRide()).Returns(new RideDto());
 
-            VisitorControl visitorControl = new VisitorControl(mediator, settings, logger, rideClient.Object, fairyTaleClient.Object, eventProducer.Object, standClient);
+            Visitor input = new Visitor();
+            repo.Setup(repo => repo.AddVisitors(It.IsAny<int>())).Returns(new List<Visitor>() {input});
+            repo.Setup(repo => repo.All()).Returns(new List<Visitor>() {input});
+            repo.Setup(repo => repo.GetVisitor(input.Guid)).Returns(input);
+            
+            Mock<IVisitorLocationStrategy> strategyMock = new Mock<IVisitorLocationStrategy>();
+            locationTypeStrategyMock.Setup(strategyMock => strategyMock.GetStrategy(It.IsAny<LocationType>()))
+                .Returns(strategyMock.Object);
+
+            VisitorControl visitorControl = new VisitorControl(mediator, logger, standClient, repo.Object,
+                visitorMovementService.Object, locationTypeStrategyMock.Object);
 
             Guid guid = Guid.NewGuid();
-            
+
             visitorControl.AddVisitors(1);
 
             Visitor visitor = visitorControl.All().First();
 
             visitorControl.NotifyOrderReady(guid.ToString());
-            Assert.False(visitorControl.IdleVisitors.ContainsKey(visitor.Guid));
+            Assert.True(visitor.AvailableAt < DateTime.Now && visitor.AvailableAt > DateTime.Now - TimeSpan.FromSeconds(5));
+        }
 
+        [Fact]
+        public void All_GivenVisitorsInRepo_ExpectRepoCalled()
+        {
+            repo.Setup(repo => repo.All()).Returns(new List<Visitor>());
+            VisitorControl visitorControl = new VisitorControl(mediator, logger, standClient, repo.Object,
+                visitorMovementService.Object, locationTypeStrategyMock.Object);
+
+            var visitors = visitorControl.All();
+            repo.Verify(repo => repo.All(), Times.Once);
+        }
+
+        [Fact]
+        public void GetVisitor_GivenVisitorsInRepo_ExpectRepoCalled()
+        {
+            repo.Setup(repo => repo.GetVisitor(It.IsAny<Guid>())).Returns(new Visitor());
+            VisitorControl visitorControl = new VisitorControl(mediator, logger, standClient, repo.Object,
+                visitorMovementService.Object, locationTypeStrategyMock.Object);
+
+            var visitor = visitorControl.GetVisitor(Guid.NewGuid());
+            repo.Verify(repo => repo.GetVisitor(It.IsAny<Guid>()), Times.Once);
+        }
+
+        [Fact]
+        public void AddIdleVisitor_GivenVisitorsInRepo_ExpectRepoCalledAndAvailableAtUpdated()
+        {
+            Visitor visitor = new Visitor();
+            DateTime dateTime = DateTime.Now - TimeSpan.FromMinutes(2);
+            repo.Setup(repo => repo.GetVisitor(It.IsAny<Guid>())).Returns(visitor);
+            VisitorControl visitorControl = new VisitorControl(mediator, logger, standClient, repo.Object,
+                visitorMovementService.Object, locationTypeStrategyMock.Object);
+
+            visitorControl.UpdateVisitorAvailabilityAt(Guid.NewGuid(), dateTime);
+            repo.Verify(repo => repo.GetVisitor(It.IsAny<Guid>()), Times.Once);
+            Assert.Equal(dateTime, visitor.AvailableAt);
+        }
+
+        [Fact]
+        public void AddIdleVisitor_GivenVisitorIsMissing_ExpectRepoCalledButNothingHappened()
+        {
+            Visitor visitor = null;
+            DateTime dateTime = DateTime.Now - TimeSpan.FromMinutes(2);
+            repo.Setup(repo => repo.GetVisitor(It.IsAny<Guid>())).Returns(visitor);
+            VisitorControl visitorControl = new VisitorControl(mediator, logger, standClient, repo.Object,
+                visitorMovementService.Object, locationTypeStrategyMock.Object);
+
+            visitorControl.UpdateVisitorAvailabilityAt(Guid.NewGuid(), dateTime);
+            repo.Verify(repo => repo.GetVisitor(It.IsAny<Guid>()), Times.Once);
+            Assert.Null(visitor);
+        }
+
+        [Fact]
+        public void AddVisitorWaitingForOrder_GivenVisitorWithTicket_ExpectAddedToList()
+        {
+            Guid visitor = Guid.NewGuid();
+            string ticket = "ticket";
+            VisitorControl visitorControl = new VisitorControl(mediator, logger, standClient, repo.Object,
+                visitorMovementService.Object, locationTypeStrategyMock.Object);
+            visitorControl.AddVisitorWaitingForOrder(ticket, visitor);
+
+            Assert.Contains(new KeyValuePair<string, Guid>(ticket, visitor),
+                visitorControl.VisitorsWaitingForOrder);
+            Assert.Single(visitorControl.VisitorsWaitingForOrder);
+        }
+
+        [Fact]
+        public void AddVisitorWaitingForOrder_GivenVisitorWithTicketAlreadyInList_ExpectNotAddedToList()
+        {
+            Guid visitor = Guid.NewGuid();
+            string ticket = "ticket";
+            VisitorControl visitorControl = new VisitorControl(mediator, logger, standClient, repo.Object,
+                visitorMovementService.Object, locationTypeStrategyMock.Object);
+            visitorControl.AddVisitorWaitingForOrder(ticket, visitor);
+
+            Assert.Contains(new KeyValuePair<string, Guid>(ticket, visitor),
+                visitorControl.VisitorsWaitingForOrder);
+            Assert.Single(visitorControl.VisitorsWaitingForOrder);
+
+            visitorControl.AddVisitorWaitingForOrder(ticket, visitor);
+
+            Assert.Contains(new KeyValuePair<string, Guid>(ticket, visitor),
+                visitorControl.VisitorsWaitingForOrder);
+            Assert.Single(visitorControl.VisitorsWaitingForOrder);
+        }
+
+        [Fact]
+        public void HandleIdleVisitors_NoVisitors_ExpectNothingHappened()
+        {
+            repo.Setup(repo => repo.IdleVisitors()).Returns(new List<Visitor>());
+            VisitorControl visitorControl = new VisitorControl(mediator, logger, standClient, repo.Object,
+                visitorMovementService.Object, locationTypeStrategyMock.Object);
+            
+            visitorControl.HandleIdleVisitors();
+            visitorMovementService.Verify(service => service.SetNextStepDistance(It.IsAny<Visitor>()), Times.Never);
+        }
+        
+        [Fact]
+        public void HandleIdleVisitors_VisitorLocationNotSet_ExpectNothingHappened()
+        {
+            Visitor visitor = new Visitor();
+
+            repo.Setup(repo => repo.IdleVisitors()).Returns(new List<Visitor>(){ visitor});
+
+            Mock<IVisitorLocationStrategy> strategyMock = new Mock<IVisitorLocationStrategy>();
+            locationTypeStrategyMock.Setup(strategyMock => strategyMock.GetStrategy(It.IsAny<LocationType>()))
+                .Returns(strategyMock.Object);
+                
+            VisitorControl visitorControl = new VisitorControl(mediator, logger, standClient, repo.Object,
+                visitorMovementService.Object, locationTypeStrategyMock.Object);
+
+            visitorControl.HandleIdleVisitors();
+            visitorMovementService.Verify(service => service.SetNextStepDistance(It.IsAny<Visitor>()), Times.Never);
+        }
+        
+        [Fact]
+        public void HandleIdleVisitors_VisitorWithLocation_ExpectLocationNotChangedAndMovedToLocation()
+        {
+            ILocationDto locationDto = new RideDto();
+            Visitor visitor = new Visitor();
+            visitor.TargetLocation = locationDto;
+            Mock<IMediator> mediator = new Mock<IMediator>();
+
+            repo.Setup(repo => repo.IdleVisitors()).Returns(new List<Visitor>(){ visitor});
+
+            Mock<IVisitorLocationStrategy> strategyMock = new Mock<IVisitorLocationStrategy>();
+            locationTypeStrategyMock.Setup(strategyMock => strategyMock.GetStrategy(It.IsAny<LocationType>()))
+                .Returns(strategyMock.Object);
+                
+            VisitorControl visitorControl = new VisitorControl(mediator.Object, logger, standClient, repo.Object,
+                visitorMovementService.Object, locationTypeStrategyMock.Object);
+
+            visitorControl.HandleIdleVisitors();
+            visitorMovementService.Verify(service => service.SetNextStepDistance(It.IsAny<Visitor>()), Times.Once);
+            strategyMock.Verify(strategy => strategy.SetNewLocation(It.IsAny<Visitor>()), Times.Never);
+            mediator.Verify(mediator => mediator.Publish(It.IsAny<VisitorEvent>(), CancellationToken.None), Times.Once);
+        }
+        
+        [Fact]
+        public void HandleIdleVisitors_VisitorWithoutLocation_ExpectLocationAndMovedToLocation()
+        {
+            ILocationDto locationDto = new RideDto();
+            Visitor visitor = new Visitor();
+            Mock<IMediator> mediator = new Mock<IMediator>();
+
+            repo.Setup(repo => repo.IdleVisitors()).Returns(new List<Visitor>(){ visitor});
+
+            Mock<IVisitorLocationStrategy> strategyMock = new Mock<IVisitorLocationStrategy>();
+            locationTypeStrategyMock.Setup(strategyMock => strategyMock.GetStrategy(It.IsAny<LocationType>()))
+                .Returns(strategyMock.Object);
+            strategyMock.Setup(mock => mock.SetNewLocation(visitor)).Callback<Visitor>((visitor) =>
+            {
+                visitor.TargetLocation = locationDto;
+            });
+                
+            VisitorControl visitorControl = new VisitorControl(mediator.Object, logger, standClient, repo.Object,
+                visitorMovementService.Object, locationTypeStrategyMock.Object);
+
+            visitorControl.HandleIdleVisitors();
+            visitorMovementService.Verify(service => service.SetNextStepDistance(It.IsAny<Visitor>()), Times.Once);
+            strategyMock.Verify(strategy => strategy.SetNewLocation(It.IsAny<Visitor>()), Times.Once);
+            mediator.Verify(mediator => mediator.Publish(It.IsAny<VisitorEvent>(), CancellationToken.None), Times.Once);
+        }
+        
+        [Fact]
+        public void HandleIdleVisitors_VisitorInRangeOfLocation_ExpectStrategyCalled()
+        {
+            ILocationDto locationDto = new RideDto();
+            locationDto.Coordinates = new Coordinate(51.6491433, 5.0454834);
+            Visitor visitor = new Visitor();
+            visitor.CurrentLocation = new Coordinate(51.6491420, 5.0454830);
+            visitor.TargetLocation = locationDto;
+            visitor.NextStepDistance = 10.0;
+            Mock<IMediator> mediator = new Mock<IMediator>();
+
+            repo.Setup(repo => repo.IdleVisitors()).Returns(new List<Visitor>(){ visitor});
+
+            Mock<IVisitorLocationStrategy> strategyMock = new Mock<IVisitorLocationStrategy>();
+            locationTypeStrategyMock.Setup(strategyMock => strategyMock.GetStrategy(It.IsAny<LocationType>()))
+                .Returns(strategyMock.Object);
+            visitor.LocationStrategy = strategyMock.Object;
+                
+            VisitorControl visitorControl = new VisitorControl(mediator.Object, logger, standClient, repo.Object,
+                visitorMovementService.Object, locationTypeStrategyMock.Object);
+
+            visitorControl.HandleIdleVisitors();
+            visitorMovementService.Verify(service => service.SetNextStepDistance(It.IsAny<Visitor>()), Times.Once);
+            strategyMock.Verify(strategy => strategy.SetNewLocation(It.IsAny<Visitor>()), Times.Never);
+            strategyMock.Verify(strategy => strategy.StartLocationActivity(It.IsAny<Visitor>()));
+            mediator.Verify(mediator => mediator.Publish(It.IsAny<VisitorEvent>(), CancellationToken.None), Times.Never);
         }
     }
 }

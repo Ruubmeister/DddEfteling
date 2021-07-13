@@ -18,7 +18,7 @@ namespace DddEfteling.Visitors.Boundaries
 
         public Task Handle(VisitorEvent notification, CancellationToken cancellationToken)
         {
-            this.visitorControl.AddIdleVisitor(notification.VisitorGuid,
+            this.visitorControl.UpdateVisitorAvailabilityAt(notification.VisitorGuid,
                 (DateTime)notification.Payload.First(kv => kv.Key.Equals("DateTime")).Value);
             return Task.CompletedTask;
         }

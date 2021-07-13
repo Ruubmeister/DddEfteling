@@ -26,7 +26,7 @@ namespace DddEfteling.VisitorTests.Boundaries
             VisitorNotificationHandler notificationHandler = new VisitorNotificationHandler(visitorControl.Object);
             notificationHandler.Handle(notification, CancellationToken.None);
 
-            visitorControl.Verify(control => control.AddIdleVisitor(It.IsAny<Guid>(), It.IsAny<DateTime>()));
+            visitorControl.Verify(control => control.UpdateVisitorAvailabilityAt(It.IsAny<Guid>(), It.IsAny<DateTime>()));
         }
     }
 }
