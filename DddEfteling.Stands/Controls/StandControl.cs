@@ -66,7 +66,7 @@ namespace DddEfteling.Stands.Controls
             this.openDinnerOrders.Add(ticket, dinner);
             this.ordersDoneAtTime.Add(ticket, dateTime);
             
-            logger.Log(LogLevel.Information, $"Placed order at stand {stand.Name} with ticket {ticket}, " +
+            logger.Log(LogLevel.Debug, $"Placed order at stand {stand.Name} with ticket {ticket}, " +
                                              $"done at {dateTime}");
 
             return ticket.ToString();
@@ -75,12 +75,12 @@ namespace DddEfteling.Stands.Controls
         public void HandleProducedOrders()
         {
             DateTime now = DateTime.Now;
-            logger.Log(LogLevel.Information, "Checking for ready orders");
+            logger.Log(LogLevel.Debug, "Checking for ready orders");
             foreach(KeyValuePair<Guid, DateTime> openOrder in this.ordersDoneAtTime)
             {
                 if(openOrder.Value <= now)
                 {
-                    logger.Log(LogLevel.Information, $"Sending order done for {openOrder.Key}");
+                    logger.Log(LogLevel.Debug, $"Sending order done for {openOrder.Key}");
                     this.SendOrderTicket(openOrder.Key.ToString());
                     this.ordersDoneAtTime.Remove(openOrder.Key);
                 }

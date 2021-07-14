@@ -96,7 +96,6 @@ namespace DddEfteling.Visitors
             {
                 while (true)
                 {
-                    visitorControl.HandleBusyVisitors();
                     visitorControl.HandleIdleVisitors();
 
                     Task.Delay(300).Wait();

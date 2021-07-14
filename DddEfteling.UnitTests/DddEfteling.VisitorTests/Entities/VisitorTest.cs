@@ -17,7 +17,6 @@ namespace DddEfteling.VisitorTests.Entities
         private Coordinate startCoordinate = new Coordinate(1.0, 1.0);
         private readonly Random random = new Random();
         private readonly IMediator mediator = new Mock<IMediator>().Object;
-        private readonly IOptions<VisitorSettings> settings = new Mock<IOptions<VisitorSettings>>().Object;
 
         public VisitorTest()
         {
@@ -28,7 +27,7 @@ namespace DddEfteling.VisitorTests.Entities
         {
             DateTime dateOfBirth = DateTime.Now;
             dateOfBirth.Subtract(TimeSpan.FromDays(365 * 20));
-            Visitor visitor = new Visitor(dateOfBirth, 1.73, startCoordinate, random, settings);
+            Visitor visitor = new Visitor(dateOfBirth, 1.73, startCoordinate, random);
 
             Assert.Equal(dateOfBirth, visitor.DateOfBirth);
             Assert.False(visitor.Guid == Guid.Empty);
@@ -36,7 +35,7 @@ namespace DddEfteling.VisitorTests.Entities
         }
 
         [Fact]
-        public void WatchFairyTale_LetVisitorWatchFairyTale_ExpectTookTime()
+        public void DoActivity_LetVisitorDoActivity_ExpectTookTime()
         {
             DateTime start = DateTime.Now;
             Mock<IOptions<VisitorSettings>> settingsMock = new Mock<IOptions<VisitorSettings>>();
@@ -45,10 +44,10 @@ namespace DddEfteling.VisitorTests.Entities
             visitorSettings.FairyTaleMaxVisitingSeconds = 5;
             settingsMock.Setup(setting => setting.Value).Returns(visitorSettings);
 
-            Visitor visitor = new Visitor(start, 1.73, startCoordinate, random, settingsMock.Object);
+            Visitor visitor = new Visitor(start, 1.73, startCoordinate, random);
             FairyTaleDto tale = new FairyTaleDto();
 
-            visitor.WatchFairyTale(tale);
+            visitor.DoActivity(tale);
         }
 
         [Fact]
@@ -58,7 +57,7 @@ namespace DddEfteling.VisitorTests.Entities
             RideDto ride = new RideDto();
             Mock<IOptions<VisitorSettings>> settingsMock = new Mock<IOptions<VisitorSettings>>();
             DateTime start = DateTime.Now;
-            Visitor visitor = new Visitor(start, 1.73, startCoordinate, random, settingsMock.Object);
+            Visitor visitor = new Visitor(start, 1.73, startCoordinate, random);
 
             visitor.AddVisitedLocation(ride);
 
@@ -72,7 +71,7 @@ namespace DddEfteling.VisitorTests.Entities
         {
             Mock<IOptions<VisitorSettings>> settingsMock = new Mock<IOptions<VisitorSettings>>();
             DateTime start = DateTime.Now;
-            Visitor visitor = new Visitor(start, 1.73, startCoordinate, random, settingsMock.Object);
+            Visitor visitor = new Visitor(start, 1.73, startCoordinate, random);
 
             Assert.Empty(visitor.VisitedLocations);
             Assert.Null(visitor.GetLastLocation());
@@ -84,7 +83,7 @@ namespace DddEfteling.VisitorTests.Entities
 
             Mock<IOptions<VisitorSettings>> settingsMock = new Mock<IOptions<VisitorSettings>>();
             DateTime start = DateTime.Now;
-            Visitor visitor = new Visitor(start, 1.73, startCoordinate, random, settingsMock.Object);
+            Visitor visitor = new Visitor(start, 1.73, startCoordinate, random);
 
             RideDto ride1 = new RideDto();
             visitor.AddVisitedLocation(ride1);
@@ -104,23 +103,6 @@ namespace DddEfteling.VisitorTests.Entities
         }
 
         [Fact]
-        public void StepInRide_VisitorStepsIntoLine_ExpectHandledData()
-        {
-            Visitor visitor = new Visitor();
-            RideDto ride = new RideDto();
-
-            visitor.CurrentLocation = new Coordinate(1, 2);
-
-            Assert.Empty(visitor.VisitedLocations);
-
-            visitor.StepInRide(ride);
-
-            Assert.NotEmpty(visitor.VisitedLocations);
-            Assert.Equal(ride, visitor.GetLastLocation());
-            Assert.Null(visitor.TargetLocation);
-        }
-
-        [Fact]
         public void WalkToDestination_VisitorStepsIntoLine_ExpectHandledData()
         {
             Visitor visitor = new Visitor();
@@ -128,8 +110,9 @@ namespace DddEfteling.VisitorTests.Entities
             ride.Coordinates = new Coordinate(51.64984, 5.04858);
             visitor.CurrentLocation = new Coordinate(51.64937, 5.04797);
             visitor.TargetLocation = ride;
+            visitor.NextStepDistance = 1.1;
 
-            visitor.WalkToDestination(1.1);
+            visitor.WalkToDestination();
 
             Assert.True(visitor.CurrentLocation.Latitude < ride.Coordinates.Latitude);
             Assert.True(visitor.CurrentLocation.Latitude > 51.64937);

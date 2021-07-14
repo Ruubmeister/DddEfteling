@@ -12,8 +12,8 @@ namespace DddEfteling.Shared.Boundaries
         public Coordinate Coordinates { get; set; }
         public LocationType LocationType { get; set; }
 
-        public List<string> Meals { get; set; }
-        public List<string> Drinks { get; set; }
+        public List<string> Meals { get; set; } = new ();
+        public List<string> Drinks { get; set; } = new ();
 
         public StandDto()
         {

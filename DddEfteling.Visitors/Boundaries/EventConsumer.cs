@@ -35,13 +35,21 @@ namespace DddEfteling.Visitors.Boundaries
                 {
                     Visitor visitor = visitorControl.GetVisitor(visitorGuid);
                     visitor.TargetLocation = null;
-                    visitorControl.AddIdleVisitor(visitorGuid, dateTime);
+                    visitorControl.UpdateVisitorAvailabilityAt(visitorGuid, dateTime);
                 }
             }
             else if (incomingEvent.Type.Equals(EventType.WatchingFairyTale) && incomingEvent.Payload.TryGetValue("Visitor", out string visitorGuid) &&
                 incomingEvent.Payload.TryGetValue("EndDateTime", out string endDateTime))
             {
-                this.visitorControl.AddBusyVisitor(Guid.Parse(visitorGuid), DateTime.Parse(endDateTime));
+                Guid visitorGuidObject = Guid.Parse(visitorGuid);
+                this.visitorControl.RemoveVisitorTargetLocation(visitorGuidObject);
+                this.visitorControl.UpdateVisitorAvailabilityAt(visitorGuidObject, DateTime.Parse(endDateTime));
+            }
+            else if (incomingEvent.Type.Equals(EventType.WaitingForOrder) &&
+                     incomingEvent.Payload.TryGetValue("Visitor", out string waitingForOrderVisitorGuid) &&
+                     incomingEvent.Payload.TryGetValue("Ticket", out string ticket))
+            {
+                this.visitorControl.AddVisitorWaitingForOrder(ticket, Guid.Parse(waitingForOrderVisitorGuid));
             }
             else if (incomingEvent.Type.Equals(EventType.OrderReady) && incomingEvent.Payload.TryGetValue("Order", out string order))
             {

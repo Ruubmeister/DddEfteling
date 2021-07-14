@@ -28,8 +28,7 @@ namespace DddEfteling.VisitorTests.Boundaries
         {
             this.visitorMock = new Mock<IVisitorControl>();
             this.visitorMock.Setup(control => control.GetVisitor(It.IsAny<Guid>())).Returns(new Visitors.Entities.Visitor());
-            this.visitorMock.Setup(control => control.AddIdleVisitor(It.IsAny<Guid>(), It.Ref<DateTime>.IsAny));
-            this.visitorMock.Setup(control => control.AddBusyVisitor(It.IsAny<Guid>(), It.Ref<DateTime>.IsAny));
+            this.visitorMock.Setup(control => control.UpdateVisitorAvailabilityAt(It.IsAny<Guid>(), It.Ref<DateTime>.IsAny));
 
             this.eventConsumer = new EventConsumer(this.visitorMock.Object, Configuration);
         }
@@ -44,8 +43,19 @@ namespace DddEfteling.VisitorTests.Boundaries
             this.eventConsumer.HandleMessage(JsonConvert.SerializeObject(incomingEvent));
 
             visitorMock.Verify(control => control.GetVisitor(It.IsAny<Guid>()), Times.Exactly(2));
-            visitorMock.Verify(control => control.AddIdleVisitor(It.IsAny<Guid>(), It.IsAny<DateTime>()), Times.Exactly(2));
+            visitorMock.Verify(control => control.UpdateVisitorAvailabilityAt(It.IsAny<Guid>(), It.IsAny<DateTime>()), Times.Exactly(2));
+        }
+        
+        [Fact]
+        public void HandleMessage_ExpectWaitingForOrderEvent_CallsControlFunction()
+        {
+            Guid visitor = Guid.NewGuid();
+            Dictionary<string, string> payload = new Dictionary<string, string>() { { "Visitor", visitor.ToString() },
+                { "Ticket", JsonConvert.SerializeObject("ticket") } };
+            Event incomingEvent = new Event(EventType.WaitingForOrder, EventSource.Visitor, payload);
+            this.eventConsumer.HandleMessage(JsonConvert.SerializeObject(incomingEvent));
 
+            visitorMock.Verify(control => control.AddVisitorWaitingForOrder(It.IsAny<string>(), It.IsAny<Guid>()), Times.Once);
         }
 
         [Fact]
@@ -56,8 +66,8 @@ namespace DddEfteling.VisitorTests.Boundaries
             Event incomingEvent = new Event(EventType.StatusChanged, EventSource.Visitor, payload);
             this.eventConsumer.HandleMessage(JsonConvert.SerializeObject(incomingEvent));
 
-            visitorMock.Verify(control => control.AddIdleVisitor(It.IsAny<Guid>(), It.IsAny<DateTime>()), Times.Never);
-            visitorMock.Verify(control => control.AddBusyVisitor(It.IsAny<Guid>(), It.IsAny<DateTime>()), Times.Never);
+            visitorMock.Verify(control => control.UpdateVisitorAvailabilityAt(It.IsAny<Guid>(), It.IsAny<DateTime>()), Times.Never);
+            visitorMock.Verify(control => control.RemoveVisitorTargetLocation(It.IsAny<Guid>()), Times.Never);
 
         }
     }

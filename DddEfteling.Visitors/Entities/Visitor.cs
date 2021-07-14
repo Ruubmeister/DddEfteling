@@ -2,18 +2,17 @@
 using DddEfteling.Shared.Controls;
 using DddEfteling.Shared.Entities;
 using Geolocation;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
+using DddEfteling.Visitors.Controls;
 
 namespace DddEfteling.Visitors.Entities
 {
     public class Visitor
     {
         private readonly Random random;
-        private readonly VisitorSettings visitorSettings;
         private readonly VisitorLocationSelector locationSelector;
 
         [JsonIgnore]
@@ -26,18 +25,45 @@ namespace DddEfteling.Visitors.Entities
             this.locationSelector = new VisitorLocationSelector(random);
         }
 
-        public Visitor(DateTime dateOfBirth, double length, Coordinate startLocation, Random random,
-            IOptions<VisitorSettings> visitorSettings)
+        public Visitor(DateTime dateOfBirth, double length, Coordinate startLocation, Random random)
         {
             Guid = Guid.NewGuid();
             DateOfBirth = dateOfBirth;
             Length = length;
             this.CurrentLocation = startLocation;
             this.random = random;
-            this.visitorSettings = visitorSettings.Value;
             this.locationSelector = new VisitorLocationSelector(random);
         }
 
+        public Guid Guid { get; }
+
+        public DateTime DateOfBirth { get; }
+
+        public double Length { get; }
+
+        public Coordinate CurrentLocation { get; set; }
+
+        [JsonIgnore]
+        public ILocationDto TargetLocation { get; set; }
+        
+        public DateTime? AvailableAt { get; set; }
+
+        public IVisitorLocationStrategy LocationStrategy { get; set; }
+        
+        public double NextStepDistance { get; set; }
+
+        public void DoActivity( ILocationDto locationDto)
+        {
+            this.locationSelector.ReduceAndBalance(locationDto.LocationType);
+            this.AddVisitedLocation(locationDto);
+            this.TargetLocation = null;
+        }
+
+        public void WalkToDestination()
+        {
+            this.CurrentLocation = CoordinateExtensions.GetStepCoordinates(CurrentLocation, TargetLocation.Coordinates, NextStepDistance);
+        }
+        
         public ILocationDto GetLastLocation()
         {
             if (this.VisitedLocations.Count < 1)
@@ -88,44 +114,6 @@ namespace DddEfteling.Visitors.Entities
         public LocationType GetLocationType(LocationType? previousLocationType)
         {
             return this.locationSelector.GetLocation(previousLocationType);
-        }
-
-        public Guid Guid { get; }
-
-        public DateTime DateOfBirth { get; }
-
-        public double Length { get; }
-
-        public Coordinate CurrentLocation { get; set; }
-
-        [JsonIgnore]
-        public ILocationDto TargetLocation { get; set; }
-
-        public void WatchFairyTale(FairyTaleDto tale)
-        {
-            int visitingSeconds = random.Next(visitorSettings.FairyTaleMinVisitingSeconds, visitorSettings.FairyTaleMaxVisitingSeconds);
-            this.locationSelector.ReduceAndBalance(LocationType.FAIRYTALE);
-            this.AddVisitedLocation(tale);
-            this.TargetLocation = null;
-        }
-
-        public void StepInRide(RideDto ride)
-        {
-            this.locationSelector.ReduceAndBalance(LocationType.RIDE);
-            this.AddVisitedLocation(ride);
-            this.TargetLocation = null;
-        }
-        
-        public void OrderAtStand(StandDto stand)
-        {
-            this.locationSelector.ReduceAndBalance(LocationType.STAND);
-            this.AddVisitedLocation(stand);
-            this.TargetLocation = null;
-        }
-
-        public void WalkToDestination(double step)
-        {
-            this.CurrentLocation = CoordinateExtensions.GetStepCoordinates(CurrentLocation, TargetLocation.Coordinates, step);
         }
 
         public VisitorDto ToDto()
