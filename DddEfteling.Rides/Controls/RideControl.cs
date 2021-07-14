@@ -5,9 +5,7 @@ using DddEfteling.Shared.Entities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DddEfteling.Shared.Controls;
@@ -18,24 +16,19 @@ namespace DddEfteling.Rides.Controls
     {
         private readonly ILogger logger;
         private readonly IEventProducer eventProducer;
-        private readonly IEmployeeClient employeeClient;
         private readonly IVisitorClient visitorClient;
-        private readonly Random random = new Random();
-        private readonly ILocationService locationService;
         private readonly LocationRepository<Ride> rideRepo;
 
         public RideControl() { }
 
-        public RideControl(ILogger<RideControl> logger, IEventProducer eventProducer, IEmployeeClient employeeClient,
-            IVisitorClient visitorClient, ILocationService locationService)
+        public RideControl(ILogger<RideControl> logger, IEventProducer eventProducer, IVisitorClient visitorClient,
+            ILocationService locationService)
         {
             rideRepo = new LocationRepository<Ride>(locationService, 
                 new LocationConverter<Ride>((x) => new Ride(x)));
             this.logger = logger;
             this.eventProducer = eventProducer;
-            this.employeeClient = employeeClient;
             this.visitorClient = visitorClient;
-            this.locationService = locationService;
             locationService.CalculateLocationDistances(rideRepo.All());
         }
 

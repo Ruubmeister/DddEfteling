@@ -33,7 +33,7 @@ namespace DddEfteling.RideTests.Controls
                 employeeControl => employeeControl.GetEmployees(It.IsAny<Ride>())
                 ).Returns(new List<Employee>());*/
 
-            this.rideControl = new RideControl(logger, eventProducer.Object, employeeClient.Object, visitorClientMock.Object, locationService);
+            this.rideControl = new RideControl(logger, eventProducer.Object, visitorClientMock.Object, locationService);
         }
 
         [Fact]

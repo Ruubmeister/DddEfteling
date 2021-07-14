@@ -28,8 +28,10 @@ namespace DddEfteling.Park.Boundaries
                     incomingEvent.Payload.TryGetValue("Skill", out string skillString))
             {
                 WorkplaceDto workplaceDto = JsonConvert.DeserializeObject<WorkplaceDto>(workplaceString);
-                Enum.TryParse(skillString, out WorkplaceSkill skill);
-                this.employeeControl.AssignEmployee(workplaceDto, skill);
+                if (Enum.TryParse(skillString, out WorkplaceSkill skill))
+                {
+                    this.employeeControl.AssignEmployee(workplaceDto, skill);
+                }
             }
         }
     }

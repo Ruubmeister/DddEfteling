@@ -10,9 +10,7 @@ namespace DddEfteling.VisitorTests.Control
 {
     public class VisitorMovementServiceTest
     {
-        private VisitorMovementService visitorMovementService = new(
-            new Mock<ILogger<VisitorMovementService>>().Object
-            );
+        private VisitorMovementService visitorMovementService = new();
         
         
         [Fact]

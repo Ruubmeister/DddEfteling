@@ -38,9 +38,13 @@ namespace DddEfteling.Rides.Boundaries
                     incomingEvent.Payload.TryGetValue("Employee", out string employeeString) &&
                     incomingEvent.Payload.TryGetValue("Skill", out string workplaceSkill))
                 {
-                    Enum.TryParse(workplaceSkill, out WorkplaceSkill skill);
-                    rideControl.HandleEmployeeChangedWorkplace(JsonConvert.DeserializeObject<WorkplaceDto>(workplaceString),
-                        Guid.Parse(employeeString), skill);
+                    if (Enum.TryParse(workplaceSkill, out WorkplaceSkill skill))
+                    {
+                        rideControl.HandleEmployeeChangedWorkplace(
+                            JsonConvert.DeserializeObject<WorkplaceDto>(workplaceString),
+                            Guid.Parse(employeeString), skill);
+                    }
+                    
                 }
             }
             else if (incomingEvent.Type.Equals(EventType.StatusChanged) && incomingEvent.Source.Equals(EventSource.Park) &&

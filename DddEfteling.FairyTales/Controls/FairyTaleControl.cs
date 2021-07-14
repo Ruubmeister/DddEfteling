@@ -2,12 +2,8 @@
 using DddEfteling.FairyTales.Entities;
 using DddEfteling.Shared.Entities;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using DddEfteling.Shared.Controls;
 
 namespace DddEfteling.FairyTales.Controls
@@ -17,7 +13,6 @@ namespace DddEfteling.FairyTales.Controls
         private readonly ILogger logger;
         private readonly Random random = new Random();
         private readonly IEventProducer eventProducer;
-        private readonly ILocationService locationService;
         private readonly LocationRepository<FairyTale> taleRepo;
         
         public FairyTaleControl() { }
@@ -30,9 +25,8 @@ namespace DddEfteling.FairyTales.Controls
             
             this.logger = logger;
             this.eventProducer = eventProducer;
-            this.locationService = locationService;
             
-            this.locationService.CalculateLocationDistances(taleRepo.All());
+            locationService.CalculateLocationDistances(taleRepo.All());
         }
 
         public FairyTale FindFairyTaleByName(string name)
@@ -62,6 +56,7 @@ namespace DddEfteling.FairyTales.Controls
 
         public void HandleVisitorArrivingAtFairyTale(Guid visitor)
         {
+            logger.LogDebug("Visitor with ID {VisitorId} arrived at fairy tale", visitor.ToString());
             var payload = new Dictionary<string, string>()
             {
                 {"Visitor", visitor.ToString() },
@@ -92,7 +87,7 @@ namespace DddEfteling.FairyTales.Controls
 
         public FairyTale NearestFairyTale(Guid fairyTaleGuid, List<Guid> exclusionList);
 
-        public FairyTale NextLocation(Guid rideGuid, List<Guid> exclusionList);
+        public FairyTale NextLocation(Guid taleGuid, List<Guid> exclusionList);
 
         public void HandleVisitorArrivingAtFairyTale(Guid visitor);
 
