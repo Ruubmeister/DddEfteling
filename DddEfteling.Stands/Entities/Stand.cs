@@ -3,7 +3,6 @@ using DddEfteling.Shared.Entities;
 using Geolocation;
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
