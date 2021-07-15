@@ -82,17 +82,14 @@ namespace DddEfteling.Visitors.Controls
         {
             if (visitor.TargetLocation != null)
             {
-                logger.LogDebug("Target location is already set, skipping finding new location");
                 return;
             }
             
             ILocationDto previousLocation = visitor.GetLastLocation();
             LocationType type = visitor.GetLocationType(previousLocation?.LocationType);
-            logger.LogDebug("New location type for {Visitor} is {Type}", visitor.Guid, type);
 
             IVisitorLocationStrategy strategy = locationTypeStrategy.GetStrategy(type);
             visitor.LocationStrategy = strategy;
-            logger.LogDebug("Strategy for {Visitor} is set", visitor.Guid);
             strategy.SetNewLocation(visitor);
         }
         

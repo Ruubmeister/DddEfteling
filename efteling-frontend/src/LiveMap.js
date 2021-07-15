@@ -132,6 +132,7 @@ class LiveMap extends React.Component {
         var iconFeature = this.getFeature(visitor.guid, visitor.currentLocation.longitude, visitor.currentLocation.latitude);
         //iconFeature.setStyle(visitorIconStyle);
         visitorsSource.addFeature(iconFeature);
+
       } else {
         mapVisitor.getGeometry().setCoordinates(fromLonLat([visitor.currentLocation.longitude, visitor.currentLocation.latitude]));
       }
