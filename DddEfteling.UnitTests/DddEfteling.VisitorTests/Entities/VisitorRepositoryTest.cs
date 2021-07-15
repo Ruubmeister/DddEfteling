@@ -31,7 +31,7 @@ namespace DddEfteling.VisitorTests.Entities
         [Fact]
         public void All_GivenNoVisitors_ExpectEmptyList()
         {
-            VisitorRepository visitorRepository = new(random, loggerMock.Object);
+            VisitorRepository visitorRepository = new(loggerMock.Object);
             
             Assert.Empty( visitorRepository.All());
         }
@@ -39,7 +39,7 @@ namespace DddEfteling.VisitorTests.Entities
         [Fact]
         public void AddVisitors_AddThreeVisitors_ExpectThreeVisitors()
         {
-            VisitorRepository visitorRepository = new(random, loggerMock.Object);
+            VisitorRepository visitorRepository = new(loggerMock.Object);
             visitorRepository.AddVisitors(3);
             
             Assert.Equal(3, visitorRepository.All().Count);

@@ -8,8 +8,7 @@ import {getStands} from './redux/stand-selectors';
 import {getVisitors} from './redux/visitor-selectors';
 
 import Map from 'ol/Map';
-import Style from 'ol/style/Style';
-import Icon from 'ol/style/Icon';
+import {Style, Icon, Circle, Fill, Stroke} from 'ol/style';
 import Tile from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import View from 'ol/View';
@@ -43,6 +42,22 @@ var standIconStyle = new Style({
       anchorXUnits: 'fraction',
       anchorYUnits: 'pixels',
       src: 'data/stand-icon.png'
+  })
+});
+
+var fill = new Fill({
+  color: 'rgba(240,240,240,0.4)'
+});
+var stroke = new Stroke({
+  color: '#333333',
+  width: 1.0
+});
+
+var visitorIconStyle = new Style({
+  image: new Circle({
+    fill: fill,
+      stroke: stroke,
+      radius: 3
   })
 });
 
@@ -110,8 +125,8 @@ class LiveMap extends React.Component {
       var mapVisitor = visitorsSource.getFeatureById(visitor.guid);
       if(mapVisitor == null){
         var iconFeature = this.getFeature(visitor.guid, visitor.currentLocation.longitude, visitor.currentLocation.latitude);
+        iconFeature.setStyle(visitorIconStyle);
         visitorsSource.addFeature(iconFeature);
-
       } else {
         mapVisitor.getGeometry().setCoordinates(fromLonLat([visitor.currentLocation.longitude, visitor.currentLocation.latitude]));
       }
