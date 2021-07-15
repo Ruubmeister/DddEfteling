@@ -44,6 +44,8 @@ namespace DddEfteling.Visitors.Controls
                 return;
             }
 
+            logger.LogInformation("Handling {Count} idle visitors", idleVisitors.Count);
+            
             foreach (var idleVisitor in idleVisitors)
             {
                 SetLocation(idleVisitor);
@@ -57,17 +59,18 @@ namespace DddEfteling.Visitors.Controls
                 }
                 
                 visitorMovementService.SetNextStepDistance(idleVisitor);
+                logger.LogInformation("Next step is {stepSize} in size", idleVisitor.NextStepDistance);
 
                 if (VisitorMovementService.IsInLocationRange(idleVisitor))
                 {
-                    logger.LogDebug("Visitor {VisitorGuid} arrived at location {LocationName}", 
+                    logger.LogInformation("Visitor {VisitorGuid} arrived at location {LocationName}", 
                         idleVisitor.Guid, idleVisitor.TargetLocation.Name);
                     idleVisitor.LocationStrategy.StartLocationActivity(idleVisitor);
                     idleVisitor.AvailableAt = null;
                 }
                 else
                 {
-                    logger.LogDebug("Visitor {VisitorGuid} walking to location {LocationName}", 
+                    logger.LogInformation("Visitor {VisitorGuid} walking to location {LocationName}", 
                         idleVisitor.Guid, idleVisitor.TargetLocation.Name);
                     idleVisitor.WalkToDestination();
                     this.NotifyIdleVisitor(idleVisitor.Guid);
@@ -79,14 +82,17 @@ namespace DddEfteling.Visitors.Controls
         {
             if (visitor.TargetLocation != null)
             {
+                logger.LogInformation("Target location is already set, skipping finding new location");
                 return;
             }
             
             ILocationDto previousLocation = visitor.GetLastLocation();
             LocationType type = visitor.GetLocationType(previousLocation?.LocationType);
+            logger.LogInformation("New location type for {Visitor} is {Type}", visitor.Guid, type);
 
             IVisitorLocationStrategy strategy = locationTypeStrategy.GetStrategy(type);
             visitor.LocationStrategy = strategy;
+            logger.LogInformation("Strategy for {Visitor} is set", visitor.Guid);
             strategy.SetNewLocation(visitor);
         }
         

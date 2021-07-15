@@ -16,7 +16,7 @@ namespace DddEfteling.Visitors.Controls
         
         public void SetNextStepDistance(Visitor visitor)
         {
-            double normalizedStep = (double) random.Next(50, 150) / 100;
+            double normalizedStep = (double) random.Next(100, 300) / 100;
             TimeSpan timeIdle = visitor.AvailableAt.HasValue ? DateTime.Now - visitor.AvailableAt.Value : 
                 TimeSpan.FromSeconds(1);
 

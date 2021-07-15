@@ -11,6 +11,8 @@ using Polly;
 using System;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using DddEfteling.Shared.Entities;
+using DddEfteling.Visitors.Entities;
 
 namespace DddEfteling.Visitors
 {
@@ -57,6 +59,9 @@ namespace DddEfteling.Visitors
             })
                 .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(6, _ => TimeSpan.FromSeconds(10)));
 
+            services.AddSingleton<IVisitorRepository, VisitorRepository>();
+            services.AddSingleton<ILocationTypeStrategy, LocationTypeStrategy>();
+            services.AddSingleton<IVisitorMovementService, VisitorMovementService>();
             services.AddSingleton<IEventProducer, EventProducer>();
             services.AddSingleton<IEventConsumer, EventConsumer>();
             services.AddSingleton<IVisitorControl, VisitorControl>();
@@ -75,12 +80,20 @@ namespace DddEfteling.Visitors
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
-            IEventConsumer eventConsumer, IVisitorControl visitorControl)
+            IEventConsumer eventConsumer, IVisitorControl visitorControl, ILocationTypeStrategy locationTypeStrategy,
+            IEventProducer producer, IFairyTaleClient fairyTaleClient, IRideClient rideClient, IStandClient standClient)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+            
+            locationTypeStrategy.Register(LocationType.FAIRYTALE, 
+                new VisitorFairyTaleStrategy(producer, fairyTaleClient));
+            locationTypeStrategy.Register(LocationType.RIDE, 
+                new VisitorRideStrategy(producer, rideClient));
+            locationTypeStrategy.Register(LocationType.STAND, 
+                new VisitorStandStrategy(producer, standClient));
 
             app.UseRouting();
             app.UseCors(DefaultCorsPolicy);
@@ -109,11 +122,11 @@ namespace DddEfteling.Visitors
                 int currentVisitors = 0;
                 while (currentVisitors <= maxVisitors)
                 {
-                    int newVisitors = random.Next(2, 10);
+                    int newVisitors = random.Next(5, 15);
 
                     visitorControl.AddVisitors(newVisitors);
                     currentVisitors += newVisitors;
-                    Task.Delay(5000).Wait();
+                    Task.Delay(2000).Wait();
                 }
             });
         }
