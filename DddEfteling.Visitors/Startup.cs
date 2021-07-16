@@ -118,7 +118,7 @@ namespace DddEfteling.Visitors
             _ = Task.Run(() =>
             {
                 Random random = new Random();
-                int maxVisitors = 15000;
+                int maxVisitors = 2000;
                 int currentVisitors = 0;
                 while (currentVisitors <= maxVisitors)
                 {
