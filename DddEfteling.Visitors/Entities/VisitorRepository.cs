@@ -7,17 +7,17 @@ using Microsoft.Extensions.Logging;
 
 namespace DddEfteling.Visitors.Entities
 {
-    public class VisitorRepository
+    public class VisitorRepository: IVisitorRepository
     {
         private readonly Random random;
         private readonly ILogger<VisitorRepository> logger;
         private readonly Coordinate startCoordinate = new Coordinate(51.649175, 5.045545);
         private ConcurrentBag<Visitor> Visitors { get; } = new ConcurrentBag<Visitor>();
 
-        public VisitorRepository(Random random, ILogger<VisitorRepository> logger)
+        public VisitorRepository( ILogger<VisitorRepository> logger)
         {
             this.logger = logger;
-            this.random = random;
+            this.random = new Random();
         }
 
         public VisitorRepository(Random random, ILogger<VisitorRepository> logger, ConcurrentBag<Visitor> visitors)

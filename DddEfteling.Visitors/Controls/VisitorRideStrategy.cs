@@ -7,7 +7,7 @@ using DddEfteling.Visitors.Entities;
 
 namespace DddEfteling.Visitors.Controls
 {
-    public class VisitorRideStrategy
+    public class VisitorRideStrategy: IVisitorLocationStrategy
     {
         private readonly IEventProducer eventProducer;
         private readonly IRideClient rideClient;

@@ -18,7 +18,7 @@ namespace DddEfteling.SharedTests.Controls
         }
 
         [Fact]
-        public void IsInRange_CoordindatesAreInRange_expectTrue()
+        public void IsInRange_CoordinatesAreInRange_expectTrue()
         {
             Coordinate coordinate1 = new Coordinate(51.648602, 5.052049);
             Coordinate coordinate2 = new Coordinate(51.648725, 5.052186);
@@ -27,7 +27,7 @@ namespace DddEfteling.SharedTests.Controls
         }
 
         [Fact]
-        public void IsInRange_CoordindatesAreNotInRange_expectFalse()
+        public void IsInRange_CoordinatesAreNotInRange_expectFalse()
         {
             Coordinate coordinate1 = new Coordinate(51.648602, 5.052049);
             Coordinate coordinate2 = new Coordinate(51.649188, 5.052295);

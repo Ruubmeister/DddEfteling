@@ -2,6 +2,7 @@ import React from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faMusic } from '@fortawesome/free-solid-svg-icons';
 import Button from "react-bootstrap/Button";
+import axios from 'axios';
 
 
 class Music extends React.Component {
@@ -19,9 +20,26 @@ class Music extends React.Component {
     }
   
     togglePlay = () => {
-      this.setState({ play: !this.state.play }, () => {
-        this.state.play ? this.audio.play() : this.audio.pause();
-      });
+      if(this.musicIsAvailable){
+        this.setState({ play: !this.state.play }, () => {
+          this.state.play ? this.audio.play() : this.audio.pause();
+        });
+      }
+    }
+
+    musicIsAvailable = () => {
+      axios.get(this.props.url)
+      .then(function(){
+        return true;
+      })
+      .catch(function (error) {
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+        return false;
+    });
     }
   
     render() {

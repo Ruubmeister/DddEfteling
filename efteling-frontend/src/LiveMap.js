@@ -8,8 +8,7 @@ import {getStands} from './redux/stand-selectors';
 import {getVisitors} from './redux/visitor-selectors';
 
 import Map from 'ol/Map';
-import Style from 'ol/style/Style';
-import Icon from 'ol/style/Icon';
+import {Style, Icon, Circle, Fill, Stroke} from 'ol/style';
 import Tile from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import View from 'ol/View';
@@ -46,6 +45,22 @@ var standIconStyle = new Style({
   })
 });
 
+var fill = new Fill({
+  color: 'rgba(240,240,240,0.4)'
+});
+var stroke = new Stroke({
+  color: '#333333',
+  width: 1.0
+});
+
+var visitorIconStyle = new Style({
+  image: new Circle({
+    fill: fill,
+      stroke: stroke,
+      radius: 3
+  })
+});
+
 class LiveMap extends React.Component {
 
     eftelingMap = null;
@@ -73,6 +88,10 @@ class LiveMap extends React.Component {
           zoom: 16
       })
     });
+    this.visitorsLayer.setStyle(visitorIconStyle);
+    this.ridesLayer.setStyle(rideIconStyle);
+    this.fairyTalesLayer.setStyle(fairyTaleIconStyle);
+    this.standsLayer.setStyle(standIconStyle);
     
     this.eftelingMap.addLayer(this.ridesLayer);
     this.eftelingMap.addLayer(this.fairyTalesLayer);
@@ -86,7 +105,8 @@ class LiveMap extends React.Component {
       });
 
       var vectorLayer = new VectorLayer({
-        source: vectorSource
+        source: vectorSource,
+        renderMode: 'image'
       });
 
       return vectorLayer;
@@ -110,8 +130,8 @@ class LiveMap extends React.Component {
       var mapVisitor = visitorsSource.getFeatureById(visitor.guid);
       if(mapVisitor == null){
         var iconFeature = this.getFeature(visitor.guid, visitor.currentLocation.longitude, visitor.currentLocation.latitude);
+        //iconFeature.setStyle(visitorIconStyle);
         visitorsSource.addFeature(iconFeature);
-
       } else {
         mapVisitor.getGeometry().setCoordinates(fromLonLat([visitor.currentLocation.longitude, visitor.currentLocation.latitude]));
       }
@@ -126,7 +146,7 @@ class LiveMap extends React.Component {
 
       if(mapRide == null){
         var iconFeature = this.getFeature(ride.guid, ride.coordinates.longitude, ride.coordinates.latitude);
-        iconFeature.setStyle(rideIconStyle);
+        //iconFeature.setStyle(rideIconStyle);
         ridesSource.addFeature(iconFeature);
       } else {
         mapRide.getGeometry().setCoordinates(fromLonLat([ride.coordinates.longitude, ride.coordinates.latitude]));
@@ -142,7 +162,7 @@ class LiveMap extends React.Component {
 
       if(mapTale == null){
         var iconFeature = this.getFeature(tale.guid, tale.coordinates.longitude, tale.coordinates.latitude);
-        iconFeature.setStyle(fairyTaleIconStyle);
+        //iconFeature.setStyle(fairyTaleIconStyle);
         fairyTalesSource.addFeature(iconFeature);
       } else {
         mapTale.getGeometry().setCoordinates(fromLonLat([tale.coordinates.longitude, tale.coordinates.latitude]));
@@ -158,7 +178,7 @@ class LiveMap extends React.Component {
 
       if(mapStand == null){
         var iconFeature = this.getFeature(stand.guid, stand.coordinates.longitude, stand.coordinates.latitude);
-        iconFeature.setStyle(standIconStyle);
+        //iconFeature.setStyle(standIconStyle);
         standsSource.addFeature(iconFeature);
 
       } else {
