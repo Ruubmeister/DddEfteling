@@ -16,7 +16,7 @@ import {fromLonLat} from 'ol/proj';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import VectorSource from 'ol/source/Vector';
-import VectorLayer from 'ol/layer/Vector';
+import VectorImageLayer from 'ol/layer/VectorImage';
 
 var rideIconStyle = new Style({
   image: new Icon({
@@ -78,6 +78,7 @@ class LiveMap extends React.Component {
   componentDidMount() {
     this.eftelingMap = new Map({
       target: this.map.current,
+      renderer: (['webgl', 'canvas']),
       layers: [
           new Tile({
               source: new OSM()
@@ -104,9 +105,8 @@ class LiveMap extends React.Component {
         features: []
       });
 
-      var vectorLayer = new VectorLayer({
-        source: vectorSource,
-        renderMode: 'image'
+      var vectorLayer = new VectorImageLayer({
+        source: vectorSource
       });
 
       return vectorLayer;
@@ -124,18 +124,31 @@ class LiveMap extends React.Component {
   }
 
   updateVisitors(){
-    var visitorsSource = this.visitorsLayer.getSource();
-    this.props.visitors.forEach(visitor => {
 
-      var mapVisitor = visitorsSource.getFeatureById(visitor.guid);
-      if(mapVisitor == null){
-        var iconFeature = this.getFeature(visitor.guid, visitor.currentLocation.longitude, visitor.currentLocation.latitude);
-        //iconFeature.setStyle(visitorIconStyle);
-        visitorsSource.addFeature(iconFeature);
-      } else {
-        mapVisitor.getGeometry().setCoordinates(fromLonLat([visitor.currentLocation.longitude, visitor.currentLocation.latitude]));
-      }
+    var vectorSource = new VectorSource({
+      features: []
     });
+
+    this.props.visitors.forEach(visitor => {
+      var iconFeature = this.getFeature(visitor.guid, visitor.currentLocation.longitude, visitor.currentLocation.latitude);
+      vectorSource.addFeature(iconFeature);
+    });
+
+    this.visitorsLayer.setSource(vectorSource);
+
+
+    // var visitorsSource = this.visitorsLayer.getSource();
+    // this.props.visitors.forEach(visitor => {
+
+    //   var mapVisitor = visitorsSource.getFeatureById(visitor.guid);
+    //   if(mapVisitor == null){
+    //     var iconFeature = this.getFeature(visitor.guid, visitor.currentLocation.longitude, visitor.currentLocation.latitude);
+    //     //iconFeature.setStyle(visitorIconStyle);
+    //     visitorsSource.addFeature(iconFeature);
+    //   } else {
+    //     mapVisitor.getGeometry().setCoordinates(fromLonLat([visitor.currentLocation.longitude, visitor.currentLocation.latitude]));
+    //   }
+    // });
   }
 
   updateRides(){
