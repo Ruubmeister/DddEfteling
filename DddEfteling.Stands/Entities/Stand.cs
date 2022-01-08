@@ -40,7 +40,9 @@ namespace DddEfteling.Stands.Entities
 
         public StandDto ToDto()
         {
-            return new StandDto(this.Guid, this.Name, this.Coordinates, this.Meals.ConvertAll(meal => meal.Name), this.Drinks.ConvertAll(drink => drink.Name));
+            return new StandDto(Guid, Name, Coordinates, 
+                Meals.ConvertAll(meal => meal.Name), 
+                Drinks.ConvertAll(drink => drink.Name));
         }
     }
 }

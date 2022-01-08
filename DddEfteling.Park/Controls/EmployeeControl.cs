@@ -42,9 +42,9 @@ namespace DddEfteling.Park.Controls
 
         public Employee HireEmployee(String firstName, String lastName, WorkplaceSkill skill)
         {
-            List<WorkplaceSkill> skills = GetPossibleSkillsFromSkill(skill);
+            var skills = GetPossibleSkillsFromSkill(skill);
 
-            Employee employee = new Employee(firstName, lastName, skills);
+            var employee = new Employee(firstName, lastName, skills);
             Employees.Add(employee);
 
             logger.LogInformation($"Hired employee: {employee.FirstName} {employee.LastName}");
@@ -53,7 +53,7 @@ namespace DddEfteling.Park.Controls
 
         public void AssignEmployee(WorkplaceDto workplace, WorkplaceSkill skill)
         {
-            Employee employee = Employees.DefaultIfEmpty(HireEmployee(nameService.RandomFirstName(), nameService.RandomLastName(), skill))
+            var employee = Employees.DefaultIfEmpty(HireEmployee(nameService.RandomFirstName(), nameService.RandomLastName(), skill))
                 .FirstOrDefault(employee => employee.ActiveWorkplace == null && employee.Skills.Contains(skill));
 
             employee.GoToWork(workplace, skill);
@@ -64,7 +64,7 @@ namespace DddEfteling.Park.Controls
                 {"Workplace", JsonConvert.SerializeObject(workplace) },
                 {"Skill", skill.ToString() }
             };
-            Event outgoingEvent = new Event(EventType.EmployeeChangedWorkplace, EventSource.Employee, payload);
+            var outgoingEvent = new Event(EventType.EmployeeChangedWorkplace, EventSource.Employee, payload);
             eventProducer.Produce(outgoingEvent);
 
             logger.LogInformation($"Employee {employee.FirstName} {employee.LastName} assigned to workspace");

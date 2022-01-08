@@ -9,11 +9,11 @@ namespace DddEfteling.Park.Entities
     [JsonConverter(typeof(RealmConverter))]
     public class Realm
     {
-        public Realm(String name)
+        public Realm(string name)
         {
             Name = name;
         }
-        public String Name { get; }
+        public string Name { get; }
 
         public List<RideDto> Rides { get; set; }
 

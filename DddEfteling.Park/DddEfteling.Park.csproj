@@ -22,10 +22,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\Vue\" />
-  </ItemGroup>
-
   <Import Project="..\DddEfteling.Shared\DddEfteling.Shared.projitems" Label="Shared" />
 
 </Project>

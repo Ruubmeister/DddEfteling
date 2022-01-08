@@ -31,13 +31,13 @@ namespace DddEfteling.Visitors.Controls
                 {"Ticket", ticket}
             };
             
-            Event waitingForOrder = new Event(EventType.WaitingForOrder, EventSource.Visitor, eventPayload);
+            var waitingForOrder = new Event(EventType.WaitingForOrder, EventSource.Visitor, eventPayload);
             eventProducer.Produce(waitingForOrder);
         }
 
         public void SetNewLocation(Visitor visitor)
         {
-            ILocationDto previousLocation = visitor.GetLastLocation();
+            var previousLocation = visitor.GetLastLocation();
 
             visitor.TargetLocation = null;
 

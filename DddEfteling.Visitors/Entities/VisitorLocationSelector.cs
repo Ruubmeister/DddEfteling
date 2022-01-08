@@ -9,7 +9,7 @@ namespace DddEfteling.Visitors.Entities
     {
         private readonly Random random;
 
-        private readonly Dictionary<LocationType, int> locationNumbers = new Dictionary<LocationType, int>()
+        private readonly Dictionary<LocationType, int> locationNumbers = new ()
         {
             {LocationType.FAIRYTALE, 30 },
             {LocationType.RIDE, 60 },
@@ -23,7 +23,7 @@ namespace DddEfteling.Visitors.Entities
 
         public void ReduceAndBalance(LocationType type)
         {
-            int reducer = 0;
+            var reducer = 0;
             switch (type)
             {
                 case LocationType.FAIRYTALE:
@@ -37,13 +37,13 @@ namespace DddEfteling.Visitors.Entities
                     break;
             }
 
-            this.locationNumbers[type] -= reducer;
-            if (this.locationNumbers[type] < 0)
+            locationNumbers[type] -= reducer;
+            if (locationNumbers[type] < 0)
             {
-                this.locationNumbers[type] = 0;
+                locationNumbers[type] = 0;
             }
 
-            foreach (KeyValuePair<LocationType, int> entry in locationNumbers.Where(entry => !entry.Key.Equals(type)).ToList())
+            foreach (var entry in locationNumbers.Where(entry => !entry.Key.Equals(type)).ToList())
             {
                 int newValue = entry.Value + (reducer / 2);
                 locationNumbers[entry.Key] = newValue;
@@ -52,9 +52,9 @@ namespace DddEfteling.Visitors.Entities
 
         public LocationType GetLocation(LocationType? previousType)
         {
-            int fairyEnd = locationNumbers[LocationType.FAIRYTALE];
-            int rideEnd = fairyEnd + locationNumbers[LocationType.RIDE];
-            int standEnd = rideEnd + locationNumbers[LocationType.STAND];
+            var fairyEnd = locationNumbers[LocationType.FAIRYTALE];
+            var rideEnd = fairyEnd + locationNumbers[LocationType.RIDE];
+            var standEnd = rideEnd + locationNumbers[LocationType.STAND];
 
             if (!previousType.Equals(null))
             {
@@ -72,20 +72,14 @@ namespace DddEfteling.Visitors.Entities
                 }
             }
 
-            int randomNumber = random.Next(1, standEnd);
+            var randomNumber = random.Next(1, standEnd);
 
             if (randomNumber <= fairyEnd)
             {
                 return LocationType.FAIRYTALE;
             }
-            else if (randomNumber <= rideEnd)
-            {
-                return LocationType.RIDE;
-            }
-            else
-            {
-                return LocationType.STAND;
-            }
+
+            return (randomNumber <= rideEnd) ? LocationType.RIDE : LocationType.STAND;
         }
 
     }

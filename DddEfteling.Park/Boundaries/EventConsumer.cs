@@ -22,15 +22,16 @@ namespace DddEfteling.Park.Boundaries
         public override void HandleMessage(string incomingMessage)
         {
 
-            Event incomingEvent = JsonConvert.DeserializeObject<Event>(incomingMessage);
+            var incomingEvent = JsonConvert.DeserializeObject<Event>(incomingMessage);
 
-            if (incomingEvent.Type.Equals(EventType.RequestEmployee) && incomingEvent.Payload.TryGetValue("Workplace", out string workplaceString) &&
-                    incomingEvent.Payload.TryGetValue("Skill", out string skillString))
+            if (incomingEvent is not null  && incomingEvent.Type.Equals(EventType.RequestEmployee) && 
+                incomingEvent.Payload.TryGetValue("Workplace", out var workplaceString) &&
+                    incomingEvent.Payload.TryGetValue("Skill", out var skillString))
             {
                 WorkplaceDto workplaceDto = JsonConvert.DeserializeObject<WorkplaceDto>(workplaceString);
                 if (Enum.TryParse(skillString, out WorkplaceSkill skill))
                 {
-                    this.employeeControl.AssignEmployee(workplaceDto, skill);
+                    employeeControl.AssignEmployee(workplaceDto, skill);
                 }
             }
         }

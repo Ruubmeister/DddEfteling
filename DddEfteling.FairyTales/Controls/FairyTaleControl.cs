@@ -20,7 +20,7 @@ namespace DddEfteling.FairyTales.Controls
         public FairyTaleControl(ILogger<FairyTaleControl> logger, IEventProducer eventProducer, 
             ILocationService locationService)
         {
-            this.taleRepo = new LocationRepository<FairyTale>(locationService, 
+            taleRepo = new LocationRepository<FairyTale>(locationService, 
                 new LocationConverter<FairyTale>( (obj) => new FairyTale(obj)));
             
             this.logger = logger;
@@ -64,14 +64,14 @@ namespace DddEfteling.FairyTales.Controls
             };
 
             var outgoingEvent = new Event(EventType.WatchingFairyTale, EventSource.FairyTale, payload);
-            this.eventProducer.Produce(outgoingEvent);
+            eventProducer.Produce(outgoingEvent);
         }
 
-        public DateTime GetEndDateTimeForVisitorWatchingFairyTale()
+        private DateTime GetEndDateTimeForVisitorWatchingFairyTale()
         {
             // Todo: Lets make this into settings later
 
-            int watchInSeconds = this.random.Next(120, 300);
+            var watchInSeconds = random.Next(120, 300);
             return DateTime.Now.AddSeconds(watchInSeconds);
         }
     }

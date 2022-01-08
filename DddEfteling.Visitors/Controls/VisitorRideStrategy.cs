@@ -26,7 +26,7 @@ namespace DddEfteling.Visitors.Controls
             };
             
             eventPayload.Add("Ride", visitor.TargetLocation.Guid.ToString());
-            Event steppingIntoRide = new Event(EventType.StepInRideLine, EventSource.Visitor, eventPayload);
+            var steppingIntoRide = new Event(EventType.StepInRideLine, EventSource.Visitor, eventPayload);
             eventProducer.Produce(steppingIntoRide);
             
             visitor.DoActivity(visitor.TargetLocation);
@@ -34,7 +34,7 @@ namespace DddEfteling.Visitors.Controls
 
         public void SetNewLocation(Visitor visitor)
         {
-            ILocationDto previousLocation = visitor.GetLastLocation();
+            var previousLocation = visitor.GetLastLocation();
 
             visitor.TargetLocation = null;
 

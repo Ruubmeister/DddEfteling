@@ -15,7 +15,7 @@ namespace DddEfteling.Park.Controls
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            JObject obj = JObject.Load(reader);
+            var obj = JObject.Load(reader);
             return new Realm(obj["name"].ToString());
         }
 

@@ -13,28 +13,28 @@ namespace DddEfteling.FairyTales.Entities
 
         public FairyTale() : base(Guid.NewGuid(), LocationType.FAIRYTALE) { }
 
-        public FairyTale(String name, Coordinate coordinates): base(Guid.NewGuid(), LocationType.FAIRYTALE)
+        public FairyTale(string name, Coordinate coordinates): base(Guid.NewGuid(), LocationType.FAIRYTALE)
         {
-            this.Name = name;
-            this.Coordinates = coordinates;
+            Name = name;
+            Coordinates = coordinates;
         }
 
-        public FairyTale(JObject obj): base(System.Guid.NewGuid(), LocationType.FAIRYTALE)
+        public FairyTale(JObject obj): base(Guid.NewGuid(), LocationType.FAIRYTALE)
         {
-            this.Name = obj["name"].ToString();
-            this.Coordinates = new Coordinate(
+            Name = obj["name"].ToString();
+            Coordinates = new Coordinate(
                 obj["coordinates"]["lat"].ToObject<double>(),
                 obj["coordinates"]["long"].ToObject<double>()
                 );
         }
 
         [JsonIgnore]
-        public ConcurrentDictionary<Guid, DateTime> VisitorWithTimeDone { get; } = new ConcurrentDictionary<Guid, DateTime>();
+        public ConcurrentDictionary<Guid, DateTime> VisitorWithTimeDone { get; } = new ();
         
 
         public FairyTaleDto ToDto()
         {
-            return new FairyTaleDto(this.Guid, this.Name, this.Coordinates, this.LocationType);
+            return new FairyTaleDto(Guid, Name, Coordinates, LocationType);
         }
     }
 }

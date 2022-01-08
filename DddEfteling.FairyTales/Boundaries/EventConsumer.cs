@@ -22,11 +22,12 @@ namespace DddEfteling.FairyTales.Boundaries
         public override void HandleMessage(string incomingMessage)
         {
 
-            Event incomingEvent = JsonConvert.DeserializeObject<Event>(incomingMessage);
+            var incomingEvent = JsonConvert.DeserializeObject<Event>(incomingMessage);
 
-            if (incomingEvent.Type.Equals(EventType.ArrivedAtFairyTale) && incomingEvent.Payload.TryGetValue("Visitor", out string visitorGuid))
+            if (incomingEvent is not null && incomingEvent.Type.Equals(EventType.ArrivedAtFairyTale)
+                                          && incomingEvent.Payload.TryGetValue("Visitor", out var visitorGuid))
             {
-                this.fairyTaleControl.HandleVisitorArrivingAtFairyTale(Guid.Parse(visitorGuid));
+                fairyTaleControl.HandleVisitorArrivingAtFairyTale(Guid.Parse(visitorGuid));
             }
         }
     }

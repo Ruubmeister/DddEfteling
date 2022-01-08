@@ -25,35 +25,35 @@ namespace DddEfteling.Visitors.Boundaries
         public override void HandleMessage(string incomingMessage)
         {
 
-            Event incomingEvent = JsonConvert.DeserializeObject<Event>(incomingMessage);
+            var incomingEvent = JsonConvert.DeserializeObject<Event>(incomingMessage);
 
             if (incomingEvent.Type.Equals(EventType.VisitorsUnboarded))
             {
-                List<Guid> visitors = JsonConvert.DeserializeObject<List<Guid>>(incomingEvent.Payload.First(item => item.Key.Equals("Visitors")).Value);
-                DateTime dateTime = JsonConvert.DeserializeObject<DateTime>(incomingEvent.Payload.First(item => item.Key.Equals("DateTime")).Value);
-                foreach (Guid visitorGuid in visitors)
+                var visitors = JsonConvert.DeserializeObject<List<Guid>>(incomingEvent.Payload.First(item => item.Key.Equals("Visitors")).Value);
+                var dateTime = JsonConvert.DeserializeObject<DateTime>(incomingEvent.Payload.First(item => item.Key.Equals("DateTime")).Value);
+                foreach (var visitorGuid in visitors)
                 {
-                    Visitor visitor = visitorControl.GetVisitor(visitorGuid);
+                    var visitor = visitorControl.GetVisitor(visitorGuid);
                     visitor.TargetLocation = null;
                     visitorControl.UpdateVisitorAvailabilityAt(visitorGuid, dateTime);
                 }
             }
-            else if (incomingEvent.Type.Equals(EventType.WatchingFairyTale) && incomingEvent.Payload.TryGetValue("Visitor", out string visitorGuid) &&
-                incomingEvent.Payload.TryGetValue("EndDateTime", out string endDateTime))
+            else if (incomingEvent.Type.Equals(EventType.WatchingFairyTale) && incomingEvent.Payload.TryGetValue("Visitor", out var visitorGuid) &&
+                incomingEvent.Payload.TryGetValue("EndDateTime", out var endDateTime))
             {
-                Guid visitorGuidObject = Guid.Parse(visitorGuid);
-                this.visitorControl.RemoveVisitorTargetLocation(visitorGuidObject);
-                this.visitorControl.UpdateVisitorAvailabilityAt(visitorGuidObject, DateTime.Parse(endDateTime));
+                var visitorGuidObject = Guid.Parse(visitorGuid);
+                visitorControl.RemoveVisitorTargetLocation(visitorGuidObject);
+                visitorControl.UpdateVisitorAvailabilityAt(visitorGuidObject, DateTime.Parse(endDateTime));
             }
             else if (incomingEvent.Type.Equals(EventType.WaitingForOrder) &&
-                     incomingEvent.Payload.TryGetValue("Visitor", out string waitingForOrderVisitorGuid) &&
-                     incomingEvent.Payload.TryGetValue("Ticket", out string ticket))
+                     incomingEvent.Payload.TryGetValue("Visitor", out var waitingForOrderVisitorGuid) &&
+                     incomingEvent.Payload.TryGetValue("Ticket", out var ticket))
             {
-                this.visitorControl.AddVisitorWaitingForOrder(ticket, Guid.Parse(waitingForOrderVisitorGuid));
+                visitorControl.AddVisitorWaitingForOrder(ticket, Guid.Parse(waitingForOrderVisitorGuid));
             }
-            else if (incomingEvent.Type.Equals(EventType.OrderReady) && incomingEvent.Payload.TryGetValue("Order", out string order))
+            else if (incomingEvent.Type.Equals(EventType.OrderReady) && incomingEvent.Payload.TryGetValue("Order", out var order))
             {
-                this.visitorControl.NotifyOrderReady(order);
+                visitorControl.NotifyOrderReady(order);
             }
         }
     }

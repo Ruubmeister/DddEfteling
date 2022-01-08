@@ -8,8 +8,8 @@ namespace DddEfteling.Shared.Controls
     public class NameService : INameService
     {
         private readonly Random rnd = new Random();
-        private List<String> FirstNames { get; }
-        private List<String> LastNames { get; }
+        private List<string> FirstNames { get; }
+        private List<string> LastNames { get; }
 
         public NameService()
         {
@@ -19,8 +19,8 @@ namespace DddEfteling.Shared.Controls
 
         private static List<string> ReadJsonFile(string file)
         {
-            using StreamReader r = new StreamReader(file);
-            string json = r.ReadToEnd();
+            using var r = new StreamReader(file);
+            var json = r.ReadToEnd();
             return JsonConvert.DeserializeObject<List<string>>(json);
         }
 

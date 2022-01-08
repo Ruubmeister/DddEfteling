@@ -14,12 +14,12 @@ namespace DddEfteling.Shared.Boundaries
                 BootstrapServers = broker
             };
             
-            this.Producer = new ProducerBuilder<Null, string>(config).Build();
+            Producer = new ProducerBuilder<Null, string>(config).Build();
         }
 
         protected KafkaProducer(IProducer<Null, string> producer)
         {
-            this.Producer = producer;
+            Producer = producer;
         }
     }
 }

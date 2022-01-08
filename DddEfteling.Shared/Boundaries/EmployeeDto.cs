@@ -14,10 +14,10 @@ namespace DddEfteling.Shared.Boundaries
 
         public EmployeeDto(Guid guid, string firstName, string lastName, List<string> skills)
         {
-            this.Guid = guid;
-            this.FirstName = firstName;
-            this.LastName = lastName;
-            this.Skills = skills;
+            Guid = guid;
+            FirstName = firstName;
+            LastName = lastName;
+            Skills = skills;
         }
 
     }

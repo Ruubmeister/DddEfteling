@@ -27,14 +27,14 @@ namespace DddEfteling.Visitors.Controls
             };
             
             eventPayload.Add("FairyTale", visitor.TargetLocation.Guid.ToString());
-            Event watchingFairyTale = new Event(EventType.ArrivedAtFairyTale, EventSource.Visitor, eventPayload);
+            var watchingFairyTale = new Event(EventType.ArrivedAtFairyTale, EventSource.Visitor, eventPayload);
             eventProducer.Produce(watchingFairyTale);
             visitor.DoActivity(visitor.TargetLocation);
         }
 
         public void SetNewLocation(Visitor visitor)
         {
-            ILocationDto previousLocation = visitor.GetLastLocation();
+            var previousLocation = visitor.GetLastLocation();
 
             visitor.TargetLocation = null;
 

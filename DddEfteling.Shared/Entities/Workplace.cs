@@ -18,11 +18,11 @@ namespace DddEfteling.Shared.Entities
             }
         }
 
-        public readonly Dictionary<WorkplaceSkill, int> skillRequiredEmployeeMap = new Dictionary<WorkplaceSkill, int>();
+        public readonly Dictionary<WorkplaceSkill, int> skillRequiredEmployeeMap = new ();
 
         public void setEmployeeSkillRequirement(WorkplaceSkill skill, int requirement)
         {
-            this.skillRequiredEmployeeMap[skill] = requirement;
+            skillRequiredEmployeeMap[skill] = requirement;
         }
 
         public int requiredEmployeesForSkill(List<EmployeeDto> rideEmployees, WorkplaceSkill skill)
@@ -33,7 +33,7 @@ namespace DddEfteling.Shared.Entities
 
         public WorkplaceDto ToWorkplaceDto()
         {
-            return new WorkplaceDto(this.Guid, this.LocationType);
+            return new WorkplaceDto(Guid, LocationType);
         }
     }
 }

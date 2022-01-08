@@ -50,17 +50,17 @@ namespace DddEfteling.Rides.Controls
 
         public void OpenRides()
         {
-            foreach (Ride ride in rideRepo.All().Where(ride => ride.Status.Equals(RideStatus.Closed)))
+            foreach (var ride in rideRepo.All().Where(ride => ride.Status.Equals(RideStatus.Closed)))
             {
                 ride.ToOpen();
                 logger.LogInformation($"Ride {ride.Name} opened");
-                this.CheckRequiredEmployees(ride);
+                CheckRequiredEmployees(ride);
             }
         }
 
         public void HandleOpenRides()
         {
-            foreach (Ride ride in rideRepo.All().Where(ride => ride.Status.Equals(RideStatus.Open)))
+            foreach (var ride in rideRepo.All().Where(ride => ride.Status.Equals(RideStatus.Open)))
             {
 
                 if (ride.EndTime > DateTime.Now)
@@ -68,7 +68,7 @@ namespace DddEfteling.Rides.Controls
                     continue;
                 }
 
-                List<VisitorDto> unboardedVisitors = ride.UnboardVisitors();
+                var unboardedVisitors = ride.UnboardVisitors();
 
                 if (ride.Status.Equals(RideStatus.Open))
                 {
@@ -83,7 +83,7 @@ namespace DddEfteling.Rides.Controls
                         { "DateTime", JsonConvert.SerializeObject(DateTime.Now)}
                     };
 
-                    Event unboardedEvent = new Event(EventType.VisitorsUnboarded, EventSource.Ride, payload);
+                    var unboardedEvent = new Event(EventType.VisitorsUnboarded, EventSource.Ride, payload);
                     eventProducer.Produce(unboardedEvent);
                 }
 
@@ -95,7 +95,7 @@ namespace DddEfteling.Rides.Controls
         {
             await Task.Run(() =>
             {
-                foreach (Ride ride in rideRepo.All().Where(ride => ride.Status.Equals(RideStatus.Open)))
+                foreach (var ride in rideRepo.All().Where(ride => ride.Status.Equals(RideStatus.Open)))
                 {
                     logger.LogInformation($"Ride {ride.Name} closed");
                     ride.ToClosed();
@@ -106,36 +106,21 @@ namespace DddEfteling.Rides.Controls
 
         public void RideToMaintenance(Guid guid)
         {
-            Ride ride = this.rideRepo.All().First(ride => ride.Guid.Equals(guid));
-
-            if(ride == null)
-            {
-                return;
-            }
+            var ride = rideRepo.All().First(ride => ride.Guid.Equals(guid));
 
             ride.ToMaintenance();
         }
 
         public void RideToOpen(Guid guid)
         {
-            Ride ride = this.rideRepo.All().First(ride => ride.Guid.Equals(guid));
-
-            if (ride == null)
-            {
-                return;
-            }
-
+            var ride = rideRepo.All().First(ride => ride.Guid.Equals(guid));
+            
             ride.ToOpen();
         }
 
         public void RideToClosed(Guid guid)
         {
-            Ride ride = this.rideRepo.All().First(ride => ride.Guid.Equals(guid));
-
-            if (ride == null)
-            {
-                return;
-            }
+            var ride = rideRepo.All().First(ride => ride.Guid.Equals(guid));
 
             ride.ToClosed();
         }
@@ -162,14 +147,14 @@ namespace DddEfteling.Rides.Controls
 
         public Ride GetRandom()
         {
-            return this.rideRepo.GetRandom();
+            return rideRepo.GetRandom();
         }
 
         public void HandleEmployeeChangedWorkplace(WorkplaceDto workplace, Guid employee, WorkplaceSkill skill)
         {
-            if (this.rideRepo.All().Any(ride => ride.Guid.Equals(workplace.Guid)))
+            if (rideRepo.All().Any(ride => ride.Guid.Equals(workplace.Guid)))
             {
-                Ride ride = rideRepo.All().First(ride => ride.Guid.Equals(workplace.Guid));
+                var ride = rideRepo.All().First(ride => ride.Guid.Equals(workplace.Guid));
 
                 ride.AddEmployee(employee, skill);
             }
@@ -177,10 +162,10 @@ namespace DddEfteling.Rides.Controls
 
         public void HandleVisitorSteppingInRideLine(Guid visitorGuid, Guid rideGuid)
         {
-            Ride ride = rideRepo.All().First(ride => ride.Guid.Equals(rideGuid));
+            var ride = rideRepo.All().First(ride => ride.Guid.Equals(rideGuid));
             if (ride.Status.Equals(RideStatus.Open))
             {
-                VisitorDto visitor = visitorClient.GetVisitor(visitorGuid);
+                var visitor = visitorClient.GetVisitor(visitorGuid);
                 ride.AddVisitorToLine(visitor);
             }
             else
@@ -190,7 +175,7 @@ namespace DddEfteling.Rides.Controls
                                 { "Visitors", visitorGuid.ToString() }
                             };
 
-                Event unboardedEvent = new Event(EventType.VisitorsUnboarded, EventSource.Ride, payload);
+                var unboardedEvent = new Event(EventType.VisitorsUnboarded, EventSource.Ride, payload);
                 eventProducer.Produce(unboardedEvent);
             }
 

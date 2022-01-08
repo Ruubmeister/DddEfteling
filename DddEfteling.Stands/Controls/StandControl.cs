@@ -24,9 +24,9 @@ namespace DddEfteling.Stands.Controls
         {
             this.logger = logger;
             this.eventProducer = eventProducer;
-            this.standRepo = new LocationRepository<Stand>(locationService,
+            standRepo = new LocationRepository<Stand>(locationService,
                 new LocationConverter<Stand>((x) => new Stand(x)));
-            locationService.CalculateLocationDistances(this.standRepo.All());
+            locationService.CalculateLocationDistances(standRepo.All());
         }
 
         public StandControl(ILogger<StandControl> logger, IEventProducer eventProducer,
@@ -36,16 +36,16 @@ namespace DddEfteling.Stands.Controls
             this.eventProducer = eventProducer;
             this.openDinnerOrders = openDinnerOrders;
             this.ordersDoneAtTime = ordersDoneAtTime;
-            this.standRepo = new LocationRepository<Stand>(locationService,
+            standRepo = new LocationRepository<Stand>(locationService,
                 new LocationConverter<Stand>((x) => new Stand(x)));
-            locationService.CalculateLocationDistances(this.standRepo.All());
+            locationService.CalculateLocationDistances(standRepo.All());
         }
 
         public string PlaceOrder(Guid standGuid, List<string> products)
         {
-            Stand stand = standRepo.All().First(s => s.Guid.Equals(standGuid));
+            var stand = standRepo.All().First(s => s.Guid.Equals(standGuid));
 
-            Dinner dinner = new Dinner(
+            var dinner = new Dinner(
                     stand.Meals.FindAll(meal => products.Contains(meal.Name)),
                     stand.Drinks.FindAll(drink => products.Contains(drink.Name))
                     );
@@ -56,12 +56,12 @@ namespace DddEfteling.Stands.Controls
                 throw new InvalidOperationException($"Dinner is invalid: {dinner.ToString()}");
             }
 
-            Guid ticket = Guid.NewGuid();
+            var ticket = Guid.NewGuid();
 
-            DateTime dateTime = this.GetDinnerDoneDateTime();
+            var dateTime = GetDinnerDoneDateTime();
 
-            this.openDinnerOrders.Add(ticket, dinner);
-            this.ordersDoneAtTime.Add(ticket, dateTime);
+            openDinnerOrders.Add(ticket, dinner);
+            ordersDoneAtTime.Add(ticket, dateTime);
             
             logger.Log(LogLevel.Debug, $"Placed order at stand {stand.Name} with ticket {ticket}, " +
                                              $"done at {dateTime}");
@@ -71,43 +71,43 @@ namespace DddEfteling.Stands.Controls
 
         public void HandleProducedOrders()
         {
-            DateTime now = DateTime.Now;
+            var now = DateTime.Now;
             logger.Log(LogLevel.Debug, "Checking for ready orders");
-            foreach(KeyValuePair<Guid, DateTime> openOrder in this.ordersDoneAtTime)
+            foreach(var openOrder in ordersDoneAtTime)
             {
                 if(openOrder.Value <= now)
                 {
                     logger.Log(LogLevel.Debug, $"Sending order done for {openOrder.Key}");
-                    this.SendOrderTicket(openOrder.Key.ToString());
-                    this.ordersDoneAtTime.Remove(openOrder.Key);
+                    SendOrderTicket(openOrder.Key.ToString());
+                    ordersDoneAtTime.Remove(openOrder.Key);
                 }
             }
         }
 
         private void SendOrderTicket(string ticket)
         {
-            Event orderEvent = new Event(EventType.OrderReady, EventSource.Stand, new Dictionary<string, string>() { { "Order", ticket } });
-            this.eventProducer.Produce(orderEvent);
+            var orderEvent = new Event(EventType.OrderReady, EventSource.Stand, new Dictionary<string, string>() { { "Order", ticket } });
+            eventProducer.Produce(orderEvent);
         }
 
         public Dinner GetReadyDinner(string ticket)
         {
-            Guid guid = Guid.Parse(ticket);
-            if (this.ordersDoneAtTime.ContainsKey(guid))
+            var guid = Guid.Parse(ticket);
+            if (ordersDoneAtTime.ContainsKey(guid))
             {
-                this.logger.LogError("Order with ID {0} is not done, but visitor tried to pick it up already", guid);
+                logger.LogError("Order with ID {0} is not done, but visitor tried to pick it up already", guid);
                 throw new InvalidOperationException(string.Format("Order with ID {0} is not done yet, will be done at {1}", guid, this.ordersDoneAtTime[guid]));
             }
 
-            if (!this.openDinnerOrders.ContainsKey(guid))
+            if (!openDinnerOrders.ContainsKey(guid))
             {
-                this.logger.LogError("Order with ID {0} does not exist, but visitor tried to pick it up already", guid);
+                logger.LogError("Order with ID {0} does not exist, but visitor tried to pick it up already", guid);
                 throw new ArgumentNullException(string.Format("Order with ID {0} is not found", guid));
             }
 
-            Dinner dinner = this.openDinnerOrders[guid];
+            var dinner = openDinnerOrders[guid];
 
-            this.openDinnerOrders.Remove(guid);
+            openDinnerOrders.Remove(guid);
 
             return dinner;
         }
@@ -116,7 +116,7 @@ namespace DddEfteling.Stands.Controls
         {
             // Todo: Lets make this into settings later
 
-            int watchInSeconds = this.random.Next(120, 300);
+            var watchInSeconds = random.Next(120, 300);
             return DateTime.Now.AddSeconds(watchInSeconds);
         }
 

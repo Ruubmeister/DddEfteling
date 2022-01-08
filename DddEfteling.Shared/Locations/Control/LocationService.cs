@@ -20,9 +20,9 @@ namespace DddEfteling.Shared.Controls
         
         public void CalculateLocationDistances<T>(ConcurrentBag<T> locations) where T: Location
         {
-            foreach (T location in locations)
+            foreach (var location in locations)
             {
-                foreach (T toLocation in locations)
+                foreach (var toLocation in locations)
                 {
                     if (location.Equals(toLocation))
                     {
@@ -38,7 +38,7 @@ namespace DddEfteling.Shared.Controls
         
         public T NearestLocation<T>(T location, ConcurrentBag<T> locations, List<Guid> exclusionList) where T: Location
         {
-            Guid nextLocation = location.DistanceToOthers.First(keyVal => !exclusionList.Contains(keyVal.Value)).Value;
+            var nextLocation = location.DistanceToOthers.First(keyVal => !exclusionList.Contains(keyVal.Value)).Value;
 
             return locations.First(x => x.Guid.Equals(nextLocation));
         }
@@ -48,8 +48,8 @@ namespace DddEfteling.Shared.Controls
             
             try
             {
-                List<KeyValuePair<double, Guid>> locationsToPick = location.DistanceToOthers.Where(keyVal => !exclusionList.Contains(keyVal.Value)).Take(3).ToList();
-                Guid nextLocation = locationsToPick.ElementAt(random.Next(locationsToPick.Count)).Value;
+                var locationsToPick = location.DistanceToOthers.Where(keyVal => !exclusionList.Contains(keyVal.Value)).Take(3).ToList();
+                var nextLocation = locationsToPick.ElementAt(random.Next(locationsToPick.Count)).Value;
                 return locations.First(tmpLocation => tmpLocation.Guid.Equals(nextLocation));
             }
             catch (Exception e)

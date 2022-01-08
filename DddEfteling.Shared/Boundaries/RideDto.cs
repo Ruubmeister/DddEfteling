@@ -35,15 +35,15 @@ namespace DddEfteling.Shared.Boundaries
         public RideDto(Guid guid, string name, string status, int minimumAge, double minimumLength, TimeSpan duration, int maxPersons,
             Coordinate coordinate, LocationType locationType)
         {
-            this.Guid = guid;
-            this.Name = name;
-            this.Status = status;
-            this.MinimumAge = minimumAge;
-            this.MinimumLength = minimumLength;
-            this.DurationInSec = (int)duration.TotalSeconds;
-            this.MaxPersons = maxPersons;
-            this.Coordinates = coordinate;
-            this.LocationType = locationType;
+            Guid = guid;
+            Name = name;
+            Status = status;
+            MinimumAge = minimumAge;
+            MinimumLength = minimumLength;
+            DurationInSec = (int)duration.TotalSeconds;
+            MaxPersons = maxPersons;
+            Coordinates = coordinate;
+            LocationType = locationType;
         }
     }
 }

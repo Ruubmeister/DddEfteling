@@ -6,26 +6,26 @@ namespace DddEfteling.Shared.Controls
     public static class CoordinateExtensions
     {
         private static readonly double radialNumber = Math.PI / 180;
-        public static bool IsInRange(Coordinate from, Coordinate to, Double distance)
+        public static bool IsInRange(Coordinate from, Coordinate to, double distance)
         {
             return distance > GeoCalculator.GetDistance(from, to, 1, DistanceUnit.Meters);
         }
 
-        public static Coordinate GetStepCoordinates(Coordinate from, Coordinate to, Double distance)
+        public static Coordinate GetStepCoordinates(Coordinate from, Coordinate to, double distance)
         {
-            double bearing = GeoCalculator.GetBearing(from, to);
+            var bearing = GeoCalculator.GetBearing(from, to);
 
-            double angle = GetRelativeBearingToClosestDirection(bearing);
+            var angle = GetRelativeBearingToClosestDirection(bearing);
 
-            (double latitudeFactor, double longitudeFactor) = CorrectionFactors(angle, bearing);
+            var (latitudeFactor, longitudeFactor) = CorrectionFactors(angle, bearing);
 
-            CoordinateBoundaries boundaries = new CoordinateBoundaries(from, distance, DistanceUnit.Meters);
+            var boundaries = new CoordinateBoundaries(from, distance, DistanceUnit.Meters);
 
-            double maxLongitude = GetMaxLongitudeFromBearing(boundaries, bearing);
-            double maxLatitude = GetMaxLatitudeFromBearing(boundaries, bearing);
+            var maxLongitude = GetMaxLongitudeFromBearing(boundaries, bearing);
+            var maxLatitude = GetMaxLatitudeFromBearing(boundaries, bearing);
 
-            double newLongitude = from.Longitude + (maxLongitude - from.Longitude) * longitudeFactor;
-            double newLatitude = from.Latitude + (maxLatitude - from.Latitude) * latitudeFactor;
+            var newLongitude = from.Longitude + (maxLongitude - from.Longitude) * longitudeFactor;
+            var newLatitude = from.Latitude + (maxLatitude - from.Latitude) * latitudeFactor;
 
             return new Coordinate(newLatitude, newLongitude);
         }
@@ -33,15 +33,12 @@ namespace DddEfteling.Shared.Controls
         private static (double latitudeFactor, double longitudeFactor) CorrectionFactors(double angle, double bearing)
         {
 
-            double factor1 = Math.Sin(angle * radialNumber);
-            double factor2 = Math.Cos(angle * radialNumber);
+            var factor1 = Math.Sin(angle * radialNumber);
+            var factor2 = Math.Cos(angle * radialNumber);
 
-            if (Math.Floor(bearing / 90) % 2 == 0)
-            {
-                return (latitudeFactor: factor2, longitudeFactor: factor1);
-            }
-
-            return (latitudeFactor: factor1, longitudeFactor: factor2);
+            return (Math.Floor(bearing / 90) % 2 == 0)
+                ? (latitudeFactor: factor2, longitudeFactor: factor1)
+                : (latitudeFactor: factor1, longitudeFactor: factor2);
         }
 
         public static double GetRelativeBearingToClosestDirection(double absoluteBearing)
@@ -52,26 +49,12 @@ namespace DddEfteling.Shared.Controls
 
         public static double GetMaxLongitudeFromBearing(CoordinateBoundaries boundary, double bearing)
         {
-            if (bearing <= 180)
-            {
-                return boundary.MaxLongitude;
-            }
-            else
-            {
-                return boundary.MinLongitude;
-            }
+            return bearing <= 180 ? boundary.MaxLongitude : boundary.MinLongitude;
         }
 
         public static double GetMaxLatitudeFromBearing(CoordinateBoundaries boundary, double bearing)
         {
-            if (bearing >= 90 && bearing < 270)
-            {
-                return boundary.MinLatitude;
-            }
-            else
-            {
-                return boundary.MaxLatitude;
-            }
+            return bearing >= 90 && bearing < 270 ? boundary.MinLatitude : boundary.MaxLatitude;
         }
     }
 }

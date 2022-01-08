@@ -18,7 +18,7 @@ namespace DddEfteling.Visitors.Controls
         private readonly IVisitorRepository repository;
         private readonly ILocationTypeStrategy locationTypeStrategy;
 
-        public readonly ConcurrentDictionary<string, Guid> VisitorsWaitingForOrder = new ConcurrentDictionary<string, Guid>();
+        public readonly ConcurrentDictionary<string, Guid> VisitorsWaitingForOrder = new();
         private readonly IVisitorMovementService visitorMovementService;
 
 

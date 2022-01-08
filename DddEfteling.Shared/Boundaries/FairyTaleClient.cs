@@ -16,54 +16,45 @@ namespace DddEfteling.Shared.Boundaries
 
         public List<FairyTaleDto> GetFairyTales()
         {
-            string url = "/api/v1/fairy-tales";
-            Uri targetUri = new Uri(client.BaseAddress, url);
+            var url = "/api/v1/fairy-tales";
+            var targetUri = new Uri(client.BaseAddress, url);
 
             var request = new HttpRequestMessage(HttpMethod.Get, targetUri.AbsoluteUri);
 
             var streamTask = client.SendAsync(request).Result;
 
-            if (streamTask.IsSuccessStatusCode)
-            {
-                return JsonConvert.DeserializeObject<List<FairyTaleDto>>(streamTask.Content.ReadAsStringAsync().Result);
-            }
-
-            return new List<FairyTaleDto>();
+            return streamTask.IsSuccessStatusCode
+                ? JsonConvert.DeserializeObject<List<FairyTaleDto>>(streamTask.Content.ReadAsStringAsync().Result)
+                : new List<FairyTaleDto>();
         }
 
         public FairyTaleDto GetRandomFairyTale()
         {
-            string url = "/api/v1/fairy-tales/random";
-            Uri targetUri = new Uri(client.BaseAddress, url);
+            var url = "/api/v1/fairy-tales/random";
+            var targetUri = new Uri(client.BaseAddress, url);
 
             var request = new HttpRequestMessage(HttpMethod.Get, targetUri.AbsoluteUri);
 
             var streamTask = client.SendAsync(request).Result;
 
-            if (streamTask.IsSuccessStatusCode)
-            {
-                return JsonConvert.DeserializeObject<FairyTaleDto>(streamTask.Content.ReadAsStringAsync().Result);
-            }
-
-            return null;
+            return streamTask.IsSuccessStatusCode
+                ? JsonConvert.DeserializeObject<FairyTaleDto>(streamTask.Content.ReadAsStringAsync().Result)
+                : null;
         }
 
         public FairyTaleDto GetNewFairyTaleLocation(Guid guid, List<Guid> excludedGuid)
         {
-            string url = $"/api/v1/fairy-tales/{guid}/new-location?exclude={String.Join(",", excludedGuid.ToArray())}";
+            var url = $"/api/v1/fairy-tales/{guid}/new-location?exclude={String.Join(",", excludedGuid.ToArray())}";
 
-            Uri targetUri = new Uri(client.BaseAddress, url);
+            var targetUri = new Uri(client.BaseAddress, url);
 
             var request = new HttpRequestMessage(HttpMethod.Get, targetUri.AbsoluteUri);
 
             var streamTask = client.SendAsync(request).Result;
-
-            if (streamTask.IsSuccessStatusCode)
-            {
-                return JsonConvert.DeserializeObject<FairyTaleDto>(streamTask.Content.ReadAsStringAsync().Result);
-            }
-
-            return null;
+            
+            return streamTask.IsSuccessStatusCode
+                    ? JsonConvert.DeserializeObject<FairyTaleDto>(streamTask.Content.ReadAsStringAsync().Result)
+                    : null;
         }
     }
 

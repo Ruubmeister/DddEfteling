@@ -21,23 +21,23 @@ namespace DddEfteling.Park.Controls
 
         public void OpenPark()
         {
-            this.status = EntranceStatus.Open;
+            status = EntranceStatus.Open;
             logger.LogInformation("Park has opened");
-            Event eventOut = new Event(EventType.StatusChanged, EventSource.Park, new Dictionary<string, string>() { { "Status", "Open" } });
+            var eventOut = new Event(EventType.StatusChanged, EventSource.Park, new Dictionary<string, string>() { { "Status", "Open" } });
             eventProducer.Produce(eventOut);
         }
 
         public void ClosePark()
         {
-            this.status = EntranceStatus.Closed;
+            status = EntranceStatus.Closed;
             logger.LogInformation("Park has closed");
-            Event eventOut = new Event(EventType.StatusChanged, EventSource.Park, new Dictionary<string, string>() { { "Status", "Closed" } });
+            var eventOut = new Event(EventType.StatusChanged, EventSource.Park, new Dictionary<string, string>() { { "Status", "Closed" } });
             eventProducer.Produce(eventOut);
         }
 
         public bool IsOpen()
         {
-            return this.status.Equals(EntranceStatus.Open);
+            return status.Equals(EntranceStatus.Open);
         }
 
         public Ticket SellTicket(TicketType type)

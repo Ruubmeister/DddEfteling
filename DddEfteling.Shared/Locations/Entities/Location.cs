@@ -27,12 +27,12 @@ namespace DddEfteling.Shared.Entities
 
         public void AddDistanceToOthers(double distance, Guid rideGuid)
         {
-            this.DistanceToOthers.Add(distance, rideGuid);
+            DistanceToOthers.Add(distance, rideGuid);
         }
         
         public double GetDistanceTo(Location location)
         {
-            return GeoCalculator.GetDistance(this.Coordinates, location.Coordinates, 4, DistanceUnit.Meters);
+            return GeoCalculator.GetDistance(Coordinates, location.Coordinates, 4, DistanceUnit.Meters);
         }
     }
 }

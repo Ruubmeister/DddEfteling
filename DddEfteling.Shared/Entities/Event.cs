@@ -11,20 +11,20 @@ namespace DddEfteling.Shared.Entities
         public Dictionary<string, string> Payload { get; }
         public Event(EventType type, EventSource source, Dictionary<string, string> payload)
         {
-            this.Type = type;
-            this.Source = source;
-            this.Payload = payload;
+            Type = type;
+            Source = source;
+            Payload = payload;
         }
         
-        public override bool Equals(Object obj)
+        public override bool Equals(object obj)
         {
             //Check for null and compare run-time types.
-            if ((obj == null) || ! this.GetType().Equals(obj.GetType()))
+            if ((obj == null) || GetType() != obj.GetType())
             {
                 return false;
             }
             else {
-                Event e = (Event) obj;
+                var e = (Event) obj;
 
                 return Type.Equals(e.Type) && Source.Equals(e.Source) && Payload.Count == e.Payload.Count && 
                                                  !Payload.Except(e.Payload).Any();

@@ -16,36 +16,30 @@ namespace DddEfteling.Shared.Boundaries
 
         public List<VisitorDto> GetVisitors()
         {
-            string url = "/api/v1/visitors";
-            Uri targetUri = new Uri(client.BaseAddress, url);
+            var url = "/api/v1/visitors";
+            var targetUri = new Uri(client.BaseAddress, url);
             var request = new HttpRequestMessage(HttpMethod.Get, targetUri.AbsoluteUri);
 
             var streamTask = client.SendAsync(request).Result;
 
-            if (streamTask.IsSuccessStatusCode)
-            {
-                return JsonConvert.DeserializeObject<List<VisitorDto>>(streamTask.Content.ReadAsStringAsync().Result);
-            }
-
-            return new List<VisitorDto>();
+            return streamTask.IsSuccessStatusCode
+                ? JsonConvert.DeserializeObject<List<VisitorDto>>(streamTask.Content.ReadAsStringAsync().Result)
+                : new List<VisitorDto>();
 
         }
 
         public VisitorDto GetVisitor(Guid guid)
         {
-            string url = $"/api/v1/visitors/{guid}";
-            Uri targetUri = new Uri(client.BaseAddress, url);
+            var url = $"/api/v1/visitors/{guid}";
+            var targetUri = new Uri(client.BaseAddress, url);
 
             var request = new HttpRequestMessage(HttpMethod.Get, targetUri.AbsoluteUri);
 
             var streamTask = client.SendAsync(request).Result;
 
-            if (streamTask.IsSuccessStatusCode)
-            {
-                return JsonConvert.DeserializeObject<VisitorDto>(streamTask.Content.ReadAsStringAsync().Result);
-            }
-
-            return null;
+            return streamTask.IsSuccessStatusCode
+                ? JsonConvert.DeserializeObject<VisitorDto>(streamTask.Content.ReadAsStringAsync().Result)
+                : null;
         }
     }
 

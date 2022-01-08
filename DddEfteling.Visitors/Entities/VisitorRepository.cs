@@ -11,20 +11,20 @@ namespace DddEfteling.Visitors.Entities
     {
         private readonly Random random;
         private readonly ILogger<VisitorRepository> logger;
-        private readonly Coordinate startCoordinate = new Coordinate(51.649175, 5.045545);
-        private ConcurrentBag<Visitor> Visitors { get; } = new ConcurrentBag<Visitor>();
+        private readonly Coordinate startCoordinate = new (51.649175, 5.045545);
+        private ConcurrentBag<Visitor> Visitors { get; } = new ();
 
         public VisitorRepository( ILogger<VisitorRepository> logger)
         {
             this.logger = logger;
-            this.random = new Random();
+            random = new Random();
         }
 
         public VisitorRepository(Random random, ILogger<VisitorRepository> logger, ConcurrentBag<Visitor> visitors)
         {
             this.logger = logger;
             this.random = random;
-            this.Visitors = visitors;
+            Visitors = visitors;
         }
         
         public List<Visitor> All()
@@ -35,11 +35,11 @@ namespace DddEfteling.Visitors.Entities
         public List<Visitor> AddVisitors(int number)
         {
             var result = new List<Visitor>();
-            for (int i = 1; i <= number; i++)
+            for (var i = 1; i <= number; i++)
             {
                 logger.LogDebug($"Adding {i} visitors");
                 // Todo: Fix hardcoded below
-                Visitor visitor = new Visitor(DateTime.Now, 1.55, startCoordinate, random);
+                var visitor = new Visitor(DateTime.Now, 1.55, startCoordinate, random);
                 Visitors.Add(visitor);
                 result.Add(visitor);
             }
@@ -49,13 +49,13 @@ namespace DddEfteling.Visitors.Entities
         
         public Visitor GetVisitor(Guid guid)
         {
-            return this.Visitors.First(visitor => visitor.Guid.Equals(guid));
+            return Visitors.First(visitor => visitor.Guid.Equals(guid));
         }
 
         public List<Visitor> IdleVisitors()
         {
-            DateTime now = DateTime.Now;
-            return this.Visitors.Where(visitor => visitor.AvailableAt <= now).ToList();
+            var now = DateTime.Now;
+            return Visitors.Where(visitor => visitor.AvailableAt <= now).ToList();
         }
 
     }

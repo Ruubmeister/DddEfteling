@@ -12,8 +12,8 @@ namespace DddEfteling.Shared.Boundaries
 
         public WorkplaceDto(Guid guid, LocationType locationType)
         {
-            this.Guid = guid;
-            this.LocationType = locationType;
+            Guid = guid;
+            LocationType = locationType;
         }
     }
 }

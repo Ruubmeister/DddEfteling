@@ -22,21 +22,21 @@ namespace DddEfteling.Rides.Boundaries
         public override void HandleMessage(string incomingMessage)
         {
 
-            Event incomingEvent = JsonConvert.DeserializeObject<Event>(incomingMessage);
+            var incomingEvent = JsonConvert.DeserializeObject<Event>(incomingMessage);
 
             if (incomingEvent.Type.Equals(EventType.StepInRideLine))
             {
-                if (incomingEvent.Payload.TryGetValue("Visitor", out string visitorGuid) &&
-                    incomingEvent.Payload.TryGetValue("Ride", out string rideGuid))
+                if (incomingEvent.Payload.TryGetValue("Visitor", out var visitorGuid) &&
+                    incomingEvent.Payload.TryGetValue("Ride", out var rideGuid))
                 {
-                    this.rideControl.HandleVisitorSteppingInRideLine(Guid.Parse(visitorGuid), Guid.Parse(rideGuid));
+                    rideControl.HandleVisitorSteppingInRideLine(Guid.Parse(visitorGuid), Guid.Parse(rideGuid));
                 }
             }
             else if (incomingEvent.Type.Equals(EventType.EmployeeChangedWorkplace))
             {
-                if (incomingEvent.Payload.TryGetValue("Workplace", out string workplaceString) &&
-                    incomingEvent.Payload.TryGetValue("Employee", out string employeeString) &&
-                    incomingEvent.Payload.TryGetValue("Skill", out string workplaceSkill))
+                if (incomingEvent.Payload.TryGetValue("Workplace", out var workplaceString) &&
+                    incomingEvent.Payload.TryGetValue("Employee", out var employeeString) &&
+                    incomingEvent.Payload.TryGetValue("Skill", out var workplaceSkill))
                 {
                     if (Enum.TryParse(workplaceSkill, out WorkplaceSkill skill))
                     {
@@ -48,15 +48,15 @@ namespace DddEfteling.Rides.Boundaries
                 }
             }
             else if (incomingEvent.Type.Equals(EventType.StatusChanged) && incomingEvent.Source.Equals(EventSource.Park) &&
-                incomingEvent.Payload.TryGetValue("Status", out string statusString))
+                incomingEvent.Payload.TryGetValue("Status", out var statusString))
             {
                 if (statusString.ToLower().Equals("open"))
                 {
-                    this.rideControl.OpenRides();
+                    rideControl.OpenRides();
                 }
                 else if (statusString.ToLower().Equals("closed"))
                 {
-                    this.rideControl.CloseRides();
+                    rideControl.CloseRides();
                 }
             }
         }

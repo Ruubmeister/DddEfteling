@@ -8,17 +8,17 @@ namespace DddEfteling.Park.Entities
     public class Employee
     {
 
-        public Employee(String firstName, String lastName, List<WorkplaceSkill> skills)
+        public Employee(string firstName, string lastName, List<WorkplaceSkill> skills)
         {
-            this.FirstName = firstName;
-            this.LastName = lastName;
-            this.Guid = Guid.NewGuid();
-            this.Skills = skills;
+            FirstName = firstName;
+            LastName = lastName;
+            Guid = Guid.NewGuid();
+            Skills = skills;
         }
 
         public Guid Guid { get; }
-        public String FirstName { get; }
-        public String LastName { get; }
+        public string FirstName { get; }
+        public string LastName { get; }
 
         public WorkplaceDto ActiveWorkplace { get; private set; }
 
@@ -28,19 +28,20 @@ namespace DddEfteling.Park.Entities
 
         public void GoToWork(WorkplaceDto workspace, WorkplaceSkill skill)
         {
-            this.ActiveWorkplace = workspace;
-            this.ActiveSkill = skill;
+            ActiveWorkplace = workspace;
+            ActiveSkill = skill;
         }
 
         public void StopWork()
         {
-            if (this.ActiveWorkplace != null)
+            if (ActiveWorkplace == null)
             {
-                this.ActiveWorkplace = null;
-                this.ActiveSkill = null;
-
-                //Also send event
+                return;
             }
+            ActiveWorkplace = null;
+            ActiveSkill = null;
+
+            //Also send event
         }
     }
 }

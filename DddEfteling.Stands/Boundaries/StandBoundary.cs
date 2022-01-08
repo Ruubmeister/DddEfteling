@@ -40,11 +40,11 @@ namespace DddEfteling.Stands.Boundaries
         {
             try
             {
-                Stand stand =  standControl.GetStand(guid);
+                var stand =  standControl.GetStand(guid);
 
-                string orderTicket = this.standControl.PlaceOrder(stand.Guid, products);
+                var orderTicket = standControl.PlaceOrder(stand.Guid, products);
 
-                if(orderTicket == null || orderTicket.ToString().Length < 1)
+                if(string.IsNullOrEmpty(orderTicket))
                 {
                     return BadRequest();
                 }
@@ -67,7 +67,7 @@ namespace DddEfteling.Stands.Boundaries
         {
             try
             {
-                Dinner dinner = standControl.GetReadyDinner(ticket);
+                var dinner = standControl.GetReadyDinner(ticket);
 
                 if (dinner == null)
                 {

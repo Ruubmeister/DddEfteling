@@ -18,10 +18,10 @@ namespace DddEfteling.Shared.Boundaries
 
         public VisitorDto(Guid guid, DateTime dateOfBirth, double length, Coordinate currentLocation)
         {
-            this.Guid = guid;
-            this.DateOfBirth = dateOfBirth;
-            this.Length = length;
-            this.CurrentLocation = currentLocation;
+            Guid = guid;
+            DateOfBirth = dateOfBirth;
+            Length = length;
+            CurrentLocation = currentLocation;
         }
     }
 }

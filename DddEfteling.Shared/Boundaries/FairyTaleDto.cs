@@ -16,15 +16,15 @@ namespace DddEfteling.Shared.Boundaries
 
         public FairyTaleDto()
         {
-            this.LocationType = LocationType.FAIRYTALE;
+            LocationType = LocationType.FAIRYTALE;
         }
 
         public FairyTaleDto(Guid guid, string name, Coordinate coordinate, LocationType locationType)
         {
-            this.Guid = guid;
-            this.Name = name;
-            this.Coordinates = coordinate;
-            this.LocationType = locationType;
+            Guid = guid;
+            Name = name;
+            Coordinates = coordinate;
+            LocationType = locationType;
         }
     }
 }

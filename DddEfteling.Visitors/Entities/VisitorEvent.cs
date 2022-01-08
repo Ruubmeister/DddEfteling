@@ -9,15 +9,15 @@ namespace DddEfteling.Visitors.Entities
     {
         public VisitorEvent(EventType type, Guid visitorGuid)
         {
-            this.Type = type;
-            this.VisitorGuid = visitorGuid;
+            Type = type;
+            VisitorGuid = visitorGuid;
         }
 
         public VisitorEvent(EventType type, Guid visitorGuid, Dictionary<string, object> payload)
         {
-            this.VisitorGuid = visitorGuid;
-            this.Type = type;
-            this.Payload = payload;
+            VisitorGuid = visitorGuid;
+            Type = type;
+            Payload = payload;
         }
         public EventType Type { get; }
 

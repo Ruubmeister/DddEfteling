@@ -16,53 +16,44 @@ namespace DddEfteling.Shared.Boundaries
 
         public List<RideDto> GetRides()
         {
-            string url = "/api/v1/rides";
-            Uri targetUri = new Uri(client.BaseAddress, url);
+            var url = "/api/v1/rides";
+            var targetUri = new Uri(client.BaseAddress, url);
             var request = new HttpRequestMessage(HttpMethod.Get, targetUri.AbsoluteUri);
 
             var streamTask = client.SendAsync(request).Result;
 
-            if (streamTask.IsSuccessStatusCode)
-            {
-                return JsonConvert.DeserializeObject<List<RideDto>>(streamTask.Content.ReadAsStringAsync().Result);
-            }
-
-            return new List<RideDto>();
+            return streamTask.IsSuccessStatusCode
+                ? JsonConvert.DeserializeObject<List<RideDto>>(streamTask.Content.ReadAsStringAsync().Result)
+                : new List<RideDto>();
         }
 
         public RideDto GetRandomRide()
         {
-            string url = "/api/v1/rides/random";
-            Uri targetUri = new Uri(client.BaseAddress, url);
+            var url = "/api/v1/rides/random";
+            var targetUri = new Uri(client.BaseAddress, url);
 
             var request = new HttpRequestMessage(HttpMethod.Get, targetUri.AbsoluteUri);
 
             var streamTask = client.SendAsync(request).Result;
 
-            if (streamTask.IsSuccessStatusCode)
-            {
-                return JsonConvert.DeserializeObject<RideDto>(streamTask.Content.ReadAsStringAsync().Result);
-            }
-
-            return null;
+            return streamTask.IsSuccessStatusCode 
+                ? JsonConvert.DeserializeObject<RideDto>(streamTask.Content.ReadAsStringAsync().Result)
+                : null;
         }
 
         public RideDto GetNextLocation(Guid guid, List<Guid> excludedGuid)
         {
-            string url = $"/api/v1/rides/{guid}/new-location?exclude={String.Join(",", excludedGuid.ToArray())}";
+            var url = $"/api/v1/rides/{guid}/new-location?exclude={String.Join(",", excludedGuid.ToArray())}";
 
-            Uri targetUri = new Uri(client.BaseAddress, url);
+            var targetUri = new Uri(client.BaseAddress, url);
 
             var request = new HttpRequestMessage(HttpMethod.Get, targetUri.AbsoluteUri);
 
             var streamTask = client.SendAsync(request).Result;
 
-            if (streamTask.IsSuccessStatusCode)
-            {
-                return JsonConvert.DeserializeObject<RideDto>(streamTask.Content.ReadAsStringAsync().Result);
-            }
-
-            return null;
+            return streamTask.IsSuccessStatusCode
+                ? JsonConvert.DeserializeObject<RideDto>(streamTask.Content.ReadAsStringAsync().Result)
+                : null;
         }
     }
 

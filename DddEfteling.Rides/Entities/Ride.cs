@@ -47,20 +47,20 @@ namespace DddEfteling.Rides.Entities
 
         public void ToMaintenance()
         {
-            this.Status = RideStatus.Maintenance;
-            this.VisitorsInLine = new Queue<VisitorDto>();
-            this.VisitorsInRide = new Queue<VisitorDto>();
+            Status = RideStatus.Maintenance;
+            VisitorsInLine = new Queue<VisitorDto>();
+            VisitorsInRide = new Queue<VisitorDto>();
         }
 
         public void ToOpen()
         {
-            this.Status = RideStatus.Open;
+            Status = RideStatus.Open;
         }
 
 
         public void ToClosed()
         {
-            this.Status = RideStatus.Closed;
+            Status = RideStatus.Closed;
         }
 
         public RideStatus Status { get; set; }
@@ -73,13 +73,13 @@ namespace DddEfteling.Rides.Entities
 
         public int MaxPersons { get; }
 
-        private Queue<VisitorDto> VisitorsInLine { get; set; } = new Queue<VisitorDto>();
+        private Queue<VisitorDto> VisitorsInLine { get; set; } = new ();
 
-        private Queue<VisitorDto> VisitorsInRide { get; set; } = new Queue<VisitorDto>();
+        private Queue<VisitorDto> VisitorsInRide { get; set; } = new ();
 
         public DateTime EndTime { get; set; }
 
-        public Dictionary<Guid, WorkplaceSkill> EmployeesToSkill { get; } = new Dictionary<Guid, WorkplaceSkill>();
+        public Dictionary<Guid, WorkplaceSkill> EmployeesToSkill { get; } = new ();
 
         public void AddEmployee(Guid guid, WorkplaceSkill skill)
         {
@@ -88,15 +88,15 @@ namespace DddEfteling.Rides.Entities
 
         public bool HasVisitor(VisitorDto visitor)
         {
-            return this.VisitorsInLine.ToList().ConvertAll(visitor => visitor.Guid).Contains(visitor.Guid) ||
-                this.VisitorsInRide.ToList().ConvertAll(visitor => visitor.Guid).Contains(visitor.Guid);
+            return VisitorsInLine.ToList().ConvertAll(visitor => visitor.Guid).Contains(visitor.Guid) ||
+                VisitorsInRide.ToList().ConvertAll(visitor => visitor.Guid).Contains(visitor.Guid);
         }
 
         public bool AddVisitorToLine(VisitorDto visitor)
         {
-            if (this.Status.Equals(RideStatus.Open))
+            if (Status.Equals(RideStatus.Open))
             {
-                this.VisitorsInLine.Enqueue(visitor);
+                VisitorsInLine.Enqueue(visitor);
                 return true;
             }
 
@@ -108,16 +108,16 @@ namespace DddEfteling.Rides.Entities
             if (Status.Equals(RideStatus.Open))
             {
                 BoardVisitors();
-                this.EndTime = DateTime.Now.Add(Duration);
+                EndTime = DateTime.Now.Add(Duration);
             }
         }
 
         public List<VisitorDto> UnboardVisitors()
         {
-            List<VisitorDto> unboardedVisitors = new List<VisitorDto>();
-            while (this.VisitorsInRide.Count > 0)
+            var unboardedVisitors = new List<VisitorDto>();
+            while (VisitorsInRide.Count > 0)
             {
-                VisitorDto visitor = this.VisitorsInRide.Dequeue();
+                var visitor = this.VisitorsInRide.Dequeue();
 
                 unboardedVisitors.Add(visitor);
             }
@@ -127,35 +127,34 @@ namespace DddEfteling.Rides.Entities
 
         public void BoardVisitors()
         {
-            while (this.VisitorsInRide.Count <= this.MaxPersons)
+            while (VisitorsInRide.Count <= MaxPersons)
             {
-                if (this.VisitorsInLine.Count < 1)
+                if (VisitorsInLine.Count < 1)
                 {
                     return;
                 }
 
-                this.VisitorsInRide.Enqueue(this.VisitorsInLine.Dequeue());
+                VisitorsInRide.Enqueue(VisitorsInLine.Dequeue());
             }
         }
 
         public RideDto ToDto()
         {
-            return new RideDto(this.Guid, this.Name, this.Status.ToString(), this.MinimumAge, this.MinimumLength,
-                this.Duration, this.MaxPersons, this.Coordinates, this.LocationType)
+            return new RideDto
             {
-                Guid = this.Guid,
-                Name = this.Name,
-                Status = this.Status.ToString(),
-                MinimumAge = this.MinimumAge,
-                MinimumLength = this.MinimumLength,
-                DurationInSec = (int)this.Duration.TotalSeconds,
-                MaxPersons = this.MaxPersons,
-                Coordinates = this.Coordinates,
-                LocationType = this.LocationType,
-                VisitorsInLine = this.VisitorsInLine.Count,
-                VisitorsInRide = this.VisitorsInRide.Count,
-                EmployeesToSkill = this.EmployeesToSkill.ToDictionary(kv => kv.Key.ToString(), kv => kv.Value.ToString()),
-                EndTime = this.EndTime.ToString("H:mm")
+                Guid = Guid,
+                Name = Name,
+                Status = Status.ToString(),
+                MinimumAge = MinimumAge,
+                MinimumLength = MinimumLength,
+                DurationInSec = (int)Duration.TotalSeconds,
+                MaxPersons = MaxPersons,
+                Coordinates = Coordinates,
+                LocationType = LocationType,
+                VisitorsInLine = VisitorsInLine.Count,
+                VisitorsInRide = VisitorsInRide.Count,
+                EmployeesToSkill = EmployeesToSkill.ToDictionary(kv => kv.Key.ToString(), kv => kv.Value.ToString()),
+                EndTime = EndTime.ToString("H:mm")
             };
         }
 

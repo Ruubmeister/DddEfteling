@@ -31,7 +31,8 @@ namespace DddEfteling.Rides.Boundaries
         [HttpGet("{guid}/new-location")]
         public ActionResult<RideDto> GetNewRideLocation(Guid guid, [FromQuery(Name = "exclude")] string excludedGuids)
         {
-            var excludedGuidList = excludedGuids.Length > 0 ? new List<string>(excludedGuids.Split(",")).ConvertAll(guidStr => Guid.Parse(guidStr)) : new List<Guid>();
+            var excludedGuidList = excludedGuids.Length > 0 ? new List<string>(excludedGuids.Split(","))
+                .ConvertAll(guidStr => Guid.Parse(guidStr)) : new List<Guid>();
             return rideControl.NextLocation(guid, excludedGuidList).ToDto();
         }
 
@@ -41,19 +42,19 @@ namespace DddEfteling.Rides.Boundaries
             switch (rideDto.Status.Trim().ToLower())
             {
                 case "open":
-                    this.rideControl.RideToOpen(guid);
+                    rideControl.RideToOpen(guid);
                     break;
                 case "closed":
-                    this.rideControl.RideToClosed(guid);
+                    rideControl.RideToClosed(guid);
                     break;
                 case "maintenance":
-                    this.rideControl.RideToMaintenance(guid);
+                    rideControl.RideToMaintenance(guid);
                     break;
                 default:
                     return BadRequest("Status not found");
             }
 
-            return this.rideControl.FindRide(guid).ToDto();
+            return rideControl.FindRide(guid).ToDto();
         }
     }
 }

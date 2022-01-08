@@ -16,13 +16,13 @@ namespace DddEfteling.Visitors.Entities
         private readonly VisitorLocationSelector locationSelector;
 
         [JsonIgnore]
-        public Dictionary<DateTime, ILocationDto> VisitedLocations { get; } = new Dictionary<DateTime, ILocationDto>();
+        public Dictionary<DateTime, ILocationDto> VisitedLocations { get; } = new ();
 
         public Visitor()
         {
-            this.Guid = Guid.NewGuid();
-            this.random = new Random();
-            this.locationSelector = new VisitorLocationSelector(random);
+            Guid = Guid.NewGuid();
+            random = new Random();
+            locationSelector = new VisitorLocationSelector(random);
         }
 
         public Visitor(DateTime dateOfBirth, double length, Coordinate startLocation, Random random)
@@ -30,9 +30,9 @@ namespace DddEfteling.Visitors.Entities
             Guid = Guid.NewGuid();
             DateOfBirth = dateOfBirth;
             Length = length;
-            this.CurrentLocation = startLocation;
+            CurrentLocation = startLocation;
             this.random = random;
-            this.locationSelector = new VisitorLocationSelector(random);
+            locationSelector = new VisitorLocationSelector(random);
         }
 
         public Guid Guid { get; }
@@ -54,24 +54,19 @@ namespace DddEfteling.Visitors.Entities
 
         public void DoActivity( ILocationDto locationDto)
         {
-            this.locationSelector.ReduceAndBalance(locationDto.LocationType);
-            this.AddVisitedLocation(locationDto);
-            this.TargetLocation = null;
+            locationSelector.ReduceAndBalance(locationDto.LocationType);
+            AddVisitedLocation(locationDto);
+            TargetLocation = null;
         }
 
         public void WalkToDestination()
         {
-            this.CurrentLocation = CoordinateExtensions.GetStepCoordinates(CurrentLocation, TargetLocation.Coordinates, NextStepDistance);
+            CurrentLocation = CoordinateExtensions.GetStepCoordinates(CurrentLocation, TargetLocation.Coordinates, NextStepDistance);
         }
         
         public ILocationDto GetLastLocation()
         {
-            if (this.VisitedLocations.Count < 1)
-            {
-                return null;
-            }
-
-            return VisitedLocations[VisitedLocations.Keys.Max()];
+            return (VisitedLocations.Count < 1) ? null : VisitedLocations[VisitedLocations.Keys.Max()];
         }
 
         public List<string> PickStandProducts(StandDto stand)
@@ -89,11 +84,11 @@ namespace DddEfteling.Visitors.Entities
 
         public void PickUpOrder(IStandClient client, string order)
         {
-            DinnerDto dinner = client.GetOrder(order);
+            var dinner = client.GetOrder(order);
 
             if(dinner != null)
             {
-                this.TargetLocation = null;
+                TargetLocation = null;
             }
         }
 
@@ -113,12 +108,12 @@ namespace DddEfteling.Visitors.Entities
 
         public LocationType GetLocationType(LocationType? previousLocationType)
         {
-            return this.locationSelector.GetLocation(previousLocationType);
+            return locationSelector.GetLocation(previousLocationType);
         }
 
         public VisitorDto ToDto()
         {
-            return new VisitorDto(this.Guid, this.DateOfBirth, this.Length, this.CurrentLocation);
+            return new VisitorDto(Guid, DateOfBirth, Length, CurrentLocation);
         }
     }
 }

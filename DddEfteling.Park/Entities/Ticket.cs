@@ -6,8 +6,8 @@ namespace DddEfteling.Park.Entities
     {
         public Ticket(TicketType type)
         {
-            this.Type = type;
-            this.Day = DateTime.Today;
+            Type = type;
+            Day = DateTime.Today;
         }
         public DateTime Day { get; }
         public TicketType Type { get; }

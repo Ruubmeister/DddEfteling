@@ -6,7 +6,7 @@ namespace DddEfteling.Visitors.Controls
 {
     public class VisitorMovementService: IVisitorMovementService
     {
-        private readonly Random random = new Random(); // Todo: Fix this random generator to injected one
+        private readonly Random random = new (); // Todo: Fix this random generator to injected one
 
         public static bool IsInLocationRange(Visitor visitor)
         {
@@ -16,8 +16,8 @@ namespace DddEfteling.Visitors.Controls
         
         public void SetNextStepDistance(Visitor visitor)
         {
-            double normalizedStep = (double) random.Next(100, 300) / 100;
-            TimeSpan timeIdle = visitor.AvailableAt.HasValue ? DateTime.Now - visitor.AvailableAt.Value : 
+            var normalizedStep = (double) random.Next(100, 300) / 100;
+            var timeIdle = visitor.AvailableAt.HasValue ? DateTime.Now - visitor.AvailableAt.Value : 
                 TimeSpan.FromSeconds(1);
 
             visitor.NextStepDistance = timeIdle.TotalSeconds * normalizedStep;

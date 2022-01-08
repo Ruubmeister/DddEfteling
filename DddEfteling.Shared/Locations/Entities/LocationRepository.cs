@@ -18,14 +18,14 @@ namespace DddEfteling.Shared.Entities
         {
             this.converter = converter;
             this.locationService = locationService;
-            this.locations = LoadLocations();
+            locations = LoadLocations();
         }
         
         private ConcurrentBag<T> LoadLocations()
         {
-            using StreamReader r = new StreamReader($"resources/{typeof(T).Name.ToLower()}.json");
-            string json = r.ReadToEnd();
-            JsonSerializerSettings settings = new JsonSerializerSettings();
+            using var r = new StreamReader($"resources/{typeof(T).Name.ToLower()}.json");
+            var json = r.ReadToEnd();
+            var settings = new JsonSerializerSettings();
             settings.Converters.Add(converter);
             return new ConcurrentBag<T>(JsonConvert.DeserializeObject<List<T>>(json, settings));
         }
@@ -52,19 +52,19 @@ namespace DddEfteling.Shared.Entities
 
         public T NearestLocation(Guid locationGuid, List<Guid> exclusionList)
         {
-            T location = this.locations.First(location => location.Guid.Equals(locationGuid));
+            var location = locations.First(location => location.Guid.Equals(locationGuid));
             return locationService.NearestLocation(location, locations, exclusionList);
         }
 
         public T NextLocation(Guid locationGuid, List<Guid> exclusionList)
         {
-            T location = this.locations.First(location => location.Guid.Equals(locationGuid));
-            return locationService.NextLocation(location, locations, exclusionList) ?? this.GetRandom();
+            var location = locations.First(location => location.Guid.Equals(locationGuid));
+            return locationService.NextLocation(location, locations, exclusionList) ?? GetRandom();
         }
         
         public T GetRandom()
         {
-            return this.locations.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
+            return locations.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
         }
     }
 }

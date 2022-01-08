@@ -8,8 +8,8 @@ namespace DddEfteling.Stands.Entities
     public class Dinner
     {
         public Dinner() {
-            this.Meals = new HashSet<Product>();
-            this.Drinks = new HashSet<Product>();
+            Meals = new HashSet<Product>();
+            Drinks = new HashSet<Product>();
         }
 
         public Dinner(HashSet<Product> meals, HashSet<Product> drinks) { 
@@ -21,8 +21,8 @@ namespace DddEfteling.Stands.Entities
             {
                 throw new ArgumentException("Given meals contain other types");
             }
-            this.Meals = meals;
-            this.Drinks = drinks;
+            Meals = meals;
+            Drinks = drinks;
         }
 
         public Dinner(List<Product> meals, List<Product> drinks) {
@@ -34,18 +34,13 @@ namespace DddEfteling.Stands.Entities
             {
                 throw new ArgumentException("Given meals contain other types");
             }
-            this.Meals = new HashSet<Product>(meals);
-            this.Drinks = new HashSet<Product>(drinks);
+            Meals = new HashSet<Product>(meals);
+            Drinks = new HashSet<Product>(drinks);
         }
 
         public bool IsValid()
         {
-            if(this.Meals.Count < 1 && this.Drinks.Count < 1)
-            {
-                return false;
-            }
-
-            return true;
+            return Meals.Count >= 1 || Drinks.Count >= 1;
         }
 
         public HashSet<Product> Meals { get; }
@@ -54,7 +49,7 @@ namespace DddEfteling.Stands.Entities
 
         public DinnerDto ToDto()
         {
-            return new DinnerDto(this.Meals.ToList().ConvertAll(m => m.Name), this.Drinks.ToList().ConvertAll(m => m.Name));
+            return new DinnerDto(Meals.ToList().ConvertAll(m => m.Name), Drinks.ToList().ConvertAll(m => m.Name));
         }
     }
 }

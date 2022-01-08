@@ -9,12 +9,12 @@ namespace DddEfteling.Visitors.Controls
 
         public void Register(LocationType type, IVisitorLocationStrategy strategy)
         {
-            this.registry.TryAdd(type, strategy);
+            registry.TryAdd(type, strategy);
         }
 
         public IVisitorLocationStrategy GetStrategy(LocationType type)
         {
-            this.registry.TryGetValue(type, out IVisitorLocationStrategy result);
+            registry.TryGetValue(type, out IVisitorLocationStrategy result);
 
             return result;
         }

@@ -13,7 +13,7 @@ namespace DddEfteling.Park.Controls
 
         public RealmControl()
         {
-            this.realms = LoadRealms();
+            realms = LoadRealms();
         }
 
         public Realm FindRealmByName(string name)
@@ -23,8 +23,8 @@ namespace DddEfteling.Park.Controls
 
         private List<Realm> LoadRealms()
         {
-            using StreamReader r = new StreamReader("resources/realms.json");
-            string json = r.ReadToEnd();
+            using var r = new StreamReader("resources/realms.json");
+            var json = r.ReadToEnd();
             return JsonConvert.DeserializeObject<List<Realm>>(json);
         }
     }

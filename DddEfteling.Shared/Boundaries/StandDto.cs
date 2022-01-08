@@ -24,11 +24,11 @@ namespace DddEfteling.Shared.Boundaries
         {
             LocationType = LocationType.STAND;
             
-            this.Guid = guid;
-            this.Name = name;
-            this.Meals = meals;
-            this.Drinks = drinks;
-            this.Coordinates = coodinates;
+            Guid = guid;
+            Name = name;
+            Meals = meals;
+            Drinks = drinks;
+            Coordinates = coodinates;
         }
     }
 }

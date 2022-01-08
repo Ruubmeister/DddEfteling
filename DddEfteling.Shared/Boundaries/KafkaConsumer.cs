@@ -12,7 +12,7 @@ namespace DddEfteling.Shared.Boundaries
         protected KafkaConsumer(string topic, string bootstrapServer, string groupId)
         {
             this.topic = topic;
-            this.config = new ConsumerConfig
+            config = new ConsumerConfig
             {
                 GroupId = $"groupId-{Guid.NewGuid()}",
                 BootstrapServers = bootstrapServer,
@@ -23,7 +23,7 @@ namespace DddEfteling.Shared.Boundaries
         public void Listen()
         {
             using var c = new ConsumerBuilder<Ignore, string>(config).Build();
-            c.Subscribe(this.topic);
+            c.Subscribe(topic);
 
             // Because Consume is a blocking call, we want to capture Ctrl+C and use a cancellation token to get out of our while loop and close the consumer gracefully.
             var cts = new CancellationTokenSource();
@@ -39,7 +39,7 @@ namespace DddEfteling.Shared.Boundaries
                 {
                     // Consume a message from the test topic. Pass in a cancellation token so we can break out of our loop when Ctrl+C is pressed
                     var cr = c.Consume(cts.Token);
-                    this.HandleMessage(cr.Message.Value);
+                    HandleMessage(cr.Message.Value);
                 }
             }
             catch (OperationCanceledException)
